@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>FON - Online Select Shop</title>
+
+  <!-- 폰트 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Noto Sans KR', system-ui, -apple-system, BlinkMacSystemFont,
+        sans-serif;
+      background-color: #ffffff;
+      color: #111;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* ---------- 상단 네비게이션 ---------- */
+    .gnb-wrapper {
+      width: 100%;
+      background-color: #000;
+      color: #fff;
+    }
+
+    .gnb {
+      max-width: 1200px;
+      margin: 0 auto;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .gnb-logo {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+
+    .gnb-menu {
+      display: flex;
+      gap: 30px;
+      font-size: 14px;
+    }
+
+    .gnb-menu a {
+      color: #fff;
+    }
+
+    .gnb-menu a.sale {
+      color: #ff3b3b;
+      font-weight: 600;
+    }
+
+    /* 우측 아이콘 영역 */
+    .gnb-icons {
+      display: flex;
+      gap: 10px; /* 좁은 간격 */
+      align-items: center;
+      color: #fff;
+    }
+
+    .icon-button {
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff; /* 버튼/링크 모두 흰색 */
+    }
+
+    .icon-button svg {
+      width: 24px;
+      height: 24px;
+      stroke: currentColor;
+      stroke-width: 1.4;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .icon-button:hover svg {
+      opacity: 0.85;
+    }
+
+    /* ---------- 메인 비주얼 (히어로) ---------- */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 520px;
+      /* 기본 이미지 (관리자에서 아직 설정 안 했을 때 사용) */
+      background: url('./images/main_hero.jpg') center center / cover no-repeat;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.25);
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      height: 100%;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+    }
+
+    .hero-text {
+      color: #fff;
+    }
+
+    .hero-text .sub-title {
+      font-size: 12px;
+      letter-spacing: 2px;
+      margin-bottom: 18px;
+    }
+
+    .hero-text h1 {
+      font-size: 24px;
+      margin-bottom: 6px;
+    }
+
+    .hero-text h2 {
+      font-size: 18px;
+      font-weight: 400;
+      margin-bottom: 20px;
+    }
+
+    .hero-text p {
+      font-size: 14px;
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+
+    .btn-outline-light {
+      display: inline-block;
+      padding: 10px 30px;
+      border: 1px solid #fff;
+      border-radius: 0;
+      font-size: 14px;
+      background: transparent;
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-outline-light:hover {
+      background: #fff;
+      color: #000;
+    }
+
+    /* ---------- 공통 섹션 ---------- */
+    .section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 60px 20px;
+    }
+
+    .section-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 30px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .section-more {
+      font-size: 13px;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    /* ---------- 인기 상품 영역 ---------- */
+    .popular-empty-box {
+      width: 100%;
+      min-height: 220px;
+      border-radius: 10px;
+      background-color: #f8fafc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      color: #555;
+    }
+
+    /* ---------- 하단 프로모션 배너 (WINTER SALE) ---------- */
+    .sale-banner {
+      width: 100%;
+      height: 400px;
+      background: url('./images/winter_sale.jpg') center center / cover
+        no-repeat;
+      position: relative;
+      margin-top: 60px;
+    }
+
+    .sale-banner-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.25);
+    }
+
+    .sale-banner-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      height: 100%;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #fff;
+    }
+
+    .sale-banner-text .sub {
+      font-size: 13px;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+    }
+
+    .sale-banner-text .title {
+      font-size: 22px;
+      margin-bottom: 24px;
+    }
+
+    .btn-outline-white {
+      display: inline-block;
+      padding: 10px 35px;
+      border: 1px solid #fff;
+      font-size: 14px;
+      background: transparent;
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-outline-white:hover {
+      background: #fff;
+      color: #000;
+    }
+
+    /* ---------- FOOTER ---------- */
+    .site-footer {
+      background-color: #000;
+      color: #fff;
+      padding: 40px 0 20px;
+      margin-top: 40px;
+      font-size: 14px;
+    }
+
+    .site-footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .footer-columns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 60px;
+      margin-bottom: 30px;
+      justify-content: space-between;
+    }
+
+    .footer-col-title {
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .footer-col li + li {
+      margin-top: 6px;
+    }
+
+    .footer-col a {
+      color: #ddd;
+      font-size: 13px;
+    }
+
+    .footer-col a:hover {
+      color: #fff;
+    }
+
+    .footer-desc {
+      font-size: 13px;
+      color: #ccc;
+      line-height: 1.6;
+    }
+
+    .footer-sns {
+      display: flex;
+      gap: 16px;
+      margin-top: 8px;
+      font-size: 18px;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid #333;
+      padding-top: 15px;
+      font-size: 12px;
+      color: #aaa;
+      text-align: left;
+    }
+
+    @media (max-width: 768px) {
+      .gnb {
+        padding: 0 16px;
+      }
+
+      .gnb-menu {
+        display: none;
+      }
+
+      .hero-inner {
+        padding: 0 16px;
+      }
+
+      .hero-text h1 {
+        font-size: 20px;
+      }
+
+      .hero-text h2 {
+        font-size: 16px;
+      }
+
+      .section {
+        padding: 40px 16px;
+      }
+
+      .sale-banner-inner {
+        padding: 0 16px;
+      }
+
+      .footer-columns {
+        flex-direction: column;
+        gap: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 상단 네비게이션 -->
+  <header class="gnb-wrapper">
+    <nav class="gnb">
+      <div class="gnb-logo">
+        <a href="main.html">FON</a>
+      </div>
+
+      <div class="gnb-menu">
+        <a href="best.html">Best</a>
+        <a href="sale.html" class="sale">SALE</a>
+        <a href="outer.html">아우터</a>
+        <a href="top.html">상의</a>
+        <a href="bottom.html">하의</a>
+        <a href="accessory.html">악세서리</a>
+        <a href="#">커뮤니티</a>
+        <a href="#">코디하기</a>
+      </div>
+
+      <!-- 우측 아이콘: 검색 / 로그인 / 장바구니 / (관리자 전용 +) -->
+      <div class="gnb-icons">
+        <!-- 검색 -->
+        <button class="icon-button" aria-label="검색">
+          <svg viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="6.3"></circle>
+            <line x1="15.4" y1="15.4" x2="20" y2="20"></line>
+          </svg>
+        </button>
+
+        <!-- 로그인 / 마이페이지 -->
+        <a href="login.html" class="icon-button" aria-label="로그인 / 마이페이지">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="9" r="3.1"></circle>
+            <path d="M6.5 19c.8-2.6 2.8-4.3 5.5-4.3s4.7 1.7 5.5 4.3"></path>
+          </svg>
+        </a>
+
+        <!-- 장바구니 -->
+        <button class="icon-button" aria-label="장바구니">
+          <svg viewBox="0 0 24 24">
+            <rect x="6.5" y="8" width="11" height="10" rx="1.8" ry="1.8"></rect>
+            <path d="M9 8V6.7A2.2 2.2 0 0 1 12 4.5A2.2 2.2 0 0 1 15 6.7V8"></path>
+            <path d="M9.3 12.2c.6.8 1.5 1.3 2.7 1.3s2.1-.5 2.7-1.3"></path>
+          </svg>
+        </button>
+
+        <!-- 관리자 전용 플러스 (초기에는 숨김) -->
+        <button
+          class="icon-button admin-add"
+          aria-label="관리자 대시보드"
+          style="display: none"
+          onclick="window.location.href='admin.html'"
+        >
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="7.5"></circle>
+            <line x1="12" y1="9" x2="12" y2="15"></line>
+            <line x1="9" y1="12" x2="15" y2="12"></line>
+          </svg>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- 메인 히어로 영역 -->
+  <section class="hero">
+    <div class="hero-overlay"></div>
+
+    <div class="hero-inner">
+      <div class="hero-text">
+        <div class="sub-title">2024 WINTER COLLECTION</div>
+        <h1>NEW SEASON,</h1>
+        <h2>NEW STYLE</h2>
+        <p>트렌디한 겨울 컬렉션으로 당신만의 스타일을 완성하세요</p>
+        <a href="#" class="btn-outline-light">컬렉션 보기</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 인기 상품 섹션 -->
+  <section class="section">
+    <div class="section-title-row">
+      <div class="section-title">인기 상품</div>
+      <a href="#" class="section-more">전체보기</a>
+    </div>
+
+    <div class="popular-empty-box">
+      구매 내역이 있는 상품이 없습니다.
+    </div>
+
+    <!-- WINTER SALE 배너 -->
+    <div class="sale-banner">
+      <div class="sale-banner-overlay"></div>
+      <div class="sale-banner-inner">
+        <div class="sale-banner-text">
+          <div class="sub">WINTER SALE</div>
+          <div class="title">최대 50% 할인</div>
+          <a href="sale.html" class="btn-outline-white">지금 쇼핑하기</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 공통 푸터 -->
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <div class="footer-columns">
+        <div class="footer-col">
+          <div class="footer-col-title">FON</div>
+          <div class="footer-desc">
+            트렌디한 패션을 제안하는<br />
+            온라인 셀렉트샵
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-col-title">고객센터</div>
+          <ul>
+            <li><a href="#">공지사항</a></li>
+            <li><a href="#">자주묻는질문</a></li>
+            <li><a href="#">1:1 문의</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-col-title">정보</div>
+          <ul>
+            <li><a href="#">회사 소개</a></li>
+            <li><a href="#">이용약관</a></li>
+            <li><a href="#">개인정보처리방침</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-col-title">소셜 미디어</div>
+          <div class="footer-sns">
+            <a href="#">📷</a>
+            <a href="#">📘</a>
+            <a href="#">▶️</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        © 2024 FON. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <!-- 관리자 로그인 여부 + 메인 히어로 이미지 적용 -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // 1) 관리자 로그인 여부에 따라 + 아이콘 보이기
+      if (localStorage.getItem('isAdmin') === 'true') {
+        document
+          .querySelectorAll('.admin-add')
+          .forEach((el) => (el.style.display = 'flex'));
+      }
+
+      // 2) 메인 히어로 이미지 변경 적용
+      const heroEl = document.querySelector('.hero');
+      if (heroEl) {
+        const savedHero = localStorage.getItem('heroImage');
+        if (savedHero) {
+          // admin_mainpage에서 저장한 URL 또는 dataURL 사용
+          heroEl.style.backgroundImage = "url('" + savedHero + "')";
+        }
+      }
+    });
+  </script>
+</body>
+</html>
