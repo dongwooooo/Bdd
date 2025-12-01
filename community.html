@@ -181,7 +181,6 @@
     }
 
     /* ---------- 게시물 카드 리스트 ---------- */
-
     .community-list-wrapper {
       max-width: 1200px;
       margin: 0 auto;
@@ -331,6 +330,120 @@
       display: block;
     }
 
+    /* ---------- 검색 오버레이 & 검색 박스 (악세서리와 동일) ---------- */
+    .search-dim {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(3px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s ease-out;
+      z-index: 40;
+    }
+
+    .search-dim.is-active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .search-layer {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding-top: 110px;
+      pointer-events: none;
+      z-index: 50;
+    }
+
+    .search-layer.is-active {
+      pointer-events: none;
+    }
+
+    .search-box {
+      width: min(520px, 92vw);
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+      padding: 18px 18px 14px;
+      transform: translateY(-18px);
+      opacity: 0;
+      transition: transform 0.22s ease-out, opacity 0.22s ease-out;
+      pointer-events: auto;
+    }
+
+    .search-layer.is-active .search-box {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .search-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .search-input {
+      flex: 1;
+      height: 38px;
+      padding: 0 12px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      font-size: 13px;
+      outline: none;
+    }
+
+    .search-input:focus {
+      border-color: #111;
+    }
+
+    .search-close-btn {
+      background: none;
+      border: none;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 999px;
+    }
+
+    .search-close-btn svg {
+      width: 18px;
+      height: 18px;
+      stroke: #333;
+      stroke-width: 1.8;
+      fill: none;
+      stroke-linecap: round;
+    }
+
+    .search-close-btn:hover {
+      background-color: #f4f4f4;
+    }
+
+    .search-results {
+      margin-top: 6px;
+      padding: 10px 8px 6px;
+      border-radius: 6px;
+      background-color: #fafafa;
+    }
+
+    .search-help {
+      font-size: 12px;
+      color: #888;
+    }
+
+    .search-no-result {
+      display: none;
+      margin-top: 6px;
+      font-size: 13px;
+      color: #777;
+    }
+
     /* ---------- FOOTER ---------- */
     .site-footer {
       background-color: #000;
@@ -421,6 +534,10 @@
       .community-grid {
         grid-template-columns: 1fr;
       }
+
+      .search-box {
+        width: calc(100% - 32px);
+      }
     }
   </style>
 </head>
@@ -444,8 +561,8 @@
       </div>
 
       <div class="gnb-icons">
-        <!-- 검색 -->
-        <button class="icon-button" aria-label="검색">
+        <!-- 검색 (id만 악세서리와 동일하게 변경) -->
+        <button class="icon-button" id="searchOpenBtn" aria-label="검색">
           <svg viewBox="0 0 24 24">
             <circle cx="11" cy="11" r="6.3"></circle>
             <line x1="15.4" y1="15.4" x2="20" y2="20"></line>
@@ -485,6 +602,35 @@
       </div>
     </nav>
   </header>
+
+  <!-- 검색 오버레이 (악세서리와 동일 구조) -->
+  <div class="search-dim" id="searchDim"></div>
+  <div class="search-layer" id="searchLayer">
+    <div class="search-box" role="dialog" aria-modal="true">
+      <div class="search-header">
+        <input
+          type="text"
+          id="searchInput"
+          class="search-input"
+          placeholder="원하는 상품, 게시글을 검색해보세요."
+        />
+        <button class="search-close-btn" id="searchCloseBtn" aria-label="검색 닫기">
+          <svg viewBox="0 0 24 24">
+            <line x1="8" y1="8" x2="16" y2="16"></line>
+            <line x1="16" y1="8" x2="8" y2="16"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="search-results">
+        <p class="search-help" id="searchHelp">
+          검색어를 입력하면 결과를 보여드릴게요.
+        </p>
+        <p class="search-no-result" id="searchNoResult">
+          검색 결과가 없습니다.
+        </p>
+      </div>
+    </div>
+  </div>
 
   <!-- 커뮤니티 상단 설명 + 정렬 -->
   <section class="community-wrapper">
@@ -694,67 +840,131 @@
     </div>
   </footer>
 
-  <!-- 스크립트: 관리자 표시 / 좋아요 / 정렬 -->
+  <!-- 스크립트: 관리자 표시 / 좋아요 / 정렬 / 검색 -->
   <script>
-    // 관리자 + 아이콘 표시
     document.addEventListener('DOMContentLoaded', function () {
+      /* ---------- 관리자 + 아이콘 표시 ---------- */
       if (localStorage.getItem('isAdmin') === 'true') {
         document
           .querySelectorAll('.admin-add')
           .forEach((el) => (el.style.display = 'flex'));
       }
-    });
 
-    // 좋아요 버튼
-    document.querySelectorAll('.like-btn').forEach((btn) => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        e.preventDefault();
+      /* ---------- 좋아요 버튼 ---------- */
+      document.querySelectorAll('.like-btn').forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          e.preventDefault();
 
-        const countEl = btn.querySelector('.like-count');
-        const heartEl = btn.querySelector('.heart');
-        let count = parseInt(countEl.textContent, 10);
+          const countEl = btn.querySelector('.like-count');
+          const heartEl = btn.querySelector('.heart');
+          let count = parseInt(countEl.textContent, 10);
 
-        if (btn.classList.contains('liked')) {
-          btn.classList.remove('liked');
-          heartEl.textContent = '♡';
-          count -= 1;
-        } else {
-          btn.classList.add('liked');
-          heartEl.textContent = '♥';
-          count += 1;
-        }
-        countEl.textContent = count;
-
-        const card = btn.closest('.community-card');
-        if (card) {
-          card.dataset.likes = count;
-        }
-      });
-    });
-
-    // 정렬 버튼
-    const sortButtons = document.querySelectorAll('.sort-btn');
-    const grid = document.getElementById('communityGrid');
-
-    sortButtons.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        sortButtons.forEach((b) => b.classList.remove('active'));
-        btn.classList.add('active');
-
-        const type = btn.dataset.sort;
-        const cards = Array.from(grid.querySelectorAll('.community-card'));
-
-        cards.sort((a, b) => {
-          if (type === 'latest') {
-            return new Date(b.dataset.date) - new Date(a.dataset.date);
+          if (btn.classList.contains('liked')) {
+            btn.classList.remove('liked');
+            heartEl.textContent = '♡';
+            count -= 1;
           } else {
-            return b.dataset.likes - a.dataset.likes;
+            btn.classList.add('liked');
+            heartEl.textContent = '♥';
+            count += 1;
+          }
+          countEl.textContent = count;
+
+          const card = btn.closest('.community-card');
+          if (card) {
+            card.dataset.likes = count;
           }
         });
-
-        cards.forEach((card) => grid.appendChild(card));
       });
+
+      /* ---------- 정렬 버튼 ---------- */
+      const sortButtons = document.querySelectorAll('.sort-btn');
+      const grid = document.getElementById('communityGrid');
+
+      sortButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          if (!grid) return;
+
+          sortButtons.forEach((b) => b.classList.remove('active'));
+          btn.classList.add('active');
+
+          const type = btn.dataset.sort;
+          const cards = Array.from(grid.querySelectorAll('.community-card'));
+
+          cards.sort((a, b) => {
+            if (type === 'latest') {
+              return new Date(b.dataset.date) - new Date(a.dataset.date);
+            } else {
+              return b.dataset.likes - a.dataset.likes;
+            }
+          });
+
+          cards.forEach((card) => grid.appendChild(card));
+        });
+      });
+
+      /* ---------- 검색 레이어 (악세서리와 동일 동작) ---------- */
+      const openBtn = document.getElementById('searchOpenBtn');
+      const dim = document.getElementById('searchDim');
+      const layer = document.getElementById('searchLayer');
+      const input = document.getElementById('searchInput');
+      const closeBtn = document.getElementById('searchCloseBtn');
+      const noResult = document.getElementById('searchNoResult');
+      const helpText = document.getElementById('searchHelp');
+
+      function openSearch() {
+        if (!dim || !layer) return;
+        dim.classList.add('is-active');
+        layer.classList.add('is-active');
+        if (input) {
+          input.value = '';
+        }
+        if (noResult) noResult.style.display = 'none';
+        if (helpText) helpText.style.display = 'block';
+        setTimeout(() => {
+          if (input) input.focus();
+        }, 10);
+      }
+
+      function closeSearch() {
+        if (!dim || !layer) return;
+        dim.classList.remove('is-active');
+        layer.classList.remove('is-active');
+      }
+
+      if (openBtn) {
+        openBtn.addEventListener('click', openSearch);
+      }
+
+      if (closeBtn) {
+        closeBtn.addEventListener('click', closeSearch);
+      }
+
+      if (dim) {
+        dim.addEventListener('click', closeSearch);
+      }
+
+      // ESC로 닫기
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+          closeSearch();
+        }
+      });
+
+      // 입력값 있을 때만 "검색 결과가 없습니다" 노출
+      if (input && noResult) {
+        input.addEventListener('input', function (e) {
+          const value = e.target.value.trim();
+          if (!value) {
+            noResult.style.display = 'none';
+            if (helpText) helpText.style.display = 'block';
+            return;
+          }
+          if (helpText) helpText.style.display = 'none';
+          noResult.style.display = 'block';
+        });
+      }
     });
   </script>
 </body>

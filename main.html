@@ -71,7 +71,7 @@
     /* 우측 아이콘 영역 */
     .gnb-icons {
       display: flex;
-      gap: 10px; /* 좁은 간격 */
+      gap: 10px;
       align-items: center;
       color: #fff;
     }
@@ -84,7 +84,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #fff; /* 버튼/링크 모두 흰색 */
+      color: #fff;
     }
 
     .icon-button svg {
@@ -106,7 +106,6 @@
       position: relative;
       width: 100%;
       height: 520px;
-      /* 기본 이미지 (관리자에서 아직 설정 안 했을 때 사용) */
       background: url('./images/main_hero.jpg') center center / cover no-repeat;
     }
 
@@ -264,6 +263,120 @@
       color: #000;
     }
 
+    /* ---------- 검색 오버레이 & 검색 박스 (공통) ---------- */
+    .search-dim {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(3px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s ease-out;
+      z-index: 40;
+    }
+
+    .search-dim.is-active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .search-layer {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding-top: 110px;
+      pointer-events: none;
+      z-index: 50;
+    }
+
+    .search-layer.is-active {
+      pointer-events: none;
+    }
+
+    .search-box {
+      width: min(520px, 92vw);
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+      padding: 18px 18px 14px;
+      transform: translateY(-18px);
+      opacity: 0;
+      transition: transform 0.22s ease-out, opacity 0.22s ease-out;
+      pointer-events: auto;
+    }
+
+    .search-layer.is-active .search-box {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .search-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .search-input {
+      flex: 1;
+      height: 38px;
+      padding: 0 12px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      font-size: 13px;
+      outline: none;
+    }
+
+    .search-input:focus {
+      border-color: #111;
+    }
+
+    .search-close-btn {
+      background: none;
+      border: none;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 999px;
+    }
+
+    .search-close-btn svg {
+      width: 18px;
+      height: 18px;
+      stroke: #333;
+      stroke-width: 1.8;
+      fill: none;
+      stroke-linecap: round;
+    }
+
+    .search-close-btn:hover {
+      background-color: #f4f4f4;
+    }
+
+    .search-results {
+      margin-top: 6px;
+      padding: 10px 8px 6px;
+      border-radius: 6px;
+      background-color: #fafafa;
+    }
+
+    .search-help {
+      font-size: 12px;
+      color: #888;
+    }
+
+    .search-no-result {
+      display: none;
+      margin-top: 6px;
+      font-size: 13px;
+      color: #777;
+    }
+
     /* ---------- FOOTER ---------- */
     .site-footer {
       background-color: #000;
@@ -364,6 +477,10 @@
         flex-direction: column;
         gap: 24px;
       }
+
+      .search-box {
+        width: calc(100% - 32px);
+      }
     }
   </style>
 </head>
@@ -388,8 +505,8 @@
 
       <!-- 우측 아이콘: 검색 / 로그인 / 장바구니 / (관리자 전용 +) -->
       <div class="gnb-icons">
-        <!-- 검색 -->
-        <button class="icon-button" aria-label="검색">
+        <!-- 검색 (id 추가) -->
+        <button class="icon-button" aria-label="검색" id="searchOpenBtn">
           <svg viewBox="0 0 24 24">
             <circle cx="11" cy="11" r="6.3"></circle>
             <line x1="15.4" y1="15.4" x2="20" y2="20"></line>
@@ -429,6 +546,35 @@
       </div>
     </nav>
   </header>
+
+  <!-- 검색 오버레이 (공통) -->
+  <div class="search-dim" id="searchDim"></div>
+  <div class="search-layer" id="searchLayer">
+    <div class="search-box" role="dialog" aria-modal="true">
+      <div class="search-header">
+        <input
+          type="text"
+          id="searchInput"
+          class="search-input"
+          placeholder="원하는 상품, 게시글을 검색해보세요."
+        />
+        <button class="search-close-btn" id="searchCloseBtn" aria-label="검색 닫기">
+          <svg viewBox="0 0 24 24">
+            <line x1="8" y1="8" x2="16" y2="16"></line>
+            <line x1="16" y1="8" x2="8" y2="16"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="search-results">
+        <p class="search-help" id="searchHelp">
+          검색어를 입력하면 결과를 보여드릴게요.
+        </p>
+        <p class="search-no-result" id="searchNoResult">
+          검색 결과가 없습니다.
+        </p>
+      </div>
+    </div>
+  </div>
 
   <!-- 메인 히어로 영역 -->
   <section class="hero">
@@ -515,7 +661,7 @@
     </div>
   </footer>
 
-  <!-- 관리자 로그인 여부 + 메인 히어로 이미지 적용 -->
+  <!-- 관리자 로그인 여부 + 메인 히어로 이미지 + 검색 기능 -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       // 1) 관리자 로그인 여부에 따라 + 아이콘 보이기
@@ -530,9 +676,70 @@
       if (heroEl) {
         const savedHero = localStorage.getItem('heroImage');
         if (savedHero) {
-          // admin_mainpage에서 저장한 URL 또는 dataURL 사용
           heroEl.style.backgroundImage = "url('" + savedHero + "')";
         }
+      }
+
+      // 3) 검색 레이어 공통 동작
+      const openBtn = document.getElementById('searchOpenBtn');
+      const dim = document.getElementById('searchDim');
+      const layer = document.getElementById('searchLayer');
+      const input = document.getElementById('searchInput');
+      const closeBtn = document.getElementById('searchCloseBtn');
+      const noResult = document.getElementById('searchNoResult');
+      const helpText = document.getElementById('searchHelp');
+
+      function openSearch() {
+        if (!dim || !layer) return;
+        dim.classList.add('is-active');
+        layer.classList.add('is-active');
+        if (input) {
+          input.value = '';
+        }
+        if (noResult) noResult.style.display = 'none';
+        if (helpText) helpText.style.display = 'block';
+        setTimeout(() => {
+          if (input) input.focus();
+        }, 10);
+      }
+
+      function closeSearch() {
+        if (!dim || !layer) return;
+        dim.classList.remove('is-active');
+        layer.classList.remove('is-active');
+      }
+
+      if (openBtn) {
+        openBtn.addEventListener('click', openSearch);
+      }
+
+      if (closeBtn) {
+        closeBtn.addEventListener('click', closeSearch);
+      }
+
+      if (dim) {
+        dim.addEventListener('click', closeSearch);
+      }
+
+      // ESC 키로 닫기
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+          closeSearch();
+        }
+      });
+
+      // 입력값 있을 때만 "검색 결과가 없습니다" 노출
+      if (input && noResult) {
+        input.addEventListener('input', function (e) {
+          const value = e.target.value.trim();
+          if (!value) {
+            noResult.style.display = 'none';
+            if (helpText) helpText.style.display = 'block';
+            return;
+          }
+          if (helpText) helpText.style.display = 'none';
+          noResult.style.display = 'block';
+        });
       }
     });
   </script>
