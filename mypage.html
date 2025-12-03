@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>FON - 마이페이지</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont,
+        system-ui, sans-serif;
+      background-color: #f5f6f8;
+      color: #111827;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* ---------- 상단 네비 (다른 페이지와 동일) ---------- */
+    .gnb-wrapper {
+      width: 100%;
+      background-color: #000;
+      color: #fff;
+    }
+
+    .gnb {
+      max-width: 1200px;
+      margin: 0 auto;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .gnb-logo {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+
+    .gnb-menu {
+      display: flex;
+      gap: 30px;
+      font-size: 14px;
+    }
+
+    .gnb-menu a {
+      color: #fff;
+    }
+
+    .gnb-menu a.sale {
+      color: #ff3b3b;
+      font-weight: 600;
+    }
+
+    .gnb-icons {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      color: #fff;
+    }
+
+    .icon-button {
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+
+    .icon-button svg {
+      width: 24px;
+      height: 24px;
+      stroke: currentColor;
+      stroke-width: 1.4;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .icon-button:hover svg {
+      opacity: 0.85;
+    }
+
+    /* ---------- 마이페이지 헤더 ---------- */
+    .mypage-header {
+      max-width: 1200px;
+      margin: 40px auto 20px;
+      padding: 0 20px;
+    }
+
+    .mypage-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .mypage-sub {
+      font-size: 14px;
+      color: #6b7280;
+    }
+
+    /* ---------- 메인 콘텐츠 레이아웃 ---------- */
+    .mypage-container {
+      max-width: 1200px;
+      margin: 0 auto 40px;
+      padding: 0 20px 40px;
+      display: grid;
+      grid-template-columns: 1.1fr 1.4fr;
+      gap: 24px;
+    }
+
+    .card {
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
+      padding: 20px 24px;
+    }
+
+    /* 왼쪽: 프로필 카드 */
+    .profile-card {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      height: 100%;
+    }
+
+    .profile-main {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .avatar-circle {
+      width: 56px;
+      height: 56px;
+      border-radius: 999px;
+      background-color: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 28px;
+    }
+
+    .profile-text-id {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .profile-text-email {
+      font-size: 13px;
+      color: #6b7280;
+    }
+
+    .logout-btn {
+      width: 100%;
+      height: 40px;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      background-color: #f9fafb;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .logout-btn:hover {
+      background-color: #f3f4f6;
+    }
+
+    /* 오른쪽 상단: 주문 내역 카드 */
+    .section-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+
+    .order-empty,
+    .wish-empty {
+      border-radius: 10px;
+      border: 1px dashed #e5e7eb;
+      padding: 18px 18px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background-color: #f9fafb;
+    }
+
+    .order-empty-icon,
+    .wish-empty-icon {
+      font-size: 24px;
+    }
+
+    .empty-main-text {
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+
+    .empty-sub-text {
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    /* 오른쪽 중간: 찜한 상품 카드 */
+    .small-muted {
+      font-size: 12px;
+      color: #9ca3af;
+      margin-left: 2px;
+    }
+
+    /* 아래: 나의 활동 카드 */
+    .activity-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 8px;
+    }
+
+    .activity-item {
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
+      padding: 12px 10px;
+      text-align: center;
+      background-color: #f9fafb;
+    }
+
+    .activity-label {
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 6px;
+    }
+
+    .activity-value {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    @media (max-width: 900px) {
+      .mypage-container {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 상단 네비게이션 -->
+  <header class="gnb-wrapper">
+    <nav class="gnb">
+      <div class="gnb-logo">
+        <a href="main.html">FON</a>
+      </div>
+
+      <div class="gnb-menu">
+        <a href="main.html">Best</a>
+        <a href="sale.html" class="sale">SALE</a>
+        <a href="outer.html">아우터</a>
+        <a href="top.html">상의</a>
+        <a href="bottom.html">하의</a>
+        <a href="accessory.html">악세서리</a>
+        <a href="community.html">커뮤니티</a>
+        <a href="#">코디하기</a>
+      </div>
+
+      <div class="gnb-icons">
+        <!-- 검색 (동작은 나중에 기존 페이지에서 쓰던 스크립트 복붙해도 됨) -->
+        <button class="icon-button" aria-label="검색">
+          <svg viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="6.3"></circle>
+            <line x1="15.4" y1="15.4" x2="20" y2="20"></line>
+          </svg>
+        </button>
+
+        <!-- 로그인/마이페이지 아이콘 (지금 페이지) -->
+        <a href="mypage.html" class="icon-button" aria-label="마이페이지">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="9" r="3.1"></circle>
+            <path d="M6.5 19c.8-2.6 2.8-4.3 5.5-4.3s4.7 1.7 5.5 4.3"></path>
+          </svg>
+        </a>
+
+        <!-- 장바구니 -->
+        <a href="cart.html" class="icon-button" aria-label="장바구니">
+          <svg viewBox="0 0 24 24">
+            <rect x="6.5" y="8" width="11" height="10" rx="1.8" ry="1.8"></rect>
+            <path d="M9 8V6.7A2.2 2.2 0 0 1 12 4.5A2.2 2.2 0 0 1 15 6.7V8"></path>
+            <path d="M9.3 12.2c.6.8 1.5 1.3 2.7 1.3s2.1-.5 2.7-1.3"></path>
+          </svg>
+        </a>
+
+        <!-- 관리자 전용 플러스 (관리자면 JS에서 보이게 할 수도 있음) -->
+        <button
+          class="icon-button admin-add"
+          aria-label="관리자 대시보드"
+          style="display: none"
+          onclick="window.location.href='admin.html'">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="7.5"></circle>
+            <line x1="12" y1="9" x2="12" y2="15"></line>
+            <line x1="9" y1="12" x2="15" y2="12"></line>
+          </svg>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- 마이페이지 헤더 -->
+  <section class="mypage-header">
+    <h1 class="mypage-title">마이페이지</h1>
+    <p class="mypage-sub" id="welcomeText">회원님, 환영합니다!</p>
+  </section>
+
+  <!-- 메인 콘텐츠 -->
+  <main class="mypage-container">
+    <!-- 왼쪽: 프로필 + 로그아웃 -->
+    <section class="card profile-card">
+      <div class="profile-main">
+        <div class="avatar-circle">👤</div>
+        <div>
+          <div class="profile-text-id" id="profileId">user</div>
+          <div class="profile-text-email" id="profileEmail">
+            등록된 이메일이 없습니다.
+          </div>
+        </div>
+      </div>
+
+      <button class="logout-btn" id="logoutBtn">
+        <span>↪</span> 로그아웃
+      </button>
+    </section>
+
+    <!-- 오른쪽 상단: 주문 내역 -->
+    <section class="card">
+      <h2 class="section-title">주문 내역</h2>
+      <div class="order-empty">
+        <div class="order-empty-icon">📦</div>
+        <div>
+          <p class="empty-main-text">아직 주문 내역이 없습니다.</p>
+          <p class="empty-sub-text">FON에서 쇼핑을 시작해보세요!</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 오른쪽 중간: 찜한 상품 -->
+    <section class="card">
+      <h2 class="section-title">
+        찜한 상품 <span class="small-muted">(0)</span>
+      </h2>
+      <div class="wish-empty">
+        <div class="wish-empty-icon">🤍</div>
+        <div>
+          <p class="empty-main-text">찜한 상품이 없습니다.</p>
+          <p class="empty-sub-text">
+            마음에 드는 상품을 찜해보세요!
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 아래: 나의 활동 -->
+    <section class="card">
+      <h2 class="section-title">나의 활동</h2>
+      <div class="activity-row">
+        <div class="activity-item">
+          <p class="activity-label">총 주문</p>
+          <p class="activity-value">0건</p>
+        </div>
+        <div class="activity-item">
+          <p class="activity-label">찜한 상품</p>
+          <p class="activity-value">0개</p>
+        </div>
+        <div class="activity-item">
+          <p class="activity-label">작성한 리뷰</p>
+          <p class="activity-value">0개</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // ----- 로그인 정보 표시 -----
+    document.addEventListener('DOMContentLoaded', function () {
+      const welcomeText = document.getElementById('welcomeText');
+      const profileId = document.getElementById('profileId');
+      const profileEmail = document.getElementById('profileEmail');
+
+      // signup.html에서 저장된 정보 (연습용)
+      const savedId = localStorage.getItem('fonUserId');
+      const savedEmail = localStorage.getItem('fonUserEmail'); // 아직 안 쓰고 있으면 null
+
+      const isAdmin = localStorage.getItem('isAdmin') === 'true';
+
+      let displayName = '회원';
+      let emailText = '등록된 이메일이 없습니다.';
+
+      if (isAdmin) {
+        displayName = 'admin';
+        emailText = '관리자 계정입니다.';
+        // 관리자 플러스 아이콘 보이기
+        document
+          .querySelectorAll('.admin-add')
+          .forEach((el) => (el.style.display = 'flex'));
+      } else if (savedId) {
+        displayName = savedId;
+        if (savedEmail) {
+          emailText = savedEmail;
+        }
+      }
+
+      welcomeText.textContent = displayName + '님, 환영합니다!';
+      profileId.textContent = displayName;
+      profileEmail.textContent = emailText;
+    });
+
+    // ----- 로그아웃 버튼 -----
+    document.getElementById('logoutBtn').addEventListener('click', function () {
+      // "로그인 상태"와 관련된 것만 정리
+      localStorage.removeItem('isAdmin');
+      // 필요하면 나중에 'fonLoggedIn' 같은 플래그를 추가해서 여기서 같이 삭제 가능
+
+      alert('로그아웃 되었습니다.');
+      window.location.href = 'main.html';
+    });
+  </script>
+</body>
+</html>

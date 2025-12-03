@@ -405,17 +405,17 @@
 
       <div class="gnb-menu">
         <a href="main.html">Best</a>
-        <a href="main.html" class="sale">SALE</a>
-        <a href="#">아우터</a>
-        <a href="#">상의</a>
-        <a href="#">하의</a>
-        <a href="#">악세서리</a>
-        <a href="#">커뮤니티</a>
+        <a href="sale.html" class="sale">SALE</a>
+        <a href="outer.html">아우터</a>
+        <a href="top.html">상의</a>
+        <a href="bottom.html">하의</a>
+        <a href="accessory.html">악세서리</a>
+        <a href="community.html">커뮤니티</a>
         <a href="#">코디하기</a>
       </div>
 
       <div class="gnb-icons">
-        <!-- 검색 (공통 패턴: id 추가) -->
+        <!-- 검색 -->
         <button class="icon-button" aria-label="검색" id="searchOpenBtn">
           <svg viewBox="0 0 24 24">
             <circle cx="11" cy="11" r="6.3"></circle>
@@ -423,7 +423,7 @@
           </svg>
         </button>
 
-        <!-- 로그인/마이페이지 (현재 페이지) -->
+        <!-- 로그인/마이페이지 -->
         <a href="login.html" class="icon-button" aria-label="로그인 / 마이페이지">
           <svg viewBox="0 0 24 24">
             <circle cx="12" cy="9" r="3.1"></circle>
@@ -432,21 +432,20 @@
         </a>
 
         <!-- 장바구니 -->
-        <button class="icon-button" aria-label="장바구니">
+        <a href="cart.html" class="icon-button" aria-label="장바구니">
           <svg viewBox="0 0 24 24">
             <rect x="6.5" y="8" width="11" height="10" rx="1.8" ry="1.8"></rect>
             <path d="M9 8V6.7A2.2 2.2 0 0 1 12 4.5A2.2 2.2 0 0 1 15 6.7V8"></path>
             <path d="M9.3 12.2c.6.8 1.5 1.3 2.7 1.3s2.1-.5 2.7-1.3"></path>
           </svg>
-        </button>
+        </a>
 
         <!-- 관리자 전용 플러스 -->
         <button
           class="icon-button admin-add"
           aria-label="관리자 대시보드"
           style="display: none"
-          onclick="window.location.href='admin.html'"
-        >
+          onclick="window.location.href='admin.html'">
           <svg viewBox="0 0 24 24">
             <circle cx="12" cy="12" r="7.5"></circle>
             <line x1="12" y1="9" x2="12" y2="15"></line>
@@ -457,7 +456,7 @@
     </nav>
   </header>
 
-  <!-- 검색 오버레이 (공통) -->
+  <!-- 검색 오버레이 -->
   <div class="search-dim" id="searchDim"></div>
   <div class="search-layer" id="searchLayer">
     <div class="search-box" role="dialog" aria-modal="true">
@@ -466,8 +465,7 @@
           type="text"
           id="searchInput"
           class="search-input"
-          placeholder="원하는 상품, 게시글을 검색해보세요."
-        />
+          placeholder="원하는 상품, 게시글을 검색해보세요." />
         <button class="search-close-btn" id="searchCloseBtn" aria-label="검색 닫기">
           <svg viewBox="0 0 24 24">
             <line x1="8" y1="8" x2="16" y2="16"></line>
@@ -499,8 +497,7 @@
             id="userId"
             class="form-input"
             type="text"
-            placeholder="아이디를 입력해주세요"
-          />
+            placeholder="아이디를 입력해주세요" />
         </div>
 
         <div class="form-group">
@@ -509,8 +506,7 @@
             id="userPw"
             class="form-input"
             type="password"
-            placeholder="비밀번호를 입력해주세요"
-          />
+            placeholder="비밀번호를 입력해주세요" />
         </div>
 
         <button type="submit" class="login-btn">로그인</button>
@@ -518,7 +514,7 @@
 
       <div class="auth-bottom">
         계정이 없으신가요?
-        <a href="#">회원가입</a>
+        <a href="signup.html">회원가입</a>
       </div>
     </div>
   </section>
@@ -571,22 +567,39 @@
 
   <!-- 로그인 / 관리자 플러스 / 검색 스크립트 -->
   <script>
-    // 로그인 처리
+    // ✅ 로그인 처리 (관리자 + 회원가입한 사용자 모두 처리)
     document.getElementById('loginForm').addEventListener('submit', function (e) {
       e.preventDefault();
 
       const id = document.getElementById('userId').value.trim();
       const pw = document.getElementById('userPw').value;
 
+      // 회원가입 페이지에서 저장한 값 가져오기
+      const savedId = localStorage.getItem('fonUserId');
+      const savedPw = localStorage.getItem('fonUserPw');
+
+      // 1) 관리자 계정
       if (id === 'admin' && pw === '1234!') {
-        // 관리자 로그인 플래그 저장
         localStorage.setItem('isAdmin', 'true');
         alert('관리자 로그인 성공!');
-        // 최초 로그인 시 관리자 페이지로 이동
         window.location.href = 'admin.html';
-      } else {
-        alert('아이디 또는 비밀번호가 올바르지 않습니다.');
+        return;
       }
+
+      // 2) 일반 회원 (회원가입으로 저장된 계정)
+      if (savedId && savedPw) {
+        if (id === savedId && pw === savedPw) {
+          alert('로그인 되었습니다.');
+          window.location.href = 'main.html'; // 메인페이지로 이동
+          return;
+        } else {
+          alert('아이디 또는 비밀번호가 올바르지 않습니다.');
+          return;
+        }
+      }
+
+      // 3) 저장된 계정 자체가 없을 때
+      alert('회원가입된 계정이 없습니다. 먼저 회원가입을 해주세요.');
     });
 
     // 공통 초기화

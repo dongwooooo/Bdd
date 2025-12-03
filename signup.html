@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>FON - 회원가입</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Noto Sans KR", system-ui, sans-serif;
+      background-color: #f5f6f8;
+      color: #111;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* ---------- 상단 GNB ---------- */
+    .gnb-wrapper {
+      width: 100%;
+      background-color: #000;
+      color: #fff;
+    }
+
+    .gnb {
+      max-width: 1200px;
+      margin: 0 auto;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .gnb-logo {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+
+    .gnb-menu {
+      display: flex;
+      gap: 30px;
+      font-size: 14px;
+    }
+
+    .gnb-menu a {
+      color: #fff;
+    }
+
+    .gnb-menu a.sale {
+      color: #ff3b3b;
+      font-weight: 600;
+    }
+
+    .gnb-icons {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      color: #fff;
+    }
+
+    .icon-button {
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+
+    .icon-button svg {
+      width: 24px;
+      height: 24px;
+      stroke: currentColor;
+      stroke-width: 1.4;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .icon-button:hover svg {
+      opacity: 0.85;
+    }
+
+    /* ---------- 회원가입 카드 ---------- */
+    .signup-wrapper {
+      max-width: 1200px;
+      margin: 60px auto;
+      display: flex;
+      justify-content: center;
+    }
+
+    .signup-card {
+      width: 420px;
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.04);
+      padding: 40px 48px 32px;
+    }
+
+    .signup-title {
+      text-align: center;
+      margin-bottom: 8px;
+      font-size: 22px;
+      font-weight: 600;
+    }
+
+    .signup-subtitle {
+      text-align: center;
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 28px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+
+    .form-label span {
+      color: #ff3b30;
+      margin-left: 2px;
+    }
+
+    .id-row {
+      display: flex;
+    }
+
+    .id-row input {
+      flex: 1;
+      border-radius: 4px 0 0 4px;
+      border-right: none;
+    }
+
+    .id-check-btn {
+      width: 100px;
+      border-radius: 0 4px 4px 0;
+      border: 1px solid #111;
+      background-color: #111;
+      color: #fff;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .id-check-btn:hover {
+      opacity: 0.9;
+    }
+
+    .form-input {
+      width: 100%;
+      height: 42px;
+      border-radius: 4px;
+      border: 1px solid #e0e0e0;
+      padding: 0 12px;
+      font-size: 13px;
+      outline: none;
+      background-color: #fafafa;
+    }
+
+    .form-input::placeholder {
+      color: #aaa;
+    }
+
+    .form-input:focus {
+      border-color: #111;
+      background-color: #fff;
+    }
+
+    .error-text,
+    .success-text {
+      margin-top: 4px;
+      font-size: 12px;
+      display: none;
+    }
+
+    .error-text {
+      color: #ff3b30;
+    }
+
+    .success-text {
+      color: #00a82d;
+    }
+
+    .signup-btn {
+      width: 100%;
+      height: 46px;
+      border-radius: 4px;
+      border: none;
+      background-color: #000;
+      color: #fff;
+      font-size: 14px;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    .signup-btn:hover {
+      opacity: 0.9;
+    }
+
+    .bottom-text {
+      margin-top: 18px;
+      text-align: center;
+      font-size: 13px;
+      color: #666;
+    }
+
+    .bottom-text a {
+      font-weight: 500;
+      border-bottom: 1px solid #666;
+    }
+  </style>
+</head>
+<body>
+  <!-- 상단 GNB -->
+  <header class="gnb-wrapper">
+    <nav class="gnb">
+      <div class="gnb-logo">
+        <a href="main.html">FON</a>
+      </div>
+
+      <div class="gnb-menu">
+        <a href="main.html">Best</a>
+        <a href="sale.html" class="sale">SALE</a>
+        <a href="outer.html">아우터</a>
+        <a href="top.html">상의</a>
+        <a href="bottom.html">하의</a>
+        <a href="accessory.html">악세서리</a>
+        <a href="community.html">커뮤니티</a>
+        <a href="#">코디하기</a>
+      </div>
+
+      <div class="gnb-icons">
+        <!-- 검색 -->
+        <button class="icon-button" aria-label="검색">
+          <svg viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="6.3"></circle>
+            <line x1="15.4" y1="15.4" x2="20" y2="20"></line>
+          </svg>
+        </button>
+
+        <!-- 로그인 -->
+        <a href="login.html" class="icon-button" aria-label="로그인 / 마이페이지">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="9" r="3.1"></circle>
+            <path d="M6.5 19c.8-2.6 2.8-4.3 5.5-4.3s4.7 1.7 5.5 4.3"></path>
+          </svg>
+        </a>
+
+        <!-- 장바구니 -->
+        <a href="cart.html" class="icon-button" aria-label="장바구니">
+          <svg viewBox="0 0 24 24">
+            <rect x="6.5" y="8" width="11" height="10" rx="1.8" ry="1.8"></rect>
+            <path d="M9 8V6.7A2.2 2.2 0 0 1 12 4.5A2.2 2.2 0 0 1 15 6.7V8"></path>
+            <path d="M9.3 12.2c.6.8 1.5 1.3 2.7 1.3s2.1-.5 2.7-1.3"></path>
+          </svg>
+        </a>
+
+        <!-- 관리자 전용 플러스 -->
+        <button class="icon-button admin-add" style="display:none;" onclick="window.location.href='admin.html'">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="7.5"></circle>
+            <line x1="12" y1="9" x2="12" y2="15"></line>
+            <line x1="9" y1="12" x2="15" y2="12"></line>
+          </svg>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- 회원가입 카드 -->
+  <main class="signup-wrapper">
+    <section class="signup-card">
+      <h1 class="signup-title">회원가입</h1>
+      <p class="signup-subtitle">FON의 회원이 되어주세요</p>
+
+      <!-- 아이디 -->
+      <div class="form-group">
+        <label class="form-label">아이디<span>*</span></label>
+        <div class="id-row">
+          <input
+            id="userId"
+            class="form-input"
+            placeholder="아이디를 입력해주세요"
+          />
+          <button type="button" class="id-check-btn" id="checkIdBtn">중복확인</button>
+        </div>
+        <p class="error-text" id="idError">아이디를 입력해주세요.</p>
+        <p class="success-text" id="idSuccess">사용 가능한 아이디입니다.</p>
+      </div>
+
+      <!-- 이름 -->
+      <div class="form-group">
+        <label class="form-label">이름<span>*</span></label>
+        <input
+          id="name"
+          class="form-input"
+          placeholder="이름을 입력해주세요"
+        />
+        <p class="error-text" id="nameError">이름을 입력해주세요.</p>
+      </div>
+
+      <!-- 전화번호 -->
+      <div class="form-group">
+        <label class="form-label">전화번호<span>*</span></label>
+        <input
+          id="phone"
+          class="form-input"
+          placeholder="예) 010-1234-5678"
+        />
+        <p class="error-text" id="phoneError">전화번호를 입력해주세요.</p>
+      </div>
+
+      <!-- 이메일 -->
+      <div class="form-group">
+        <label class="form-label">이메일<span>*</span></label>
+        <input
+          id="email"
+          class="form-input"
+          placeholder="example@email.com"
+        />
+        <p class="error-text" id="emailError">이메일을 입력해주세요.</p>
+      </div>
+
+      <!-- 비밀번호 -->
+      <div class="form-group">
+        <label class="form-label">비밀번호<span>*</span></label>
+        <input
+          type="password"
+          id="password"
+          class="form-input"
+          placeholder="비밀번호를 입력해주세요"
+        />
+        <p class="error-text" id="pwError">비밀번호를 입력해주세요.</p>
+      </div>
+
+      <!-- 비밀번호 확인 -->
+      <div class="form-group">
+        <label class="form-label">비밀번호 확인<span>*</span></label>
+        <input
+          type="password"
+          id="passwordConfirm"
+          class="form-input"
+          placeholder="비밀번호를 다시 입력해주세요"
+        />
+        <p class="error-text" id="pwConfirmError">비밀번호 확인을 입력해주세요.</p>
+      </div>
+
+      <button class="signup-btn" id="signupBtn">회원가입</button>
+
+      <p class="bottom-text">
+        이미 계정이 있으신가요?
+        <a href="login.html">로그인</a>
+      </p>
+    </section>
+  </main>
+
+  <!-- 회원가입 기능 -->
+  <script>
+    const usedIds = ["fon123", "admin"];
+
+    const userIdInput = document.getElementById("userId");
+    const idError = document.getElementById("idError");
+    const idSuccess = document.getElementById("idSuccess");
+
+    const nameInput = document.getElementById("name");
+    const phoneInput = document.getElementById("phone");
+    const emailInput = document.getElementById("email");
+
+    const nameError = document.getElementById("nameError");
+    const phoneError = document.getElementById("phoneError");
+    const emailError = document.getElementById("emailError");
+
+    const pwInput = document.getElementById("password");
+    const pwConfirmInput = document.getElementById("passwordConfirm");
+    const pwError = document.getElementById("pwError");
+    const pwConfirmError = document.getElementById("pwConfirmError");
+
+    const checkIdBtn = document.getElementById("checkIdBtn");
+    const signupBtn = document.getElementById("signupBtn");
+
+    // 아이디 중복확인
+    checkIdBtn.addEventListener("click", () => {
+      const id = userIdInput.value.trim();
+
+      idError.style.display = "none";
+      idSuccess.style.display = "none";
+
+      if (!id) {
+        idError.textContent = "아이디를 입력해주세요.";
+        idError.style.display = "block";
+        return;
+      }
+
+      if (usedIds.includes(id)) {
+        idError.textContent = "이미 사용 중인 아이디입니다.";
+        idError.style.display = "block";
+      } else {
+        idSuccess.style.display = "block";
+      }
+    });
+
+    function validatePassword() {
+      const pw = pwInput.value.trim();
+
+      if (!pw) {
+        pwError.textContent = "비밀번호를 입력해주세요.";
+        pwError.style.display = "block";
+        return false;
+      }
+
+      if (pw.length < 6) {
+        pwError.textContent = "비밀번호는 6자 이상 입력해주세요.";
+        pwError.style.display = "block";
+        return false;
+      }
+
+      pwError.style.display = "none";
+      return true;
+    }
+
+    function validatePasswordConfirm() {
+      const pw = pwInput.value.trim();
+      const pw2 = pwConfirmInput.value.trim();
+
+      if (!pw2) {
+        pwConfirmError.textContent = "비밀번호 확인을 입력해주세요.";
+        pwConfirmError.style.display = "block";
+        return false;
+      }
+
+      if (pw !== pw2) {
+        pwConfirmError.textContent = "비밀번호가 일치하지 않습니다.";
+        pwConfirmError.style.display = "block";
+        return false;
+      }
+
+      pwConfirmError.style.display = "none";
+      return true;
+    }
+
+    pwInput.addEventListener("input", validatePassword);
+    pwConfirmInput.addEventListener("input", validatePasswordConfirm);
+
+    signupBtn.addEventListener("click", () => {
+      const id = userIdInput.value.trim();
+      const name = nameInput.value.trim();
+      const phone = phoneInput.value.trim();
+      const email = emailInput.value.trim();
+
+      // 일단 전부 숨기기
+      idError.style.display = "none";
+      nameError.style.display = "none";
+      phoneError.style.display = "none";
+      emailError.style.display = "none";
+
+      let ok = true;
+
+      if (!id) {
+        idError.textContent = "아이디를 입력해주세요.";
+        idError.style.display = "block";
+        ok = false;
+      }
+
+      if (!name) {
+        nameError.style.display = "block";
+        ok = false;
+      }
+
+      if (!phone) {
+        phoneError.style.display = "block";
+        ok = false;
+      }
+
+      if (!email) {
+        emailError.style.display = "block";
+        ok = false;
+      }
+
+      if (!validatePassword()) ok = false;
+      if (!validatePasswordConfirm()) ok = false;
+
+      if (!ok) return;
+
+      const pw = pwInput.value;
+
+      localStorage.setItem("fonUserId", id);
+      localStorage.setItem("fonUserPw", pw);
+
+      alert("회원가입이 완료되었습니다.\n로그인 페이지로 이동합니다.");
+      window.location.href = "login.html";
+    });
+  </script>
+</body>
+</html>

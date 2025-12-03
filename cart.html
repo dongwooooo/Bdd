@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <title>FON - Online Select Shop</title>
+  <title>FON - 장바구니</title>
 
   <!-- 폰트 -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -68,7 +68,6 @@
       font-weight: 600;
     }
 
-    /* 우측 아이콘 영역 */
     .gnb-icons {
       display: flex;
       gap: 10px;
@@ -101,169 +100,61 @@
       opacity: 0.85;
     }
 
-    /* ---------- 메인 비주얼 (히어로) ---------- */
-    .hero {
-      position: relative;
-      width: 100%;
-      height: 520px;
-      background: url('./images/main_hero.jpg') center center / cover no-repeat;
-    }
-
-    .hero-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.25);
-    }
-
-    .hero-inner {
-      position: relative;
-      z-index: 1;
+    /* ---------- 장바구니 타이틀 영역 ---------- */
+    .cart-header {
       max-width: 1200px;
-      height: 100%;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
+      margin: 80px auto 40px;
+      padding: 0 40px;
     }
 
-    .hero-text {
-      color: #fff;
-    }
-
-    .hero-text .sub-title {
-      font-size: 12px;
-      letter-spacing: 2px;
-      margin-bottom: 18px;
-    }
-
-    .hero-text h1 {
-      font-size: 24px;
-      margin-bottom: 6px;
-    }
-
-    .hero-text h2 {
-      font-size: 18px;
-      font-weight: 400;
-      margin-bottom: 20px;
-    }
-
-    .hero-text p {
-      font-size: 14px;
-      margin-bottom: 30px;
-      line-height: 1.6;
-    }
-
-    .btn-outline-light {
-      display: inline-block;
-      padding: 10px 30px;
-      border: 1px solid #fff;
-      border-radius: 0;
-      font-size: 14px;
-      background: transparent;
-      color: #fff;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .btn-outline-light:hover {
-      background: #fff;
-      color: #000;
-    }
-
-    /* ---------- 공통 섹션 ---------- */
-    .section {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 60px 20px;
-    }
-
-    .section-title-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 30px;
-    }
-
-    .section-title {
-      font-size: 20px;
+    .cart-title {
+      font-size: 28px;
       font-weight: 600;
+      margin-bottom: 10px;
     }
 
-    .section-more {
-      font-size: 13px;
-      text-decoration: underline;
-      cursor: pointer;
+    .cart-subtitle {
+      font-size: 14px;
+      color: #666;
     }
 
-    /* ---------- 인기 상품 영역 ---------- */
-    .popular-empty-box {
-      width: 100%;
-      min-height: 220px;
-      border-radius: 10px;
-      background-color: #f8fafc;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 15px;
-      color: #555;
-    }
-
-    /* ---------- 하단 프로모션 배너 (WINTER SALE) ---------- */
-    .sale-banner {
-      width: 100%;
-      height: 400px;
-      background: url('./images/winter_sale.jpg') center center / cover
-        no-repeat;
-      position: relative;
-      margin-top: 60px;
-    }
-
-    .sale-banner-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.25);
-    }
-
-    .sale-banner-inner {
-      position: relative;
-      z-index: 1;
+    /* ---------- 비어있는 장바구니 영역 ---------- */
+    .cart-empty-wrapper {
       max-width: 1200px;
-      height: 100%;
-      margin: 0 auto;
+      margin: 120px auto 160px;
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
+    }
+
+    .cart-empty-box {
       text-align: center;
-      color: #fff;
     }
 
-    .sale-banner-text .sub {
-      font-size: 13px;
-      letter-spacing: 2px;
-      margin-bottom: 12px;
-    }
-
-    .sale-banner-text .title {
-      font-size: 22px;
+    .cart-empty-text {
+      font-size: 14px;
+      color: #777;
       margin-bottom: 24px;
     }
 
-    .btn-outline-white {
+    .cart-continue-btn {
       display: inline-block;
-      padding: 10px 35px;
-      border: 1px solid #fff;
+      min-width: 140px;
+      padding: 12px 32px;
       font-size: 14px;
-      background: transparent;
+      text-align: center;
+      background-color: #000;
       color: #fff;
+      border: none;
       cursor: pointer;
-      transition: all 0.2s ease;
+      outline: none;
     }
 
-    .btn-outline-white:hover {
-      background: #fff;
-      color: #000;
+    .cart-continue-btn:hover {
+      background-color: #222;
     }
 
-    /* ---------- 검색 오버레이 & 검색 박스 (공통) ---------- */
+    /* ---------- 검색 오버레이 ---------- */
     .search-dim {
       position: fixed;
       inset: 0;
@@ -382,7 +273,6 @@
       background-color: #000;
       color: #fff;
       padding: 40px 0 20px;
-      margin-top: 40px;
       font-size: 14px;
     }
 
@@ -453,24 +343,13 @@
         display: none;
       }
 
-      .hero-inner {
-        padding: 0 16px;
+      .cart-header {
+        padding: 0 20px;
+        margin: 60px auto 30px;
       }
 
-      .hero-text h1 {
-        font-size: 20px;
-      }
-
-      .hero-text h2 {
-        font-size: 16px;
-      }
-
-      .section {
-        padding: 40px 16px;
-      }
-
-      .sale-banner-inner {
-        padding: 0 16px;
+      .cart-empty-wrapper {
+        margin: 80px auto 120px;
       }
 
       .footer-columns {
@@ -493,7 +372,7 @@
       </div>
 
       <div class="gnb-menu">
-        <a href="best.html">Best</a>
+        <a href="main.html">Best</a>
         <a href="sale.html" class="sale">SALE</a>
         <a href="outer.html">아우터</a>
         <a href="top.html">상의</a>
@@ -503,9 +382,8 @@
         <a href="#">코디하기</a>
       </div>
 
-      <!-- 우측 아이콘: 검색 / 로그인 / 장바구니 / (관리자 전용 +) -->
       <div class="gnb-icons">
-        <!-- 검색 (id 추가) -->
+        <!-- 검색 -->
         <button class="icon-button" aria-label="검색" id="searchOpenBtn">
           <svg viewBox="0 0 24 24">
             <circle cx="11" cy="11" r="6.3"></circle>
@@ -513,7 +391,7 @@
           </svg>
         </button>
 
-        <!-- 로그인 / 마이페이지 -->
+        <!-- 로그인/마이페이지 -->
         <a href="login.html" class="icon-button" aria-label="로그인 / 마이페이지">
           <svg viewBox="0 0 24 24">
             <circle cx="12" cy="9" r="3.1"></circle>
@@ -521,7 +399,7 @@
           </svg>
         </a>
 
-        <!-- 장바구니 -->
+        <!-- 장바구니(현재 페이지) -->
         <a href="cart.html" class="icon-button" aria-label="장바구니">
           <svg viewBox="0 0 24 24">
             <rect x="6.5" y="8" width="11" height="10" rx="1.8" ry="1.8"></rect>
@@ -530,7 +408,7 @@
           </svg>
         </a>
 
-        <!-- 관리자 전용 플러스 (초기에는 숨김) -->
+        <!-- 관리자 전용 플러스 -->
         <button
           class="icon-button admin-add"
           aria-label="관리자 대시보드"
@@ -547,7 +425,7 @@
     </nav>
   </header>
 
-  <!-- 검색 오버레이 (공통) -->
+  <!-- 검색 오버레이 -->
   <div class="search-dim" id="searchDim"></div>
   <div class="search-layer" id="searchLayer">
     <div class="search-box" role="dialog" aria-modal="true">
@@ -576,42 +454,24 @@
     </div>
   </div>
 
-  <!-- 메인 히어로 영역 -->
-  <section class="hero">
-    <div class="hero-overlay"></div>
-
-    <div class="hero-inner">
-      <div class="hero-text">
-        <div class="sub-title">2024 WINTER COLLECTION</div>
-        <h1>NEW SEASON,</h1>
-        <h2>NEW STYLE</h2>
-        <p>트렌디한 겨울 컬렉션으로 당신만의 스타일을 완성하세요</p>
-        <a href="#" class="btn-outline-light">컬렉션 보기</a>
-      </div>
-    </div>
+  <!-- 장바구니 타이틀 -->
+  <section class="cart-header">
+    <h1 class="cart-title">장바구니</h1>
+    <p class="cart-subtitle">장바구니에 담긴 상품을 확인해보세요</p>
   </section>
 
-  <!-- 인기 상품 섹션 -->
-  <section class="section">
-    <div class="section-title-row">
-      <div class="section-title">인기 상품</div>
-      <a href="#" class="section-more">전체보기</a>
-    </div>
-
-    <div class="popular-empty-box">
-      구매 내역이 있는 상품이 없습니다.
-    </div>
-
-    <!-- WINTER SALE 배너 -->
-    <div class="sale-banner">
-      <div class="sale-banner-overlay"></div>
-      <div class="sale-banner-inner">
-        <div class="sale-banner-text">
-          <div class="sub">WINTER SALE</div>
-          <div class="title">최대 50% 할인</div>
-          <a href="sale.html" class="btn-outline-white">지금 쇼핑하기</a>
-        </div>
-      </div>
+  <!-- 비어있는 장바구니 -->
+  <section class="cart-empty-wrapper">
+    <div class="cart-empty-box">
+      <p class="cart-empty-text">장바구니가 비어있습니다.</p>
+      <!-- ✅ 쇼핑 계속하기 버튼: 메인페이지로 이동 -->
+      <button
+        type="button"
+        class="cart-continue-btn"
+        onclick="window.location.href='main.html'"
+      >
+        쇼핑 계속하기
+      </button>
     </div>
   </section>
 
@@ -661,26 +521,17 @@
     </div>
   </footer>
 
-  <!-- 관리자 로그인 여부 + 메인 히어로 이미지 + 검색 기능 -->
+  <!-- 공통 스크립트 (검색 + 관리자 버튼) -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      // 1) 관리자 로그인 여부에 따라 + 아이콘 보이기
+      // 관리자 플러스 아이콘 표시
       if (localStorage.getItem('isAdmin') === 'true') {
         document
           .querySelectorAll('.admin-add')
           .forEach((el) => (el.style.display = 'flex'));
       }
 
-      // 2) 메인 히어로 이미지 변경 적용
-      const heroEl = document.querySelector('.hero');
-      if (heroEl) {
-        const savedHero = localStorage.getItem('heroImage');
-        if (savedHero) {
-          heroEl.style.backgroundImage = "url('" + savedHero + "')";
-        }
-      }
-
-      // 3) 검색 레이어 공통 동작
+      // 검색 레이어 공통 동작
       const openBtn = document.getElementById('searchOpenBtn');
       const dim = document.getElementById('searchDim');
       const layer = document.getElementById('searchLayer');
@@ -709,17 +560,9 @@
         layer.classList.remove('is-active');
       }
 
-      if (openBtn) {
-        openBtn.addEventListener('click', openSearch);
-      }
-
-      if (closeBtn) {
-        closeBtn.addEventListener('click', closeSearch);
-      }
-
-      if (dim) {
-        dim.addEventListener('click', closeSearch);
-      }
+      if (openBtn) openBtn.addEventListener('click', openSearch);
+      if (closeBtn) closeBtn.addEventListener('click', closeSearch);
+      if (dim) dim.addEventListener('click', closeSearch);
 
       // ESC 키로 닫기
       document.addEventListener('keydown', function (e) {
@@ -728,7 +571,7 @@
         }
       });
 
-      // 입력값 있을 때만 "검색 결과가 없습니다" 노출
+      // 입력값 있을 때만 "검색 결과가 없습니다" 표시
       if (input && noResult) {
         input.addEventListener('input', function (e) {
           const value = e.target.value.trim();
