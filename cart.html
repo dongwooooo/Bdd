@@ -372,7 +372,7 @@
       </div>
 
       <div class="gnb-menu">
-        <a href="main.html">Best</a>
+        <a href="best.html">Best</a>
         <a href="sale.html" class="sale">SALE</a>
         <a href="outer.html">아우터</a>
         <a href="top.html">상의</a>
@@ -391,8 +391,13 @@
           </svg>
         </button>
 
-        <!-- 로그인/마이페이지 -->
-        <a href="login.html" class="icon-button" aria-label="로그인 / 마이페이지">
+        <!-- 로그인/마이페이지 (동적 이동용 id 추가) -->
+        <a
+          href="login.html"
+          class="icon-button"
+          aria-label="로그인 / 마이페이지"
+          id="userIconLink"
+        >
           <svg viewBox="0 0 24 24">
             <circle cx="12" cy="9" r="3.1"></circle>
             <path d="M6.5 19c.8-2.6 2.8-4.3 5.5-4.3s4.7 1.7 5.5 4.3"></path>
@@ -464,7 +469,7 @@
   <section class="cart-empty-wrapper">
     <div class="cart-empty-box">
       <p class="cart-empty-text">장바구니가 비어있습니다.</p>
-      <!-- ✅ 쇼핑 계속하기 버튼: 메인페이지로 이동 -->
+      <!-- 쇼핑 계속하기 버튼: 메인페이지로 이동 -->
       <button
         type="button"
         class="cart-continue-btn"
@@ -490,7 +495,7 @@
         <div class="footer-col">
           <div class="footer-col-title">고객센터</div>
           <ul>
-            <li><a href="#">공지사항</a></li>
+            <li><a href="notice.html">공지사항</a></li>
             <li><a href="#">자주묻는질문</a></li>
             <li><a href="#">1:1 문의</a></li>
           </ul>
@@ -521,17 +526,24 @@
     </div>
   </footer>
 
-  <!-- 공통 스크립트 (검색 + 관리자 버튼) -->
+  <!-- 공통 스크립트 (로그인 아이콘 + 검색 + 관리자 버튼) -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      // 관리자 플러스 아이콘 표시
+      // 0) 로그인 상태에 따라 사람 아이콘 목적지 변경
+      const userLink = document.getElementById('userIconLink');
+      if (userLink) {
+        const isLoggedIn = localStorage.getItem('fonLoggedIn') === 'true';
+        userLink.href = isLoggedIn ? 'mypage.html' : 'login.html';
+      }
+
+      // 1) 관리자 플러스 아이콘 표시
       if (localStorage.getItem('isAdmin') === 'true') {
         document
           .querySelectorAll('.admin-add')
           .forEach((el) => (el.style.display = 'flex'));
       }
 
-      // 검색 레이어 공통 동작
+      // 2) 검색 레이어 공통 동작
       const openBtn = document.getElementById('searchOpenBtn');
       const dim = document.getElementById('searchDim');
       const layer = document.getElementById('searchLayer');

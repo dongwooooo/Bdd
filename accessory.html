@@ -414,7 +414,7 @@
         </button>
 
         <!-- 로그인 / 마이페이지 -->
-        <a href="login.html" class="icon-button" aria-label="로그인 / 마이페이지">
+        <a href="login.html" class="icon-button" aria-label="로그인 / 마이페이지" id="userIconLink">
           <svg viewBox="0 0 24 24">
             <circle cx="12" cy="9" r="3.1"></circle>
             <path d="M6.5 19c.8-2.6 2.8-4.3 5.5-4.3s4.7 1.7 5.5 4.3"></path>
@@ -520,7 +520,7 @@
         <div class="footer-col">
           <div class="footer-col-title">고객센터</div>
           <ul>
-            <li><a href="#">공지사항</a></li>
+            <li><a href="notice.html">공지사항</a></li>
             <li><a href="#">자주묻는질문</a></li>
             <li><a href="#">1:1 문의</a></li>
           </ul>
@@ -551,17 +551,24 @@
     </div>
   </footer>
 
-  <!-- 관리자 플러스 아이콘 + 검색 기능 스크립트 -->
+  <!-- 관리자 플러스 아이콘 + 검색 + 사람아이콘 스크립트 -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      // 관리자 전용 + 아이콘 노출
+      // 1) 관리자 전용 + 아이콘 노출
       if (localStorage.getItem('isAdmin') === 'true') {
         document
           .querySelectorAll('.admin-add')
           .forEach((el) => (el.style.display = 'flex'));
       }
 
-      // 검색 레이어 관련 요소
+      // 2) 로그인 상태에 따라 사람 아이콘 목적지 변경 ⭐
+      const userLink = document.getElementById('userIconLink');
+      if (userLink) {
+        const isLoggedIn = localStorage.getItem('fonLoggedIn') === 'true';
+        userLink.href = isLoggedIn ? 'mypage.html' : 'login.html';
+      }
+
+      // 3) 검색 레이어 관련 요소
       const openBtn = document.getElementById('searchOpenBtn');
       const dim = document.getElementById('searchDim');
       const layer = document.getElementById('searchLayer');
@@ -574,11 +581,11 @@
         if (!dim || !layer) return;
         dim.classList.add('is-active');
         layer.classList.add('is-active');
-        input.value = '';
-        noResult.style.display = 'none';
+        if (input) input.value = '';
+        if (noResult) noResult.style.display = 'none';
         if (helpText) helpText.style.display = 'block';
         setTimeout(() => {
-          input.focus();
+          if (input) input.focus();
         }, 10);
       }
 
@@ -612,13 +619,12 @@
         input.addEventListener('input', function (e) {
           const value = e.target.value.trim();
           if (!value) {
-            noResult.style.display = 'none';
+            if (noResult) noResult.style.display = 'none';
             if (helpText) helpText.style.display = 'block';
             return;
           }
-          // 실제 검색 결과가 없다고 가정 (나중에 검색 로직 연결 가능)
           if (helpText) helpText.style.display = 'none';
-          noResult.style.display = 'block';
+          if (noResult) noResult.style.display = 'block';
         });
       }
     });

@@ -4,6 +4,14 @@
   <meta charset="UTF-8" />
   <title>FON - 회원가입</title>
 
+  <!-- 폰트 (다른 페이지와 통일) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap"
+    rel="stylesheet"
+  />
+
   <style>
     * {
       margin: 0;
@@ -89,6 +97,120 @@
 
     .icon-button:hover svg {
       opacity: 0.85;
+    }
+
+    /* ---------- 검색 오버레이 & 검색 박스 (공통) ---------- */
+    .search-dim {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(3px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s ease-out;
+      z-index: 40;
+    }
+
+    .search-dim.is-active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .search-layer {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding-top: 110px;
+      pointer-events: none;
+      z-index: 50;
+    }
+
+    .search-layer.is-active {
+      pointer-events: none;
+    }
+
+    .search-box {
+      width: min(520px, 92vw);
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+      padding: 18px 18px 14px;
+      transform: translateY(-18px);
+      opacity: 0;
+      transition: transform 0.22s ease-out, opacity 0.22s ease-out;
+      pointer-events: auto;
+    }
+
+    .search-layer.is-active .search-box {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .search-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .search-input {
+      flex: 1;
+      height: 38px;
+      padding: 0 12px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      font-size: 13px;
+      outline: none;
+    }
+
+    .search-input:focus {
+      border-color: #111;
+    }
+
+    .search-close-btn {
+      background: none;
+      border: none;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 999px;
+    }
+
+    .search-close-btn svg {
+      width: 18px;
+      height: 18px;
+      stroke: #333;
+      stroke-width: 1.8;
+      fill: none;
+      stroke-linecap: round;
+    }
+
+    .search-close-btn:hover {
+      background-color: #f4f4f4;
+    }
+
+    .search-results {
+      margin-top: 6px;
+      padding: 10px 8px 6px;
+      border-radius: 6px;
+      background-color: #fafafa;
+    }
+
+    .search-help {
+      font-size: 12px;
+      color: #888;
+    }
+
+    .search-no-result {
+      display: none;
+      margin-top: 6px;
+      font-size: 13px;
+      color: #777;
     }
 
     /* ---------- 회원가입 카드 ---------- */
@@ -222,6 +344,98 @@
       font-weight: 500;
       border-bottom: 1px solid #666;
     }
+
+    /* ---------- FOOTER (공통) ---------- */
+    .site-footer {
+      background-color: #000;
+      color: #fff;
+      padding: 40px 0 20px;
+      margin-top: 40px;
+      font-size: 14px;
+    }
+
+    .site-footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .footer-columns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 60px;
+      margin-bottom: 30px;
+      justify-content: space-between;
+    }
+
+    .footer-col-title {
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .footer-col li + li {
+      margin-top: 6px;
+    }
+
+    .footer-col a {
+      color: #ddd;
+      font-size: 13px;
+    }
+
+    .footer-col a:hover {
+      color: #fff;
+    }
+
+    .footer-desc {
+      font-size: 13px;
+      color: #ccc;
+      line-height: 1.6;
+    }
+
+    .footer-sns {
+      display: flex;
+      gap: 16px;
+      margin-top: 8px;
+      font-size: 18px;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid #333;
+      padding-top: 15px;
+      font-size: 12px;
+      color: #aaa;
+      text-align: left;
+    }
+
+    @media (max-width: 768px) {
+      .gnb {
+        padding: 0 16px;
+      }
+
+      .gnb-menu {
+        display: none;
+      }
+
+      .search-box {
+        width: calc(100% - 32px);
+      }
+
+      .signup-card {
+        width: 100%;
+        margin: 0 16px;
+        padding: 32px 24px 24px;
+      }
+
+      .footer-columns {
+        flex-direction: column;
+        gap: 24px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -245,15 +459,20 @@
 
       <div class="gnb-icons">
         <!-- 검색 -->
-        <button class="icon-button" aria-label="검색">
+        <button class="icon-button" aria-label="검색" id="searchOpenBtn">
           <svg viewBox="0 0 24 24">
             <circle cx="11" cy="11" r="6.3"></circle>
             <line x1="15.4" y1="15.4" x2="20" y2="20"></line>
           </svg>
         </button>
 
-        <!-- 로그인 -->
-        <a href="login.html" class="icon-button" aria-label="로그인 / 마이페이지">
+        <!-- 로그인 / 마이페이지 (동적 이동용 id 추가) -->
+        <a
+          href="login.html"
+          class="icon-button"
+          aria-label="로그인 / 마이페이지"
+          id="userIconLink"
+        >
           <svg viewBox="0 0 24 24">
             <circle cx="12" cy="9" r="3.1"></circle>
             <path d="M6.5 19c.8-2.6 2.8-4.3 5.5-4.3s4.7 1.7 5.5 4.3"></path>
@@ -270,7 +489,12 @@
         </a>
 
         <!-- 관리자 전용 플러스 -->
-        <button class="icon-button admin-add" style="display:none;" onclick="window.location.href='admin.html'">
+        <button
+          class="icon-button admin-add"
+          style="display:none;"
+          onclick="window.location.href='admin.html'"
+          aria-label="관리자 대시보드"
+        >
           <svg viewBox="0 0 24 24">
             <circle cx="12" cy="12" r="7.5"></circle>
             <line x1="12" y1="9" x2="12" y2="15"></line>
@@ -280,6 +504,35 @@
       </div>
     </nav>
   </header>
+
+  <!-- 검색 오버레이 -->
+  <div class="search-dim" id="searchDim"></div>
+  <div class="search-layer" id="searchLayer">
+    <div class="search-box" role="dialog" aria-modal="true">
+      <div class="search-header">
+        <input
+          type="text"
+          id="searchInput"
+          class="search-input"
+          placeholder="원하는 상품, 게시글을 검색해보세요."
+        />
+        <button class="search-close-btn" id="searchCloseBtn" aria-label="검색 닫기">
+          <svg viewBox="0 0 24 24">
+            <line x1="8" y1="8" x2="16" y2="16"></line>
+            <line x1="16" y1="8" x2="8" y2="16"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="search-results">
+        <p class="search-help" id="searchHelp">
+          검색어를 입력하면 결과를 보여드릴게요.
+        </p>
+        <p class="search-no-result" id="searchNoResult">
+          검색 결과가 없습니다.
+        </p>
+      </div>
+    </div>
+  </div>
 
   <!-- 회원가입 카드 -->
   <main class="signup-wrapper">
@@ -368,140 +621,263 @@
     </section>
   </main>
 
-  <!-- 회원가입 기능 -->
+  <!-- 공통 푸터 -->
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <div class="footer-columns">
+        <div class="footer-col">
+          <div class="footer-col-title">FON</div>
+          <div class="footer-desc">
+            트렌디한 패션을 제안하는<br />
+            온라인 셀렉트샵
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-col-title">고객센터</div>
+          <ul>
+            <li><a href="notice.html">공지사항</a></li>
+            <li><a href="#">자주묻는질문</a></li>
+            <li><a href="#">1:1 문의</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-col-title">정보</div>
+          <ul>
+            <li><a href="#">회사 소개</a></li>
+            <li><a href="#">이용약관</a></li>
+            <li><a href="#">개인정보처리방침</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-col-title">소셜 미디어</div>
+          <div class="footer-sns">
+            <a href="#">📷</a>
+            <a href="#">📘</a>
+            <a href="#">▶️</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        © 2024 FON. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <!-- 회원가입 기능 + GNB 공통 기능 -->
   <script>
-    const usedIds = ["fon123", "admin"];
-
-    const userIdInput = document.getElementById("userId");
-    const idError = document.getElementById("idError");
-    const idSuccess = document.getElementById("idSuccess");
-
-    const nameInput = document.getElementById("name");
-    const phoneInput = document.getElementById("phone");
-    const emailInput = document.getElementById("email");
-
-    const nameError = document.getElementById("nameError");
-    const phoneError = document.getElementById("phoneError");
-    const emailError = document.getElementById("emailError");
-
-    const pwInput = document.getElementById("password");
-    const pwConfirmInput = document.getElementById("passwordConfirm");
-    const pwError = document.getElementById("pwError");
-    const pwConfirmError = document.getElementById("pwConfirmError");
-
-    const checkIdBtn = document.getElementById("checkIdBtn");
-    const signupBtn = document.getElementById("signupBtn");
-
-    // 아이디 중복확인
-    checkIdBtn.addEventListener("click", () => {
-      const id = userIdInput.value.trim();
-
-      idError.style.display = "none";
-      idSuccess.style.display = "none";
-
-      if (!id) {
-        idError.textContent = "아이디를 입력해주세요.";
-        idError.style.display = "block";
-        return;
+    document.addEventListener('DOMContentLoaded', function () {
+      /* ---- 로그인 상태에 따른 사람 아이콘 링크 전환 ---- */
+      const userLink = document.getElementById('userIconLink');
+      if (userLink) {
+        const isLoggedIn = localStorage.getItem('fonLoggedIn') === 'true';
+        userLink.href = isLoggedIn ? 'mypage.html' : 'login.html';
       }
 
-      if (usedIds.includes(id)) {
-        idError.textContent = "이미 사용 중인 아이디입니다.";
-        idError.style.display = "block";
-      } else {
-        idSuccess.style.display = "block";
-      }
-    });
-
-    function validatePassword() {
-      const pw = pwInput.value.trim();
-
-      if (!pw) {
-        pwError.textContent = "비밀번호를 입력해주세요.";
-        pwError.style.display = "block";
-        return false;
+      /* ---- 관리자 플러스 아이콘 표시 ---- */
+      if (localStorage.getItem('isAdmin') === 'true') {
+        document
+          .querySelectorAll('.admin-add')
+          .forEach((el) => (el.style.display = 'flex'));
       }
 
-      if (pw.length < 6) {
-        pwError.textContent = "비밀번호는 6자 이상 입력해주세요.";
-        pwError.style.display = "block";
-        return false;
+      /* ---- 검색 오버레이 ---- */
+      const openBtn = document.getElementById('searchOpenBtn');
+      const dim = document.getElementById('searchDim');
+      const layer = document.getElementById('searchLayer');
+      const input = document.getElementById('searchInput');
+      const closeBtn = document.getElementById('searchCloseBtn');
+      const noResult = document.getElementById('searchNoResult');
+      const helpText = document.getElementById('searchHelp');
+
+      function openSearch() {
+        if (!dim || !layer) return;
+        dim.classList.add('is-active');
+        layer.classList.add('is-active');
+        if (input) {
+          input.value = '';
+        }
+        if (noResult) noResult.style.display = 'none';
+        if (helpText) helpText.style.display = 'block';
+        setTimeout(() => {
+          if (input) input.focus();
+        }, 10);
       }
 
-      pwError.style.display = "none";
-      return true;
-    }
-
-    function validatePasswordConfirm() {
-      const pw = pwInput.value.trim();
-      const pw2 = pwConfirmInput.value.trim();
-
-      if (!pw2) {
-        pwConfirmError.textContent = "비밀번호 확인을 입력해주세요.";
-        pwConfirmError.style.display = "block";
-        return false;
+      function closeSearch() {
+        if (!dim || !layer) return;
+        dim.classList.remove('is-active');
+        layer.classList.remove('is-active');
       }
 
-      if (pw !== pw2) {
-        pwConfirmError.textContent = "비밀번호가 일치하지 않습니다.";
-        pwConfirmError.style.display = "block";
-        return false;
+      if (openBtn) {
+        openBtn.addEventListener('click', openSearch);
       }
 
-      pwConfirmError.style.display = "none";
-      return true;
-    }
-
-    pwInput.addEventListener("input", validatePassword);
-    pwConfirmInput.addEventListener("input", validatePasswordConfirm);
-
-    signupBtn.addEventListener("click", () => {
-      const id = userIdInput.value.trim();
-      const name = nameInput.value.trim();
-      const phone = phoneInput.value.trim();
-      const email = emailInput.value.trim();
-
-      // 일단 전부 숨기기
-      idError.style.display = "none";
-      nameError.style.display = "none";
-      phoneError.style.display = "none";
-      emailError.style.display = "none";
-
-      let ok = true;
-
-      if (!id) {
-        idError.textContent = "아이디를 입력해주세요.";
-        idError.style.display = "block";
-        ok = false;
+      if (closeBtn) {
+        closeBtn.addEventListener('click', closeSearch);
       }
 
-      if (!name) {
-        nameError.style.display = "block";
-        ok = false;
+      if (dim) {
+        dim.addEventListener('click', closeSearch);
       }
 
-      if (!phone) {
-        phoneError.style.display = "block";
-        ok = false;
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+          closeSearch();
+        }
+      });
+
+      if (input && noResult) {
+        input.addEventListener('input', function (e) {
+          const value = e.target.value.trim();
+          if (!value) {
+            noResult.style.display = 'none';
+            if (helpText) helpText.style.display = 'block';
+            return;
+          }
+          if (helpText) helpText.style.display = 'none';
+          noResult.style.display = 'block';
+        });
       }
 
-      if (!email) {
-        emailError.style.display = "block";
-        ok = false;
+      /* ---- 회원가입 로직 ---- */
+      const usedIds = ["fon123", "admin"];
+
+      const userIdInput = document.getElementById("userId");
+      const idError = document.getElementById("idError");
+      const idSuccess = document.getElementById("idSuccess");
+
+      const nameInput = document.getElementById("name");
+      const phoneInput = document.getElementById("phone");
+      const emailInput = document.getElementById("email");
+
+      const nameError = document.getElementById("nameError");
+      const phoneError = document.getElementById("phoneError");
+      const emailError = document.getElementById("emailError");
+
+      const pwInput = document.getElementById("password");
+      const pwConfirmInput = document.getElementById("passwordConfirm");
+      const pwError = document.getElementById("pwError");
+      const pwConfirmError = document.getElementById("pwConfirmError");
+
+      const checkIdBtn = document.getElementById("checkIdBtn");
+      const signupBtn = document.getElementById("signupBtn");
+
+      // 아이디 중복확인
+      checkIdBtn.addEventListener("click", () => {
+        const id = userIdInput.value.trim();
+
+        idError.style.display = "none";
+        idSuccess.style.display = "none";
+
+        if (!id) {
+          idError.textContent = "아이디를 입력해주세요.";
+          idError.style.display = "block";
+          return;
+        }
+
+        if (usedIds.includes(id)) {
+          idError.textContent = "이미 사용 중인 아이디입니다.";
+          idError.style.display = "block";
+        } else {
+          idSuccess.style.display = "block";
+        }
+      });
+
+      function validatePassword() {
+        const pw = pwInput.value.trim();
+
+        if (!pw) {
+          pwError.textContent = "비밀번호를 입력해주세요.";
+          pwError.style.display = "block";
+          return false;
+        }
+
+        if (pw.length < 6) {
+          pwError.textContent = "비밀번호는 6자 이상 입력해주세요.";
+          pwError.style.display = "block";
+          return false;
+        }
+
+        pwError.style.display = "none";
+        return true;
       }
 
-      if (!validatePassword()) ok = false;
-      if (!validatePasswordConfirm()) ok = false;
+      function validatePasswordConfirm() {
+        const pw = pwInput.value.trim();
+        const pw2 = pwConfirmInput.value.trim();
 
-      if (!ok) return;
+        if (!pw2) {
+          pwConfirmError.textContent = "비밀번호 확인을 입력해주세요.";
+          pwConfirmError.style.display = "block";
+          return false;
+        }
 
-      const pw = pwInput.value;
+        if (pw !== pw2) {
+          pwConfirmError.textContent = "비밀번호가 일치하지 않습니다.";
+          pwConfirmError.style.display = "block";
+          return false;
+        }
 
-      localStorage.setItem("fonUserId", id);
-      localStorage.setItem("fonUserPw", pw);
+        pwConfirmError.style.display = "none";
+        return true;
+      }
 
-      alert("회원가입이 완료되었습니다.\n로그인 페이지로 이동합니다.");
-      window.location.href = "login.html";
+      pwInput.addEventListener("input", validatePassword);
+      pwConfirmInput.addEventListener("input", validatePasswordConfirm);
+
+      signupBtn.addEventListener("click", () => {
+        const id = userIdInput.value.trim();
+        const name = nameInput.value.trim();
+        const phone = phoneInput.value.trim();
+        const email = emailInput.value.trim();
+
+        // 일단 전부 숨기기
+        idError.style.display = "none";
+        nameError.style.display = "none";
+        phoneError.style.display = "none";
+        emailError.style.display = "none";
+
+        let ok = true;
+
+        if (!id) {
+          idError.textContent = "아이디를 입력해주세요.";
+          idError.style.display = "block";
+          ok = false;
+        }
+
+        if (!name) {
+          nameError.style.display = "block";
+          ok = false;
+        }
+
+        if (!phone) {
+          phoneError.style.display = "block";
+          ok = false;
+        }
+
+        if (!email) {
+          emailError.style.display = "block";
+          ok = false;
+        }
+
+        if (!validatePassword()) ok = false;
+        if (!validatePasswordConfirm()) ok = false;
+
+        if (!ok) return;
+
+        const pw = pwInput.value;
+
+        localStorage.setItem("fonUserId", id);
+        localStorage.setItem("fonUserPw", pw);
+
+        alert("회원가입이 완료되었습니다.\n로그인 페이지로 이동합니다.");
+        window.location.href = "login.html";
+      });
     });
   </script>
 </body>

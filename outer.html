@@ -413,8 +413,13 @@
           </svg>
         </button>
 
-        <!-- 로그인 / 마이페이지 -->
-        <a href="login.html" class="icon-button" aria-label="로그인 / 마이페이지">
+        <!-- 로그인 / 마이페이지 (동적 이동용 id 추가) -->
+        <a
+          href="login.html"
+          class="icon-button"
+          aria-label="로그인 / 마이페이지"
+          id="userIconLink"
+        >
           <svg viewBox="0 0 24 24">
             <circle cx="12" cy="9" r="3.1"></circle>
             <path d="M6.5 19c.8-2.6 2.8-4.3 5.5-4.3s4.7 1.7 5.5 4.3"></path>
@@ -520,7 +525,7 @@
         <div class="footer-col">
           <div class="footer-col-title">고객센터</div>
           <ul>
-            <li><a href="#">공지사항</a></li>
+            <li><a href="notice.html">공지사항</a></li>
             <li><a href="#">자주묻는질문</a></li>
             <li><a href="#">1:1 문의</a></li>
           </ul>
@@ -551,9 +556,16 @@
     </div>
   </footer>
 
-  <!-- 관리자 플러스 아이콘 + 검색 기능 -->
+  <!-- 관리자 플러스 아이콘 + 로그인 아이콘 전환 + 검색 기능 -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
+      // 0) 로그인 상태에 따른 사람 아이콘 링크 변경
+      const userLink = document.getElementById('userIconLink');
+      if (userLink) {
+        const isLoggedIn = localStorage.getItem('fonLoggedIn') === 'true';
+        userLink.href = isLoggedIn ? 'mypage.html' : 'login.html';
+      }
+
       // 관리자 플러스 아이콘 표시
       if (localStorage.getItem('isAdmin') === 'true') {
         document

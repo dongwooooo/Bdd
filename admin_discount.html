@@ -459,7 +459,7 @@
         </button>
 
         <!-- 로그인/마이페이지 -->
-        <a href="login.html" class="icon-button" aria-label="로그인 / 마이페이지">
+        <a href="login.html" class="icon-button" aria-label="로그인 / 마이페이지" id="userIconLink">
           <svg viewBox="0 0 24 24">
             <circle cx="12" cy="9" r="3.1"></circle>
             <path d="M6.5 19c.8-2.6 2.8-4.3 5.5-4.3s4.7 1.7 5.5 4.3"></path>
@@ -584,7 +584,7 @@
         <div class="footer-col">
           <div class="footer-col-title">고객센터</div>
           <ul>
-            <li><a href="#">공지사항</a></li>
+            <li><a href="notice.html">공지사항</a></li>
             <li><a href="#">자주묻는질문</a></li>
             <li><a href="#">1:1 문의</a></li>
           </ul>
@@ -615,7 +615,7 @@
     </div>
   </footer>
 
-  <!-- 관리자 플래그 + 검색 오버레이 스크립트 -->
+  <!-- 관리자 플래그 + 검색 오버레이 + 사람아이콘 스크립트 -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       // 1) 관리자 플러스 아이콘 표시
@@ -625,7 +625,14 @@
           .forEach((el) => (el.style.display = 'flex'));
       }
 
-      // 2) 검색 레이어 공통 동작
+      // 2) 로그인 상태에 따라 사람 아이콘 목적지 변경 ⭐
+      const userLink = document.getElementById('userIconLink');
+      if (userLink) {
+        const isLoggedIn = localStorage.getItem('fonLoggedIn') === 'true';
+        userLink.href = isLoggedIn ? 'mypage.html' : 'login.html';
+      }
+
+      // 3) 검색 레이어 공통 동작
       const openBtn = document.getElementById('searchOpenBtn');
       const dim = document.getElementById('searchDim');
       const layer = document.getElementById('searchLayer');

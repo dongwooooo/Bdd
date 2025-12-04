@@ -4,6 +4,14 @@
   <meta charset="UTF-8" />
   <title>FON - 마이페이지</title>
 
+  <!-- 폰트 (메인과 통일) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap"
+    rel="stylesheet"
+  />
+
   <style>
     * {
       margin: 0;
@@ -23,7 +31,7 @@
       color: inherit;
     }
 
-    /* ---------- 상단 네비 (다른 페이지와 동일) ---------- */
+    /* ---------- 상단 네비 (메인과 동일) ---------- */
     .gnb-wrapper {
       width: 100%;
       background-color: #000;
@@ -110,7 +118,7 @@
       color: #6b7280;
     }
 
-    /* ---------- 메인 콘텐츠 레이아웃 ---------- */
+    /* ---------- 메인 레이아웃 ---------- */
     .mypage-container {
       max-width: 1200px;
       margin: 0 auto 40px;
@@ -118,6 +126,7 @@
       display: grid;
       grid-template-columns: 1.1fr 1.4fr;
       gap: 24px;
+      align-items: flex-start;
     }
 
     .card {
@@ -127,12 +136,12 @@
       padding: 20px 24px;
     }
 
-    /* 왼쪽: 프로필 카드 */
+    /* 프로필 카드 */
     .profile-card {
       display: flex;
       flex-direction: column;
       gap: 18px;
-      height: 100%;
+      height: 160px; /* 주문내역 카드와 비슷한 높이 */
     }
 
     .profile-main {
@@ -176,17 +185,28 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
+      margin-top: auto;
     }
 
     .logout-btn:hover {
       background-color: #f3f4f6;
     }
 
-    /* 오른쪽 상단: 주문 내역 카드 */
+    /* 오른쪽: 주문/찜/활동 세로 정렬 */
+    .mypage-right {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
     .section-title {
       font-size: 14px;
       font-weight: 600;
       margin-bottom: 14px;
+    }
+
+    .order-card {
+      height: 160px;
     }
 
     .order-empty,
@@ -216,14 +236,12 @@
       color: #6b7280;
     }
 
-    /* 오른쪽 중간: 찜한 상품 카드 */
     .small-muted {
       font-size: 12px;
       color: #9ca3af;
       margin-left: 2px;
     }
 
-    /* 아래: 나의 활동 카드 */
     .activity-row {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -250,9 +268,90 @@
       font-weight: 600;
     }
 
+    /* ---------- FOOTER (메인과 동일) ---------- */
+    .site-footer {
+      background-color: #000;
+      color: #fff;
+      padding: 40px 0 20px;
+      margin-top: 40px;
+      font-size: 14px;
+    }
+
+    .site-footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .footer-columns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 60px;
+      margin-bottom: 30px;
+      justify-content: space-between;
+    }
+
+    .footer-col-title {
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .footer-col li + li {
+      margin-top: 6px;
+    }
+
+    .footer-col a {
+      color: #ddd;
+      font-size: 13px;
+    }
+
+    .footer-col a:hover {
+      color: #fff;
+    }
+
+    .footer-desc {
+      font-size: 13px;
+      color: #ccc;
+      line-height: 1.6;
+    }
+
+    .footer-sns {
+      display: flex;
+      gap: 16px;
+      margin-top: 8px;
+      font-size: 18px;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid #333;
+      padding-top: 15px;
+      font-size: 12px;
+      color: #aaa;
+      text-align: left;
+    }
+
     @media (max-width: 900px) {
       .mypage-container {
         grid-template-columns: 1fr;
+      }
+
+      .profile-card,
+      .order-card {
+        height: auto;
+      }
+
+      .site-footer {
+        margin-top: 20px;
+      }
+
+      .footer-columns {
+        flex-direction: column;
+        gap: 24px;
       }
     }
   </style>
@@ -277,7 +376,7 @@
       </div>
 
       <div class="gnb-icons">
-        <!-- 검색 (동작은 나중에 기존 페이지에서 쓰던 스크립트 복붙해도 됨) -->
+        <!-- 검색 아이콘 (마이페이지에선 아직 동작 X, 디자인만 맞춰둠) -->
         <button class="icon-button" aria-label="검색">
           <svg viewBox="0 0 24 24">
             <circle cx="11" cy="11" r="6.3"></circle>
@@ -285,7 +384,7 @@
           </svg>
         </button>
 
-        <!-- 로그인/마이페이지 아이콘 (지금 페이지) -->
+        <!-- 마이페이지 아이콘 (현재 페이지) -->
         <a href="mypage.html" class="icon-button" aria-label="마이페이지">
           <svg viewBox="0 0 24 24">
             <circle cx="12" cy="9" r="3.1"></circle>
@@ -302,7 +401,7 @@
           </svg>
         </a>
 
-        <!-- 관리자 전용 플러스 (관리자면 JS에서 보이게 할 수도 있음) -->
+        <!-- 관리자 전용 플러스 -->
         <button
           class="icon-button admin-add"
           aria-label="관리자 대시보드"
@@ -326,7 +425,7 @@
 
   <!-- 메인 콘텐츠 -->
   <main class="mypage-container">
-    <!-- 왼쪽: 프로필 + 로그아웃 -->
+    <!-- 왼쪽: 프로필 -->
     <section class="card profile-card">
       <div class="profile-main">
         <div class="avatar-circle">👤</div>
@@ -343,53 +442,102 @@
       </button>
     </section>
 
-    <!-- 오른쪽 상단: 주문 내역 -->
-    <section class="card">
-      <h2 class="section-title">주문 내역</h2>
-      <div class="order-empty">
-        <div class="order-empty-icon">📦</div>
-        <div>
-          <p class="empty-main-text">아직 주문 내역이 없습니다.</p>
-          <p class="empty-sub-text">FON에서 쇼핑을 시작해보세요!</p>
+    <!-- 오른쪽: 주문 / 찜 / 활동 -->
+    <div class="mypage-right">
+      <!-- 주문 내역 -->
+      <section class="card order-card">
+        <h2 class="section-title">주문 내역</h2>
+        <div class="order-empty">
+          <div class="order-empty-icon">📦</div>
+          <div>
+            <p class="empty-main-text">아직 주문 내역이 없습니다.</p>
+            <p class="empty-sub-text">FON에서 쇼핑을 시작해보세요!</p>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- 오른쪽 중간: 찜한 상품 -->
-    <section class="card">
-      <h2 class="section-title">
-        찜한 상품 <span class="small-muted">(0)</span>
-      </h2>
-      <div class="wish-empty">
-        <div class="wish-empty-icon">🤍</div>
-        <div>
-          <p class="empty-main-text">찜한 상품이 없습니다.</p>
-          <p class="empty-sub-text">
-            마음에 드는 상품을 찜해보세요!
-          </p>
+      <!-- 찜한 상품 -->
+      <section class="card wish-card">
+        <h2 class="section-title">
+          찜한 상품 <span class="small-muted">(0)</span>
+        </h2>
+        <div class="wish-empty">
+          <div class="wish-empty-icon">🤍</div>
+          <div>
+            <p class="empty-main-text">찜한 상품이 없습니다.</p>
+            <p class="empty-sub-text">
+              마음에 드는 상품을 찜해보세요!
+            </p>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- 아래: 나의 활동 -->
-    <section class="card">
-      <h2 class="section-title">나의 활동</h2>
-      <div class="activity-row">
-        <div class="activity-item">
-          <p class="activity-label">총 주문</p>
-          <p class="activity-value">0건</p>
+      <!-- 나의 활동 -->
+      <section class="card activity-card">
+        <h2 class="section-title">나의 활동</h2>
+        <div class="activity-row">
+          <div class="activity-item">
+            <p class="activity-label">총 주문</p>
+            <p class="activity-value">0건</p>
+          </div>
+          <div class="activity-item">
+            <p class="activity-label">찜한 상품</p>
+            <p class="activity-value">0개</p>
+          </div>
+          <div class="activity-item">
+            <p class="activity-label">작성한 리뷰</p>
+            <p class="activity-value">0개</p>
+          </div>
         </div>
-        <div class="activity-item">
-          <p class="activity-label">찜한 상품</p>
-          <p class="activity-value">0개</p>
-        </div>
-        <div class="activity-item">
-          <p class="activity-label">작성한 리뷰</p>
-          <p class="activity-value">0개</p>
-        </div>
-      </div>
-    </section>
+      </section>
+    </div>
   </main>
+
+  <!-- 공통 푸터 (메인에서 가져옴, 공지사항만 notice.html로) -->
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <div class="footer-columns">
+        <div class="footer-col">
+          <div class="footer-col-title">FON</div>
+          <div class="footer-desc">
+            트렌디한 패션을 제안하는<br />
+            온라인 셀렉트샵
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-col-title">고객센터</div>
+          <ul>
+            <li><a href="notice.html">공지사항</a></li>
+            <li><a href="#">자주묻는질문</a></li>
+            <li><a href="#">1:1 문의</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-col-title">정보</div>
+          <ul>
+            <li><a href="#">회사 소개</a></li>
+            <li><a href="#">이용약관</a></li>
+            <li><a href="#">개인정보처리방침</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-col-title">소셜 미디어</div>
+          <div class="footer-sns">
+            <a href="#">📷</a>
+            <a href="#">📘</a>
+            <a href="#">▶️</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        © 2024 FON. All rights reserved.
+      </div>
+    </div>
+  </footer>
 
   <script>
     // ----- 로그인 정보 표시 -----
@@ -398,10 +546,8 @@
       const profileId = document.getElementById('profileId');
       const profileEmail = document.getElementById('profileEmail');
 
-      // signup.html에서 저장된 정보 (연습용)
       const savedId = localStorage.getItem('fonUserId');
-      const savedEmail = localStorage.getItem('fonUserEmail'); // 아직 안 쓰고 있으면 null
-
+      const savedEmail = localStorage.getItem('fonUserEmail');
       const isAdmin = localStorage.getItem('isAdmin') === 'true';
 
       let displayName = '회원';
@@ -410,7 +556,6 @@
       if (isAdmin) {
         displayName = 'admin';
         emailText = '관리자 계정입니다.';
-        // 관리자 플러스 아이콘 보이기
         document
           .querySelectorAll('.admin-add')
           .forEach((el) => (el.style.display = 'flex'));
@@ -428,9 +573,8 @@
 
     // ----- 로그아웃 버튼 -----
     document.getElementById('logoutBtn').addEventListener('click', function () {
-      // "로그인 상태"와 관련된 것만 정리
       localStorage.removeItem('isAdmin');
-      // 필요하면 나중에 'fonLoggedIn' 같은 플래그를 추가해서 여기서 같이 삭제 가능
+      localStorage.removeItem('fonLoggedIn'); // 로그인 상태 해제
 
       alert('로그아웃 되었습니다.');
       window.location.href = 'main.html';
