@@ -345,14 +345,116 @@
       background-color: #fff;
       border-radius: 10px;
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.04);
-      padding: 40px 24px;
-      min-height: 220px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      padding: 24px 24px 30px;
+    }
+
+    .discount-empty {
+      padding: 40px 0;
+      text-align: center;
       color: #777;
       font-size: 14px;
     }
+
+    .discount-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .discount-card {
+      border-radius: 12px;
+      border: 1px solid #e5e7f5;
+      overflow: hidden;
+      background-color: #fff;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .discount-card-image-wrap {
+      position: relative;
+      width: 100%;
+      padding-top: 115%;
+      overflow: hidden;
+    }
+
+    .discount-card-image-wrap img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .badge-sale {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background-color: #ff3b3b;
+      color: #fff;
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-weight: 600;
+    }
+
+    .discount-card-body {
+      padding: 12px 14px 10px;
+      font-size: 14px;
+    }
+
+    .discount-name {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .discount-price {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .discount-category {
+      font-size: 13px;
+      color: #777;
+      margin-bottom: 2px;
+    }
+
+    .discount-sales {
+      font-size: 12px;
+      color: #3366cc;
+      margin-bottom: 6px;
+    }
+
+    .discount-card-footer {
+      display: flex;
+      gap: 8px;
+      padding: 10px 14px 12px;
+    }
+
+    .btn-edit,
+    .btn-delete {
+      flex: 1;
+      border-radius: 6px;
+      padding: 7px 0;
+      font-size: 13px;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .btn-edit {
+      background-color: #2979ff;
+      color: #fff;
+    }
+
+    .btn-delete {
+      background-color: #ff3b3b;
+      color: #fff;
+    }
+
+    .btn-edit:hover { background-color: #1e63d9; }
+    .btn-delete:hover { background-color: #e33636; }
 
     /* ---------- FOOTER (공통) ---------- */
     .site-footer {
@@ -450,7 +552,7 @@
       </div>
 
       <div class="gnb-icons">
-        <!-- 검색 (아이디 추가) -->
+        <!-- 검색 -->
         <button class="icon-button" aria-label="검색" id="searchOpenBtn">
           <svg viewBox="0 0 24 24">
             <circle cx="11" cy="11" r="6.3"></circle>
@@ -480,8 +582,7 @@
           class="icon-button admin-add"
           aria-label="관리자 대시보드"
           style="display: none"
-          onclick="window.location.href='admin.html'"
-        >
+          onclick="window.location.href='admin.html'">
           <svg viewBox="0 0 24 24">
             <circle cx="12" cy="12" r="7.5"></circle>
             <line x1="12" y1="9" x2="12" y2="15"></line>
@@ -501,8 +602,7 @@
           type="text"
           id="searchInput"
           class="search-input"
-          placeholder="원하는 상품, 게시글을 검색해보세요."
-        />
+          placeholder="원하는 상품, 게시글을 검색해보세요." />
         <button class="search-close-btn" id="searchCloseBtn" aria-label="검색 닫기">
           <svg viewBox="0 0 24 24">
             <line x1="8" y1="8" x2="16" y2="16"></line>
@@ -563,7 +663,8 @@
         </div>
 
         <div class="discount-list-card">
-          등록된 할인 상품이 없습니다.
+          <div class="discount-empty">등록된 할인 상품이 없습니다.</div>
+          <div class="discount-grid" id="discountGrid"></div>
         </div>
       </section>
     </div>
@@ -615,8 +716,25 @@
     </div>
   </footer>
 
-  <!-- 관리자 플래그 + 검색 오버레이 + 사람아이콘 스크립트 -->
+  <!-- 관리자 플래그 + 검색 오버레이 + 사람아이콘 + 할인상품 렌더링 -->
   <script>
+    // 할인 상품 로드/저장
+    function loadDiscountProducts() {
+      const raw = localStorage.getItem('fonDiscountProducts');
+      if (!raw) return [];
+      try {
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (e) {
+        console.error(e);
+        return [];
+      }
+    }
+
+    function saveDiscountProducts(list) {
+      localStorage.setItem('fonDiscountProducts', JSON.stringify(list));
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
       // 1) 관리자 플러스 아이콘 표시
       if (localStorage.getItem('isAdmin') === 'true') {
@@ -625,7 +743,7 @@
           .forEach((el) => (el.style.display = 'flex'));
       }
 
-      // 2) 로그인 상태에 따라 사람 아이콘 목적지 변경 ⭐
+      // 2) 로그인 상태에 따라 사람 아이콘 목적지 변경
       const userLink = document.getElementById('userIconLink');
       if (userLink) {
         const isLoggedIn = localStorage.getItem('fonLoggedIn') === 'true';
@@ -645,14 +763,10 @@
         if (!dim || !layer) return;
         dim.classList.add('is-active');
         layer.classList.add('is-active');
-        if (input) {
-          input.value = '';
-        }
+        if (input) input.value = '';
         if (noResult) noResult.style.display = 'none';
         if (helpText) helpText.style.display = 'block';
-        setTimeout(() => {
-          if (input) input.focus();
-        }, 10);
+        setTimeout(() => { if (input) input.focus(); }, 10);
       }
 
       function closeSearch() {
@@ -661,26 +775,14 @@
         layer.classList.remove('is-active');
       }
 
-      if (openBtn) {
-        openBtn.addEventListener('click', openSearch);
-      }
+      if (openBtn) openBtn.addEventListener('click', openSearch);
+      if (closeBtn) closeBtn.addEventListener('click', closeSearch);
+      if (dim) dim.addEventListener('click', closeSearch);
 
-      if (closeBtn) {
-        closeBtn.addEventListener('click', closeSearch);
-      }
-
-      if (dim) {
-        dim.addEventListener('click', closeSearch);
-      }
-
-      // ESC 키로 닫기
       document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') {
-          closeSearch();
-        }
+        if (e.key === 'Escape') closeSearch();
       });
 
-      // 입력값 있을 때만 "검색 결과가 없습니다" 표시
       if (input && noResult) {
         input.addEventListener('input', function (e) {
           const value = e.target.value.trim();
@@ -693,6 +795,99 @@
           noResult.style.display = 'block';
         });
       }
+
+      // 4) 할인 상품 등록 버튼 -> 할인 상품 등록 페이지로 이동
+      const addBtn = document.querySelector('.btn-discount-add');
+      if (addBtn) {
+        addBtn.addEventListener('click', function () {
+          window.location.href = 'admin_discount_form.html';
+        });
+      }
+
+      // 5) 할인 상품 리스트 렌더링
+      const grid = document.getElementById('discountGrid');
+      const emptyEl = document.querySelector('.discount-empty');
+
+      function renderDiscounts() {
+        const list = loadDiscountProducts();
+
+        if (!grid) return;
+
+        if (!list.length) {
+          grid.innerHTML = '';
+          if (emptyEl) emptyEl.style.display = 'block';
+          return;
+        }
+
+        if (emptyEl) emptyEl.style.display = 'none';
+
+        grid.innerHTML = list
+          .map((p) => {
+            const priceText = Number(p.price || 0).toLocaleString('ko-KR') + '원';
+            const salesText = `판매 수량: ${p.salesCount || 0}개`;
+            const categoryText =
+              p.category === 'outer'
+                ? '아우터'
+                : p.category === 'top'
+                ? '상의'
+                : p.category === 'bottom'
+                ? '하의'
+                : p.category === 'acc'
+                ? '악세서리'
+                : p.category || '';
+            const imgSrc =
+              (p.images && p.images.main1) ||
+              'https://images.pexels.com/photos/1304640/pexels-photo-1304640.jpeg?auto=compress&cs=tinysrgb&w=800';
+
+            return `
+              <article class="discount-card" data-id="${p.id}">
+                <div class="discount-card-image-wrap">
+                  <span class="badge-sale">SALE</span>
+                  <img src="${imgSrc}" alt="${p.name || ''}" />
+                </div>
+                <div class="discount-card-body">
+                  <div class="discount-name">${p.name || ''}</div>
+                  <div class="discount-price">${priceText}</div>
+                  <div class="discount-category">${categoryText}</div>
+                  <div class="discount-sales">${salesText}</div>
+                </div>
+                <div class="discount-card-footer">
+                  <button class="btn-edit" type="button">수정</button>
+                  <button class="btn-delete" type="button">삭제</button>
+                </div>
+              </article>
+            `;
+          })
+          .join('');
+
+        // 수정 버튼
+        grid.querySelectorAll('.btn-edit').forEach((btn) => {
+          btn.addEventListener('click', function () {
+            const card = this.closest('.discount-card');
+            const id = card && card.getAttribute('data-id');
+            if (!id) return;
+            window.location.href =
+              'admin_discount_form.html?id=' + encodeURIComponent(id);
+          });
+        });
+
+        // 삭제 버튼
+        grid.querySelectorAll('.btn-delete').forEach((btn) => {
+          btn.addEventListener('click', function () {
+            const card = this.closest('.discount-card');
+            const id = card && card.getAttribute('data-id');
+            if (!id) return;
+            if (!confirm('이 할인 상품을 삭제하시겠습니까?')) return;
+
+            const current = loadDiscountProducts();
+            const next = current.filter((p) => String(p.id) !== String(id));
+            saveDiscountProducts(next);
+            renderDiscounts();
+          });
+        });
+      }
+
+      renderDiscounts();
     });
   </script>
 </body>

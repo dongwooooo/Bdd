@@ -104,7 +104,7 @@
       opacity: 0.85;
     }
 
-    /* ---------- 검색 오버레이 & 검색 박스 (관리자 페이지와 동일) ---------- */
+    /* ---------- 검색 오버레이 & 검색 박스 ---------- */
     .search-dim {
       position: fixed;
       inset: 0;
@@ -305,7 +305,7 @@
       color: #111;
     }
 
-    /* 오른쪽 내용 영역 (상품 관리 전용) */
+    /* 오른쪽 내용 영역 */
     .admin-content {
       flex: 1;
       display: flex;
@@ -313,7 +313,7 @@
       gap: 20px;
     }
 
-    /* 상단 제목 + 버튼 라인 */
+    /* 상단 제목 + 버튼 */
     .product-header-row {
       display: flex;
       align-items: center;
@@ -397,18 +397,125 @@
       color: #888;
     }
 
-    /* 상품 리스트 박스 */
+    /* 상품 리스트 래퍼 */
     .product-list-card {
       background-color: #fff;
       border-radius: 10px;
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.04);
-      padding: 40px 24px;
-      min-height: 260px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      padding: 24px 24px 30px;
+    }
+
+    .product-empty {
+      padding: 40px 0;
+      text-align: center;
       color: #777;
       font-size: 14px;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .product-card {
+      border-radius: 12px;
+      border: 1px solid #e5e7f5;
+      overflow: hidden;
+      background-color: #fff;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .product-card-image-wrap {
+      position: relative;
+      width: 100%;
+      padding-top: 115%; /* 4:5 비율 정도 */
+      overflow: hidden;
+    }
+
+    .product-card-image-wrap img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .badge-new {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background-color: #ff3b3b;
+      color: #fff;
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-weight: 600;
+    }
+
+    .product-card-body {
+      padding: 12px 14px 10px;
+      font-size: 14px;
+    }
+
+    .product-name {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .product-price {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .product-category {
+      font-size: 13px;
+      color: #777;
+      margin-bottom: 2px;
+    }
+
+    .product-sales {
+      font-size: 12px;
+      color: #3366cc;
+      margin-bottom: 6px;
+    }
+
+    .product-card-footer {
+      display: flex;
+      gap: 8px;
+      padding: 10px 14px 12px;
+    }
+
+    .btn-edit,
+    .btn-delete {
+      flex: 1;
+      border-radius: 6px;
+      padding: 7px 0;
+      font-size: 13px;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .btn-edit {
+      background-color: #2979ff;
+      color: #fff;
+    }
+
+    .btn-delete {
+      background-color: #ff3b3b;
+      color: #fff;
+    }
+
+    .btn-edit:hover {
+      background-color: #1e63d9;
+    }
+
+    .btn-delete:hover {
+      background-color: #e33636;
     }
 
     /* ---------- FOOTER (공통) ---------- */
@@ -521,7 +628,7 @@
       </div>
 
       <div class="gnb-icons">
-        <!-- 검색 (아이디 추가) -->
+        <!-- 검색 -->
         <button class="icon-button" aria-label="검색" id="searchOpenBtn">
           <svg viewBox="0 0 24 24">
             <circle cx="11" cy="11" r="6.3"></circle>
@@ -551,7 +658,7 @@
           </svg>
         </a>
 
-        <!-- 관리자 전용 플러스 -->
+        <!-- 관리자 플러스 -->
         <button
           class="icon-button admin-add"
           aria-label="관리자 대시보드"
@@ -568,7 +675,7 @@
     </nav>
   </header>
 
-  <!-- 검색 오버레이 (관리자 페이지와 동일) -->
+  <!-- 검색 오버레이 -->
   <div class="search-dim" id="searchDim"></div>
   <div class="search-layer" id="searchLayer">
     <div class="search-box" role="dialog" aria-modal="true">
@@ -657,15 +764,16 @@
           </div>
         </div>
 
-        <!-- 상품 리스트 박스 -->
+        <!-- 상품 리스트 -->
         <div class="product-list-card">
-          등록된 상품이 없습니다.
+          <div class="product-empty">등록된 상품이 없습니다.</div>
+          <div class="product-grid" id="productGrid"></div>
         </div>
       </section>
     </div>
   </main>
 
-  <!-- 공통 푸터 -->
+  <!-- 푸터 -->
   <footer class="site-footer">
     <div class="site-footer-inner">
       <div class="footer-columns">
@@ -711,8 +819,25 @@
     </div>
   </footer>
 
-  <!-- 관리자 플래그 + 로그인 아이콘 + 검색 오버레이 스크립트 -->
+  <!-- 스크립트 -->
   <script>
+    // 공통: 상품 배열 로드/저장
+    function loadProducts() {
+      const raw = localStorage.getItem('fonProducts');
+      if (!raw) return [];
+      try {
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (e) {
+        console.error(e);
+        return [];
+      }
+    }
+
+    function saveProducts(list) {
+      localStorage.setItem('fonProducts', JSON.stringify(list));
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
       // 0) 로그인 상태에 따라 사람 아이콘 목적지 변경
       const userLink = document.getElementById('userIconLink');
@@ -757,26 +882,16 @@
         layer.classList.remove('is-active');
       }
 
-      if (openBtn) {
-        openBtn.addEventListener('click', openSearch);
-      }
+      if (openBtn) openBtn.addEventListener('click', openSearch);
+      if (closeBtn) closeBtn.addEventListener('click', closeSearch);
+      if (dim) dim.addEventListener('click', closeSearch);
 
-      if (closeBtn) {
-        closeBtn.addEventListener('click', closeSearch);
-      }
-
-      if (dim) {
-        dim.addEventListener('click', closeSearch);
-      }
-
-      // ESC 키로 닫기
       document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') {
           closeSearch();
         }
       });
 
-      // 입력값 있을 때만 "검색 결과가 없습니다" 표시
       if (input && noResult) {
         input.addEventListener('input', function (e) {
           const value = e.target.value.trim();
@@ -789,6 +904,130 @@
           noResult.style.display = 'block';
         });
       }
+
+      // 3) 상품 등록 버튼 → 상품 등록 페이지로 이동
+      const addBtn = document.querySelector('.btn-product-add');
+      if (addBtn) {
+        addBtn.addEventListener('click', function () {
+          window.location.href = 'admin_product_form.html';
+        });
+      }
+
+      // 4) 상품 리스트 렌더링
+      const grid = document.getElementById('productGrid');
+      const emptyEl = document.querySelector('.product-empty');
+      const countEl = document.querySelector('.filter-count');
+
+      function renderProducts(categoryLabel) {
+        const all = loadProducts();
+
+        let filtered = all;
+        if (categoryLabel && categoryLabel !== '전체') {
+          const map = {
+            '아우터': 'outer',
+            '상의': 'top',
+            '하의': 'bottom',
+            '악세서리': 'acc',
+          };
+          const code = map[categoryLabel] || categoryLabel;
+          filtered = all.filter((p) => p.category === code);
+        }
+
+        if (countEl) {
+          countEl.textContent = `${filtered.length}개 상품`;
+        }
+
+        if (!grid) return;
+
+        if (filtered.length === 0) {
+          grid.innerHTML = '';
+          if (emptyEl) emptyEl.style.display = 'block';
+          return;
+        }
+
+        if (emptyEl) emptyEl.style.display = 'none';
+
+        grid.innerHTML = filtered
+          .map((p) => {
+            const priceText = Number(p.price || 0).toLocaleString('ko-KR') + '원';
+            const salesText = `판매 수량: ${p.salesCount || 0}개`;
+            const categoryText =
+              p.category === 'outer'
+                ? '아우터'
+                : p.category === 'top'
+                ? '상의'
+                : p.category === 'bottom'
+                ? '하의'
+                : p.category === 'acc'
+                ? '악세서리'
+                : p.category || '';
+            const imgSrc =
+              (p.images && p.images.main1) ||
+              'https://images.pexels.com/photos/1304640/pexels-photo-1304640.jpeg?auto=compress&cs=tinysrgb&w=800';
+
+            return `
+            <article class="product-card" data-id="${p.id}">
+              <div class="product-card-image-wrap">
+                <span class="badge-new">NEW</span>
+                <img src="${imgSrc}" alt="${p.name || ''}" />
+              </div>
+              <div class="product-card-body">
+                <div class="product-name">${p.name || ''}</div>
+                <div class="product-price">${priceText}</div>
+                <div class="product-category">${categoryText}</div>
+                <div class="product-sales">${salesText}</div>
+              </div>
+              <div class="product-card-footer">
+                <button class="btn-edit" type="button">수정</button>
+                <button class="btn-delete" type="button">삭제</button>
+              </div>
+            </article>
+          `;
+          })
+          .join('');
+
+        // 수정/삭제 버튼 이벤트
+        grid.querySelectorAll('.btn-edit').forEach((btn) => {
+          btn.addEventListener('click', function () {
+            const card = this.closest('.product-card');
+            const id = card && card.getAttribute('data-id');
+            if (!id) return;
+            window.location.href =
+              'admin_product_form.html?id=' + encodeURIComponent(id);
+          });
+        });
+
+        grid.querySelectorAll('.btn-delete').forEach((btn) => {
+          btn.addEventListener('click', function () {
+            const card = this.closest('.product-card');
+            const id = card && card.getAttribute('data-id');
+            if (!id) return;
+            if (!confirm('이 상품을 삭제하시겠습니까?')) return;
+
+            const current = loadProducts();
+            const next = current.filter((p) => String(p.id) !== String(id));
+            saveProducts(next);
+            renderProducts(
+              document.querySelector('.filter-chip.active')?.textContent.trim() ||
+                '전체',
+            );
+          });
+        });
+      }
+
+      // 5) 카테고리 필터 버튼
+      const chips = document.querySelectorAll('.filter-chip');
+      chips.forEach((chip) => {
+        chip.addEventListener('click', () => {
+          chips.forEach((c) => c.classList.remove('active'));
+          chip.classList.add('active');
+          const label = chip.textContent.trim();
+          renderProducts(label || '전체');
+        });
+      });
+
+      // 최초 렌더링
+      renderProducts('전체');
     });
   </script>
 </body>
