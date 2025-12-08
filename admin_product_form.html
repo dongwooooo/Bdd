@@ -13,11 +13,7 @@
   />
 
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: 'Noto Sans KR', system-ui, -apple-system, BlinkMacSystemFont,
@@ -26,16 +22,10 @@
       color: #111;
     }
 
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
 
-    ul {
-      list-style: none;
-    }
-
-    /* ---------- 상단 네비게이션 (기존과 동일) ---------- */
+    /* ---------- 상단 네비게이션 ---------- */
     .gnb-wrapper {
       width: 100%;
       background-color: #000;
@@ -63,9 +53,7 @@
       font-size: 14px;
     }
 
-    .gnb-menu a {
-      color: #fff;
-    }
+    .gnb-menu a { color: #fff; }
 
     .gnb-menu a.sale {
       color: #ff3b3b;
@@ -100,9 +88,7 @@
       stroke-linejoin: round;
     }
 
-    .icon-button:hover svg {
-      opacity: 0.85;
-    }
+    .icon-button:hover svg { opacity: 0.85; }
 
     /* ---------- 검색 오버레이 ---------- */
     .search-dim {
@@ -170,9 +156,7 @@
       outline: none;
     }
 
-    .search-input:focus {
-      border-color: #111;
-    }
+    .search-input:focus { border-color: #111; }
 
     .search-close-btn {
       background: none;
@@ -195,9 +179,7 @@
       stroke-linecap: round;
     }
 
-    .search-close-btn:hover {
-      background-color: #f4f4f4;
-    }
+    .search-close-btn:hover { background-color: #f4f4f4; }
 
     .search-results {
       margin-top: 6px;
@@ -218,7 +200,7 @@
       color: #777;
     }
 
-    /* ---------- 본문 상단 텍스트 ---------- */
+    /* ---------- 본문 ---------- */
     .page-main {
       background-color: #f4f6fb;
       min-height: calc(100vh - 60px);
@@ -240,9 +222,7 @@
       gap: 4px;
     }
 
-    .page-breadcrumb a {
-      color: #bbb;
-    }
+    .page-breadcrumb a { color: #bbb; }
 
     .page-title {
       font-size: 22px;
@@ -336,9 +316,7 @@
       cursor: pointer;
     }
 
-    .btn-light:hover {
-      background-color: #eceffa;
-    }
+    .btn-light:hover { background-color: #eceffa; }
 
     .helper-text {
       font-size: 11px;
@@ -351,13 +329,11 @@
       margin-bottom: 10px;
     }
 
-    .multi-input-group .dynamic-list input + input {
-      margin-top: 6px;
-    }
-
     .dynamic-list {
       display: flex;
       flex-direction: column;
+      gap: 6px;
+      margin-bottom: 6px;
     }
 
     /* 상세 페이지 꾸미기 박스 */
@@ -366,18 +342,13 @@
       border-radius: 10px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
       padding: 20px 22px 18px;
-    }
-
-    .detail-builder-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
+      margin-top: 10px;
     }
 
     .detail-title {
-      font-size: 15px;
+      font-size: 16px;
       font-weight: 600;
+      margin-bottom: 6px;
     }
 
     .detail-desc {
@@ -388,36 +359,102 @@
 
     .detail-buttons {
       display: flex;
-      gap: 8px;
+      gap: 12px;
       margin-bottom: 10px;
     }
 
     .detail-btn {
+      flex: 1;
       border-radius: 999px;
       border: none;
-      padding: 7px 15px;
-      font-size: 13px;
+      padding: 12px 16px;
+      font-size: 14px;
       font-weight: 500;
       color: #fff;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
     }
 
-    .detail-btn.title {
-      background-color: #2979ff;
+    .detail-btn span.icon {
+      font-size: 16px;
     }
 
-    .detail-btn.text {
-      background-color: #07b255;
-    }
-
-    .detail-btn.image {
-      background-color: #a23af7;
-    }
+    .detail-btn.title { background-color: #2979ff; }
+    .detail-btn.text { background-color: #07b255; }
+    .detail-btn.image { background-color: #a23af7; }
 
     .detail-tip {
       font-size: 11px;
       color: #999;
-      margin-top: 4px;
+      margin-top: 6px;
+    }
+
+    /* 블록 카드 */
+    .detail-blocks {
+      margin-top: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .detail-block {
+      border-radius: 8px;
+      border: 1px solid #e3e5f0;
+      background-color: #fafbff;
+      padding: 10px 12px 12px;
+      position: relative;
+    }
+
+    .detail-block-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .detail-block-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .detail-block-label span.badge {
+      font-size: 13px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background-color: #edf0ff;
+      color: #334155;
+    }
+
+    .detail-block-remove {
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-size: 16px;
+      color: #999;
+    }
+
+    .detail-block-remove:hover { color: #666; }
+
+    .detail-block textarea,
+    .detail-block input[type="text"] {
+      width: 100%;
+      border-radius: 6px;
+      border: 1px solid #e0e3ee;
+      padding: 7px 9px;
+      font-size: 13px;
+      resize: vertical;
+    }
+
+    .detail-block textarea:focus,
+    .detail-block input[type="text"]:focus {
+      border-color: #000;
+      outline: none;
     }
 
     /* 제출 버튼 */
@@ -452,19 +489,15 @@
       cursor: pointer;
     }
 
-    .btn-cancel:hover {
-      background-color: #d2d6e4;
-    }
+    .btn-cancel:hover { background-color: #d2d6e4; }
 
     @media (max-width: 960px) {
-      .form-layout {
-        grid-template-columns: 1fr;
-      }
+      .form-layout { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
-  <!-- 상단 네비게이션 -->
+  <!-- 상단 네비 -->
   <header class="gnb-wrapper">
     <nav class="gnb">
       <div class="gnb-logo">
@@ -496,8 +529,7 @@
           href="login.html"
           class="icon-button"
           aria-label="로그인 / 마이페이지"
-          id="userIconLink"
-        >
+          id="userIconLink">
           <svg viewBox="0 0 24 24">
             <circle cx="12" cy="9" r="3.1"></circle>
             <path d="M6.5 19c.8-2.6 2.8-4.3 5.5-4.3s4.7 1.7 5.5 4.3"></path>
@@ -525,8 +557,7 @@
           type="text"
           id="searchInput"
           class="search-input"
-          placeholder="원하는 상품, 게시글을 검색해보세요."
-        />
+          placeholder="원하는 상품, 게시글을 검색해보세요." />
         <button class="search-close-btn" id="searchCloseBtn" aria-label="검색 닫기">
           <svg viewBox="0 0 24 24">
             <line x1="8" y1="8" x2="16" y2="16"></line>
@@ -561,29 +592,25 @@
             <h2 class="card-title">상품 이미지</h2>
             <p class="card-caption">대표 사진 1개 필수, 2개 권장</p>
 
-            <!-- 대표 사진 1 -->
             <label for="mainImage1">대표 사진 1<span class="required">*</span></label>
             <div class="input-row">
               <input
                 type="text"
                 id="mainImage1"
                 name="mainImage1"
-                placeholder="https://example.com/image.jpg"
-              />
+                placeholder="https://example.com/image.jpg" />
               <button class="btn-light" type="button" id="btnUpload1">
                 파일 업로드
               </button>
             </div>
 
-            <!-- 대표 사진 2 -->
             <label for="mainImage2">대표 사진 2</label>
             <div class="input-row">
               <input
                 type="text"
                 id="mainImage2"
                 name="mainImage2"
-                placeholder="https://example.com/image.jpg"
-              />
+                placeholder="https://example.com/image.jpg" />
               <button class="btn-light" type="button" id="btnUpload2">
                 파일 업로드
               </button>
@@ -623,16 +650,14 @@
               name="name"
               placeholder="상품명을 입력하세요"
               required
-              style="margin-bottom: 10px"
-            />
+              style="margin-bottom: 10px" />
 
             <label for="category">카테고리<span class="required">*</span></label>
             <select
               id="category"
               name="category"
               required
-              style="margin-bottom: 10px"
-            >
+              style="margin-bottom: 10px">
               <option value="outer">아우터</option>
               <option value="top">상의</option>
               <option value="bottom">하의</option>
@@ -647,8 +672,7 @@
               placeholder="가격을 입력하세요"
               min="0"
               required
-              style="margin-bottom: 10px"
-            />
+              style="margin-bottom: 10px" />
 
             <!-- 사이즈 -->
             <div class="multi-input-group">
@@ -671,47 +695,47 @@
               id="summary"
               name="summary"
               placeholder="상품에 대한 간단한 설명을 입력하세요"
-              style="margin-bottom: 10px"
-            ></textarea>
+              style="margin-bottom: 10px"></textarea>
 
             <label for="detail">상세 정보</label>
             <textarea
               id="detail"
               name="detail"
-              placeholder="소재: 코튼 100%, 세탁: 기계세탁, 핏: 레귤러핏"
-            ></textarea>
+              placeholder="소재: 코튼 100%, 세탁: 기계세탁, 핏: 레귤러핏"></textarea>
           </section>
         </div>
 
         <!-- 상세 페이지 꾸미기 -->
         <section class="detail-builder">
-          <div class="detail-builder-header">
-            <h2 class="detail-title">상품 상세 페이지 꾸미기</h2>
-          </div>
+          <h2 class="detail-title">상품 상세 페이지 꾸미기</h2>
           <p class="detail-desc">
-            고객이 상품 상세 페이지에서 보게 될 내용을 작성해보세요.
+            고객이 상품 상세 페이지에서 보게 될 내용을 작성하세요.
           </p>
+
           <div class="detail-buttons">
             <button class="detail-btn title" type="button" data-type="title">
-              제목 추가
+              <span class="icon">🄰</span>
+              <span>제목 추가</span>
             </button>
             <button class="detail-btn text" type="button" data-type="text">
-              설명 추가
+              <span class="icon">📄</span>
+              <span>설명 추가</span>
             </button>
             <button class="detail-btn image" type="button" data-type="image">
-              이미지 추가
+              <span class="icon">🖼️</span>
+              <span>이미지 추가</span>
             </button>
           </div>
+
           <p class="detail-tip">
-            💡 팁: 제목 → 설명 → 이미지 순서로 추가하면 보기 좋은 상세 페이지를 만들 수
-            있습니다!
+            💡 팁: 제목 → 설명 → 이미지 순서로 추가하면 보기 좋은 상세 페이지를 만들 수 있습니다!
           </p>
-          <!-- 내부적으로는 그냥 큰 textarea 하나에 JSON 문자열 저장 (지금은 간단히만) -->
-          <textarea
-            id="detailBlocks"
-            style="margin-top: 12px; min-height: 80px"
-            placeholder="상세 페이지 블록 구성은 추후 확장 예정입니다. 간단한 문장을 적어두셔도 좋아요."
-          ></textarea>
+
+          <!-- 실제 블록들이 들어갈 영역 (버튼 누르기 전에는 비어 있음) -->
+          <div class="detail-blocks" id="detailBlocksContainer"></div>
+
+          <!-- 저장용 hidden input (JSON 문자열) -->
+          <input type="hidden" id="detailBlocksData" name="detailBlocksData" />
         </section>
 
         <!-- 버튼 -->
@@ -723,18 +747,18 @@
     </div>
   </main>
 
-  <!-- 푸터는 생략해도 되지만 필요하면 여기 붙여도 됨 -->
-
   <script>
-    // 공통: 상품 배열 로드/저장
+    function getQueryParam(name) {
+      return new URLSearchParams(window.location.search).get(name);
+    }
+
     function loadProducts() {
       const raw = localStorage.getItem('fonProducts');
       if (!raw) return [];
       try {
         const parsed = JSON.parse(raw);
         return Array.isArray(parsed) ? parsed : [];
-      } catch (e) {
-        console.error(e);
+      } catch {
         return [];
       }
     }
@@ -743,19 +767,15 @@
       localStorage.setItem('fonProducts', JSON.stringify(list));
     }
 
-    function getQueryParam(name) {
-      return new URLSearchParams(window.location.search).get(name);
-    }
-
     document.addEventListener('DOMContentLoaded', function () {
-      // 로그인 아이콘
+      /* --- 로그인 아이콘 --- */
       const userLink = document.getElementById('userIconLink');
       if (userLink) {
         const isLoggedIn = localStorage.getItem('fonLoggedIn') === 'true';
         userLink.href = isLoggedIn ? 'mypage.html' : 'login.html';
       }
 
-      // 검색 레이어
+      /* --- 검색 레이어 --- */
       const openBtn = document.getElementById('searchOpenBtn');
       const dim = document.getElementById('searchDim');
       const layer = document.getElementById('searchLayer');
@@ -768,14 +788,10 @@
         if (!dim || !layer) return;
         dim.classList.add('is-active');
         layer.classList.add('is-active');
-        if (input) {
-          input.value = '';
-        }
+        if (input) input.value = '';
         if (noResult) noResult.style.display = 'none';
         if (helpText) helpText.style.display = 'block';
-        setTimeout(() => {
-          if (input) input.focus();
-        }, 10);
+        setTimeout(() => { if (input) input.focus(); }, 10);
       }
 
       function closeSearch() {
@@ -787,15 +803,10 @@
       if (openBtn) openBtn.addEventListener('click', openSearch);
       if (closeBtn) closeBtn.addEventListener('click', closeSearch);
       if (dim) dim.addEventListener('click', closeSearch);
-
-      document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') {
-          closeSearch();
-        }
-      });
+      document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSearch(); });
 
       if (input && noResult) {
-        input.addEventListener('input', function (e) {
+        input.addEventListener('input', e => {
           const value = e.target.value.trim();
           if (!value) {
             noResult.style.display = 'none';
@@ -807,54 +818,50 @@
         });
       }
 
-      // 동적 입력: 사이즈 / 색상 / 추가이미지
-      function addDynamicInput(listEl, placeholder) {
-        const el = document.createElement('input');
-        el.type = 'text';
-        el.placeholder = placeholder;
-        listEl.appendChild(el);
-        return el;
-      }
-
+      /* --- 동적 인풋(사이즈/색상/추가이미지) --- */
       const sizeList = document.getElementById('sizeList');
       const colorList = document.getElementById('colorList');
       const extraImageList = document.getElementById('extraImageList');
 
+      function addDynamicInput(parent, placeholder) {
+        const el = document.createElement('input');
+        el.type = 'text';
+        el.placeholder = placeholder;
+        parent.appendChild(el);
+        return el;
+      }
+
+      // 기본 하나씩 생성
       addDynamicInput(sizeList, '예: M');
       addDynamicInput(colorList, '예: 블랙');
 
-      document.getElementById('btnAddSize').addEventListener('click', function () {
+      document.getElementById('btnAddSize').addEventListener('click', () => {
         addDynamicInput(sizeList, '사이즈 입력');
       });
 
-      document.getElementById('btnAddColor').addEventListener('click', function () {
+      document.getElementById('btnAddColor').addEventListener('click', () => {
         addDynamicInput(colorList, '색상 입력');
       });
 
-      document
-        .getElementById('btnAddExtraImage')
-        .addEventListener('click', function () {
-          addDynamicInput(extraImageList, '추가 이미지 URL');
-        });
+      document.getElementById('btnAddExtraImage').addEventListener('click', () => {
+        addDynamicInput(extraImageList, '추가 이미지 URL');
+      });
 
-      // 파일 업로드 -> dataURL 로 텍스트 박스에 넣기
+      /* --- 파일 업로드 버튼 -> dataURL --- */
       function bindFileUpload(buttonId, fileInputId, textInputId) {
         const btn = document.getElementById(buttonId);
         const fileInput = document.getElementById(fileInputId);
         const textInput = document.getElementById(textInputId);
-
         if (!btn || !fileInput || !textInput) return;
 
-        btn.addEventListener('click', function () {
-          fileInput.click();
-        });
+        btn.addEventListener('click', () => fileInput.click());
 
-        fileInput.addEventListener('change', function (e) {
+        fileInput.addEventListener('change', e => {
           const file = e.target.files[0];
           if (!file) return;
           const reader = new FileReader();
-          reader.onload = function (event) {
-            textInput.value = event.target.result; // dataURL
+          reader.onload = ev => {
+            textInput.value = ev.target.result;
           };
           reader.readAsDataURL(file);
         });
@@ -863,19 +870,103 @@
       bindFileUpload('btnUpload1', 'fileInput1', 'mainImage1');
       bindFileUpload('btnUpload2', 'fileInput2', 'mainImage2');
 
-      // 수정 모드인지 확인
+      /* --- 상세 페이지 블록 생성/동기화 --- */
+      const detailBlocksContainer = document.getElementById('detailBlocksContainer');
+      const detailBlocksDataInput = document.getElementById('detailBlocksData');
+
+      function syncDetailBlocksToHidden() {
+        const blocks = [];
+        detailBlocksContainer.querySelectorAll('.detail-block').forEach(block => {
+          const type = block.dataset.type;
+          if (type === 'image') {
+            const input = block.querySelector('input[type="text"]');
+            blocks.push({ type, url: (input.value || '').trim() });
+          } else {
+            const textarea = block.querySelector('textarea');
+            blocks.push({ type, text: (textarea.value || '').trim() });
+          }
+        });
+        detailBlocksDataInput.value = JSON.stringify(blocks);
+      }
+
+      function createDetailBlock(type, value = '', url = '') {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'detail-block';
+        wrapper.dataset.type = type;
+
+        const header = document.createElement('div');
+        header.className = 'detail-block-header';
+
+        const label = document.createElement('div');
+        label.className = 'detail-block-label';
+
+        const badge = document.createElement('span');
+        badge.className = 'badge';
+
+        if (type === 'title') {
+          badge.textContent = '제목/제목 (큰 글씨)';
+        } else if (type === 'text') {
+          badge.textContent = '설명 (작은 글씨)';
+        } else {
+          badge.textContent = '이미지';
+        }
+
+        label.appendChild(badge);
+        header.appendChild(label);
+
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'detail-block-remove';
+        removeBtn.innerHTML = '&times;';
+        removeBtn.addEventListener('click', () => {
+          wrapper.remove();
+          syncDetailBlocksToHidden();
+        });
+
+        header.appendChild(removeBtn);
+        wrapper.appendChild(header);
+
+        if (type === 'image') {
+          const input = document.createElement('input');
+          input.type = 'text';
+          input.placeholder = 'https://example.com/image.jpg';
+          input.value = url || '';
+          input.addEventListener('input', syncDetailBlocksToHidden);
+          wrapper.appendChild(input);
+        } else {
+          const textarea = document.createElement('textarea');
+          textarea.placeholder =
+            type === 'title'
+              ? '주제나 제목을 입력하세요 (예: 제품 소개, 착용감, 스타일링 TIP 등)'
+              : '상품에 대한 자세한 설명을 입력하세요...';
+          textarea.value = value || '';
+          textarea.addEventListener('input', syncDetailBlocksToHidden);
+          wrapper.appendChild(textarea);
+        }
+
+        detailBlocksContainer.appendChild(wrapper);
+        syncDetailBlocksToHidden();
+      }
+
+      document.querySelectorAll('.detail-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const type = btn.dataset.type;
+          createDetailBlock(type);
+        });
+      });
+
+      /* --- 수정 모드 처리 --- */
       const editingId = getQueryParam('id');
       const pageTitleEl = document.getElementById('pageTitle');
       const pageSubtitleEl = document.getElementById('pageSubtitle');
       const submitButton = document.getElementById('submitButton');
 
       if (editingId) {
-        const products = loadProducts();
-        const target = products.find((p) => String(p.id) === String(editingId));
+        const list = loadProducts();
+        const target = list.find(p => String(p.id) === String(editingId));
         if (target) {
           if (pageTitleEl) pageTitleEl.textContent = '상품 수정';
-          if (pageSubtitleEl)
-            pageSubtitleEl.textContent = '상품 정보를 수정합니다.';
+          if (pageSubtitleEl) pageSubtitleEl.textContent = '상품 정보를 수정합니다.';
           if (submitButton) submitButton.textContent = '상품 수정 완료';
 
           document.getElementById('name').value = target.name || '';
@@ -889,144 +980,117 @@
 
           document.getElementById('summary').value = target.summary || '';
           document.getElementById('detail').value = target.detail || '';
-          document.getElementById('detailBlocks').value =
-            target.detailBlocks || '';
 
           // 사이즈 / 색상 / 추가이미지
           sizeList.innerHTML = '';
           colorList.innerHTML = '';
           extraImageList.innerHTML = '';
 
-          const sizes = (target.sizes || '').split(',').map((s) => s.trim()).filter(Boolean);
-          const colors = (target.colors || '').split(',').map((c) => c.trim()).filter(Boolean);
-          const extraImages =
-            (target.images && target.images.extra) || [];
+          const sizes = (target.sizes || '').split(',').map(s => s.trim()).filter(Boolean);
+          const colors = (target.colors || '').split(',').map(c => c.trim()).filter(Boolean);
+          const extraImages = (target.images && target.images.extra) || [];
 
-          if (sizes.length) {
-            sizes.forEach((s) => {
-              const input = addDynamicInput(sizeList, '사이즈 입력');
-              input.value = s;
-            });
-          } else {
-            addDynamicInput(sizeList, '예: M');
-          }
+          if (sizes.length) sizes.forEach(s => { const i = addDynamicInput(sizeList, '사이즈 입력'); i.value = s; });
+          else addDynamicInput(sizeList, '예: M');
 
-          if (colors.length) {
-            colors.forEach((c) => {
-              const input = addDynamicInput(colorList, '색상 입력');
-              input.value = c;
-            });
-          } else {
-            addDynamicInput(colorList, '예: 블랙');
-          }
+          if (colors.length) colors.forEach(c => { const i = addDynamicInput(colorList, '색상 입력'); i.value = c; });
+          else addDynamicInput(colorList, '예: 블랙');
 
-          extraImages.forEach((url) => {
-            const input = addDynamicInput(
-              extraImageList,
-              '추가 이미지 URL',
-            );
-            input.value = url;
+          extraImages.forEach(url => {
+            const i = addDynamicInput(extraImageList, '추가 이미지 URL');
+            i.value = url;
+          });
+
+          // 상세 블록 복원
+          let blocksData = [];
+          try {
+            blocksData = JSON.parse(target.detailBlocks || '[]');
+          } catch {}
+          blocksData.forEach(b => {
+            createDetailBlock(b.type, b.text, b.url);
           });
         }
       }
 
-      // 상세 페이지 꾸미기 버튼들은 일단 안내만
-      document.querySelectorAll('.detail-btn').forEach((btn) => {
-        btn.addEventListener('click', function () {
-          alert(
-            '상세 페이지 블록 편집 기능은 추후 확장 예정입니다.\n지금은 아래 텍스트 영역에 자유롭게 내용을 적어주세요 🙂',
-          );
-        });
-      });
-
-      // 취소 버튼
-      document.getElementById('btnCancel').addEventListener('click', function () {
+      /* --- 취소 버튼 --- */
+      document.getElementById('btnCancel').addEventListener('click', () => {
         if (confirm('변경사항이 저장되지 않습니다. 돌아가시겠습니까?')) {
           window.location.href = 'admin_products.html';
         }
       });
 
-      // 폼 제출
-      document
-        .getElementById('productForm')
-        .addEventListener('submit', function (e) {
-          e.preventDefault();
+      /* --- 폼 제출 --- */
+      document.getElementById('productForm').addEventListener('submit', function (e) {
+        e.preventDefault();
 
-          const name = document.getElementById('name').value.trim();
-          const category = document.getElementById('category').value;
-          const price = Number(document.getElementById('price').value || 0);
-          const mainImage1 =
-            document.getElementById('mainImage1').value.trim() || '';
-          const mainImage2 =
-            document.getElementById('mainImage2').value.trim() || '';
+        const name = document.getElementById('name').value.trim();
+        const category = document.getElementById('category').value;
+        const priceStr = document.getElementById('price').value.trim();
+        const price = Number(priceStr);
+        const mainImage1 = document.getElementById('mainImage1').value.trim();
+        const mainImage2 = document.getElementById('mainImage2').value.trim();
 
-         if (!name || !category || priceStr === '' || isNaN(price) || !mainImage1) {
-  alert('필수 항목(상품명, 카테고리, 가격, 대표 사진 1)을 모두 올바르게 입력해주세요.');
-  return;
-}
+        // 🔥 여기서 문자열 기준 + isNaN으로 체크 (할인상품이랑 같은 방식)
+        if (!name || !category || priceStr === '' || isNaN(price) || !mainImage1) {
+          alert('필수 항목(상품명, 카테고리, 가격, 대표 사진 1)을 모두 올바르게 입력해주세요.');
+          return;
+        }
 
+        const sizeValues = Array.from(sizeList.querySelectorAll('input'))
+          .map(el => el.value.trim())
+          .filter(Boolean)
+          .join(', ');
 
-          const sizeValues = Array.from(sizeList.querySelectorAll('input'))
-            .map((el) => el.value.trim())
-            .filter(Boolean)
-            .join(', ');
+        const colorValues = Array.from(colorList.querySelectorAll('input'))
+          .map(el => el.value.trim())
+          .filter(Boolean)
+          .join(', ');
 
-          const colorValues = Array.from(colorList.querySelectorAll('input'))
-            .map((el) => el.value.trim())
-            .filter(Boolean)
-            .join(', ');
+        const extraImages = Array.from(extraImageList.querySelectorAll('input'))
+          .map(el => el.value.trim())
+          .filter(Boolean);
 
-          const extraImages = Array.from(
-            extraImageList.querySelectorAll('input'),
-          )
-            .map((el) => el.value.trim())
-            .filter(Boolean);
+        const summary = document.getElementById('summary').value.trim();
+        const detail = document.getElementById('detail').value.trim();
 
-          const summary = document.getElementById('summary').value.trim();
-          const detail = document.getElementById('detail').value.trim();
-          const detailBlocks =
-            document.getElementById('detailBlocks').value.trim();
+        // 제출 직전에 상세 블록을 hidden input에 동기화
+        syncDetailBlocksToHidden();
+        const detailBlocksJson = detailBlocksDataInput.value || '[]';
 
-          const products = loadProducts();
+        const list = loadProducts();
+        const nowId = editingId || Date.now().toString();
 
-          const nowId = editingId || Date.now().toString();
+        const data = {
+          id: nowId,
+          name,
+          category,
+          price,
+          sizes: sizeValues,
+          colors: colorValues,
+          summary,
+          detail,
+          detailBlocks: detailBlocksJson,
+          images: {
+            main1: mainImage1,
+            main2: mainImage2,
+            extra: extraImages,
+          },
+          salesCount: (editingId && list.find(p => String(p.id) === String(editingId))?.salesCount) || 0,
+          isNew: true
+        };
 
-          const productData = {
-            id: nowId,
-            name,
-            category,
-            price,
-            sizes: sizeValues,
-            colors: colorValues,
-            summary,
-            detail,
-            detailBlocks,
-            images: {
-              main1: mainImage1,
-              main2: mainImage2,
-              extra: extraImages,
-            },
-            salesCount: 0,
-          };
+        if (editingId) {
+          const idx = list.findIndex(p => String(p.id) === String(editingId));
+          if (idx !== -1) list[idx] = data;
+          else list.push(data);
+        } else {
+          list.push(data);
+        }
 
-          if (editingId) {
-            const idx = products.findIndex(
-              (p) => String(p.id) === String(editingId),
-            );
-            if (idx !== -1) {
-              products[idx] = productData;
-            } else {
-              products.push(productData);
-            }
-          } else {
-            products.push(productData);
-          }
-
-          saveProducts(products);
-
-          alert('상품 정보가 저장되었습니다.');
-          window.location.href = 'admin_products.html';
-        });
+        saveProducts(list);
+        alert('상품 정보가 저장되었습니다.');
+        window.location.href = 'admin_products.html';
+      });
     });
   </script>
 </body>
