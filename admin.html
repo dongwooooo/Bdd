@@ -328,10 +328,16 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      transition: transform 0.12s ease-out, box-shadow 0.12s ease-out;
     }
 
     .dash-card.clickable {
       cursor: pointer;
+    }
+
+    .dash-card.clickable:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
     }
 
     .dash-info-title {
@@ -377,19 +383,57 @@
       background-color: #fff;
       border-radius: 10px;
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.04);
-      padding: 18px 22px 40px;
+      padding: 18px 22px 26px;
     }
 
     .recent-title {
       font-size: 15px;
       font-weight: 600;
-      margin-bottom: 40px;
+      margin-bottom: 20px;
     }
 
     .recent-empty {
       text-align: center;
       color: #777;
       font-size: 14px;
+      padding: 26px 0;
+    }
+
+    .recent-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 18px;
+      border-radius: 8px;
+      background-color: #fafafa;
+    }
+
+    .recent-left-title {
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+
+    .recent-left-meta {
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 5px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .status-pending {
+      background-color: #fef3c7;
+      color: #b45309;
+    }
+
+    .status-done {
+      background-color: #dcfce7;
+      color: #166534;
     }
 
     /* ---------- FOOTER (공통) ---------- */
@@ -500,11 +544,11 @@
         <a href="bottom.html">하의</a>
         <a href="accessory.html">악세서리</a>
         <a href="community.html">커뮤니티</a>
-        <a href="#">코디하기</a>
+
       </div>
 
       <div class="gnb-icons">
-        <!-- 검색 (아이디 추가) -->
+        <!-- 검색 -->
         <button class="icon-button" aria-label="검색" id="searchOpenBtn">
           <svg viewBox="0 0 24 24">
             <circle cx="11" cy="11" r="6.3"></circle>
@@ -615,42 +659,50 @@
       <section class="admin-content">
         <!-- 상단 4개 카드 -->
         <div class="dashboard-grid">
-          <!-- 등록된 상품 : 클릭하면 상품 관리 페이지로 이동 -->
+          <!-- 등록된 상품 -->
           <div
             class="dash-card clickable"
             onclick="window.location.href='admin_products.html'"
           >
             <div>
               <div class="dash-info-title">등록된 상품</div>
-              <div class="dash-info-count">0</div>
+              <div class="dash-info-count" id="dashProductCount">0</div>
             </div>
             <div class="dash-icon-box dash-icon-blue">📦</div>
           </div>
 
-          <!-- 할인 상품 : 클릭하면 할인 상품 페이지로 이동 -->
+          <!-- 할인 상품 -->
           <div
             class="dash-card clickable"
             onclick="window.location.href='admin_discount.html'"
           >
             <div>
               <div class="dash-info-title">할인 상품</div>
-              <div class="dash-info-count">0</div>
+              <div class="dash-info-count" id="dashDiscountCount">0</div>
             </div>
             <div class="dash-icon-box dash-icon-red">🏷️</div>
           </div>
 
-          <div class="dash-card">
+          <!-- 1:1 문의 -->
+          <div
+            class="dash-card clickable"
+            onclick="window.location.href='admin_inquiry.html'"
+          >
             <div>
               <div class="dash-info-title">1:1 문의</div>
-              <div class="dash-info-count">0</div>
+              <div class="dash-info-count" id="dashInquiryCount">0</div>
             </div>
             <div class="dash-icon-box dash-icon-purple">💬</div>
           </div>
 
-          <div class="dash-card">
+          <!-- FAQ -->
+          <div
+            class="dash-card clickable"
+            onclick="window.location.href='admin_faq.html'"
+          >
             <div>
               <div class="dash-info-title">FAQ</div>
-              <div class="dash-info-count">0</div>
+              <div class="dash-info-count" id="dashFaqCount">0</div>
             </div>
             <div class="dash-icon-box dash-icon-orange">❓</div>
           </div>
@@ -659,7 +711,9 @@
         <!-- 최근 문의 카드 -->
         <div class="recent-card">
           <div class="recent-title">최근 문의</div>
-          <div class="recent-empty">문의가 없습니다.</div>
+          <div id="recentContainer">
+            <div class="recent-empty">문의가 없습니다.</div>
+          </div>
         </div>
       </section>
     </div>
@@ -681,8 +735,8 @@
           <div class="footer-col-title">고객센터</div>
           <ul>
             <li><a href="notice.html">공지사항</a></li>
-            <li><a href="#">자주묻는질문</a></li>
-            <li><a href="#">1:1 문의</a></li>
+            <li><a href="faq.html">자주묻는질문</a></li>
+            <li><a href="qna.html">1:1 문의</a></li>
           </ul>
         </div>
 
@@ -711,8 +765,54 @@
     </div>
   </footer>
 
-  <!-- 관리자 플래그 + 로그인 아이콘 + 검색 오버레이 스크립트 -->
+  <!-- 관리자 플래그 + 대시보드 데이터 + 검색 오버레이 스크립트 -->
   <script>
+    // 공통: JSON 파싱 헬퍼
+    function getJson(key) {
+      try {
+        return JSON.parse(localStorage.getItem(key) || '[]');
+      } catch (e) {
+        console.warn(key + ' 파싱 에러', e);
+        return [];
+      }
+    }
+
+    // 최근 문의 렌더링
+    function renderRecentInquiry(inquiries) {
+      const container = document.getElementById('recentContainer');
+      if (!container) return;
+
+      if (!inquiries.length) {
+        container.innerHTML =
+          '<div class="recent-empty">문의가 없습니다.</div>';
+        return;
+      }
+
+      const latest = inquiries[inquiries.length - 1];
+      const statusDone = latest.status === 'done' || latest.status === '답변완료';
+
+      const writer = latest.writer || '고객';
+      const date = latest.createdAt || latest.date || '';
+
+      container.innerHTML = `
+        <div class="recent-item">
+          <div>
+            <div class="recent-left-title">${latest.title || '제목 없음'}</div>
+            <div class="recent-left-meta">
+              ${writer} · ${date}
+            </div>
+          </div>
+          <div>
+            <span class="status-badge ${
+              statusDone ? 'status-done' : 'status-pending'
+            }">
+              ${statusDone ? '답변완료' : '답변대기'}
+            </span>
+          </div>
+        </div>
+      `;
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
       // 0) 로그인 상태에 따라 사람 아이콘 목적지 변경
       const userLink = document.getElementById('userIconLink');
@@ -728,11 +828,33 @@
           .forEach((el) => (el.style.display = 'flex'));
       }
 
-      // 2) 검색 레이어 공통 동작
-      const openBtn = document.getElementById('searchOpenBtn');
-      const dim = document.getElementById('searchDim');
-      const layer = document.getElementById('searchLayer');
-      const input = document.getElementById('searchInput');
+      // 2) 대시보드 숫자 채우기
+      //  - 상품관리 페이지에서:  localStorage.setItem('fonProducts', JSON.stringify([...]))
+      //  - 할인상품 페이지에서:  localStorage.setItem('fonDiscounts', JSON.stringify([...]))
+      //  - 1:1 문의 페이지에서:  localStorage.setItem('fonInquiries', JSON.stringify([...]))
+      //  - FAQ 관리자에서:      localStorage.setItem('fonFaqs', JSON.stringify([...]))
+      const products   = getJson('fonProducts');
+      const discounts  = getJson('fonDiscountProducts'); 
+      const inquiries  = getJson('fonInquiries');
+      const faqs       = getJson('fonFaqs');
+
+      const productCountEl  = document.getElementById('dashProductCount');
+      const discountCountEl = document.getElementById('dashDiscountCount');
+      const inquiryCountEl  = document.getElementById('dashInquiryCount');
+      const faqCountEl      = document.getElementById('dashFaqCount');
+
+      if (productCountEl)  productCountEl.textContent  = products.length;
+      if (discountCountEl) discountCountEl.textContent = discounts.length;
+      if (inquiryCountEl)  inquiryCountEl.textContent  = inquiries.length;
+      if (faqCountEl)      faqCountEl.textContent      = faqs.length;
+
+      renderRecentInquiry(inquiries);
+
+      // 3) 검색 레이어 공통 동작
+      const openBtn  = document.getElementById('searchOpenBtn');
+      const dim      = document.getElementById('searchDim');
+      const layer    = document.getElementById('searchLayer');
+      const input    = document.getElementById('searchInput');
       const closeBtn = document.getElementById('searchCloseBtn');
       const noResult = document.getElementById('searchNoResult');
       const helpText = document.getElementById('searchHelp');

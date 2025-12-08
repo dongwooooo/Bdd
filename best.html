@@ -169,20 +169,92 @@
       max-width: 1200px;
       margin: 0 auto;
       padding: 90px 20px 120px;
-      text-align: center;
       font-size: 14px;
       color: #888;
     }
 
-    .best-list-area p.main {
+    /* 비어 있을 때 문구 */
+    .best-empty {
+      text-align: center;
+    }
+
+    .best-empty p.main {
       margin-bottom: 10px;
       font-size: 15px;
       color: #555;
     }
 
-    .best-list-area p.sub {
+    .best-empty p.sub {
       font-size: 13px;
       color: #999;
+    }
+
+    /* 상품 그리드 */
+    .best-grid {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 24px;
+    }
+
+    .best-card {
+      display: block;
+      background-color: #fff;
+      border-radius: 10px;
+      border: 1px solid #eee;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+      transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
+    }
+
+    .best-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 35px rgba(0, 0, 0, 0.08);
+    }
+
+    .best-card-img {
+      width: 100%;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      background-color: #f3f4f6;
+    }
+
+    .best-card-body {
+      padding: 10px 10px 12px;
+      font-size: 13px;
+      color: #111;
+    }
+
+    .best-card-name {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 4px;
+    }
+
+    .best-card-price {
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 4px;
+      font-weight: 600;
+    }
+
+    .best-card-price-original {
+      font-size: 12px;
+      color: #999;
+      text-decoration: line-through;
+    }
+
+    .best-card-price-sale {
+      font-size: 14px;
+      color: #e11d48;
+      font-weight: 700;
+    }
+
+    .best-card-price-rate {
+      font-size: 11px;
+      color: #e11d48;
     }
 
     /* ---------- 검색 오버레이 & 검색 박스 (공통) ---------- */
@@ -404,7 +476,7 @@
         <a href="bottom.html">하의</a>
         <a href="accessory.html">악세서리</a>
         <a href="community.html">커뮤니티</a>
-        <a href="#">코디하기</a>
+
       </div>
 
       <!-- 우측 아이콘 -->
@@ -495,23 +567,29 @@
 
   <hr class="divider" />
 
-  <!-- 상단 카운트 / 정렬 / 필터 -->
+  <!-- 상단 카운트 / 정렬 -->
   <div class="best-toolbar">
     <div class="best-count">총 0개</div>
     <div class="toolbar-right">
-      <select class="select-sort">
-        <option>판매 많은순</option>
-        <option>낮은 가격순</option>
-        <option>높은 가격순</option>
-        <option>최신순</option>
+      <select class="select-sort" id="bestSortSelect">
+        <option value="popular">판매 많은순</option>
+        <option value="low">낮은 가격순</option>
+        <option value="high">높은 가격순</option>
+        <option value="new">최신순</option>
       </select>
     </div>
   </div>
 
-  <!-- 리스트 영역 (비어 있을 때 안내 문구) -->
+  <!-- 리스트 영역 -->
   <section class="best-list-area">
-    <p class="main">구매 내역이 있는 상품이 없습니다.</p>
-    <p class="sub">관리자 페이지에서 상품을 등록하고 구매를 시작해보세요!</p>
+    <!-- 비어 있을 때 -->
+    <div class="best-empty" id="best-empty">
+      <p class="main">구매 내역이 있는 상품이 없습니다.</p>
+      <p class="sub">관리자 페이지에서 상품을 등록하고 구매를 시작해보세요!</p>
+    </div>
+
+    <!-- 상품 그리드 -->
+    <div class="best-grid" id="best-grid"></div>
   </section>
 
   <!-- 공통 푸터 -->
@@ -560,24 +638,51 @@
     </div>
   </footer>
 
-  <!-- 관리자 플러스 아이콘 + 로그인 아이콘 + 검색 기능 -->
+  <!-- 스크립트 -->
   <script>
+    // popularProducts 로부터 BEST 상품 불러오기
+    function loadBestProducts() {
+      const raw = localStorage.getItem('popularProducts');
+      if (!raw) return [];
+      try {
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
+    }
+
+    // 간단 정렬 (옵션은 아직 크게 의미 없고, 가격 기준 정도만)
+    function sortBestProducts(list, mode) {
+      const arr = [...list];
+      if (mode === 'low') {
+        arr.sort((a, b) => Number(a.price || 0) - Number(b.price || 0));
+      } else if (mode === 'high') {
+        arr.sort((a, b) => Number(b.price || 0) - Number(a.price || 0));
+      } else if (mode === 'new') {
+        // id 가 숫자고, 최근일수록 큰 값이라고 가정
+        arr.sort((a, b) => Number(b.id || 0) - Number(a.id || 0));
+      }
+      // 'popular' 는 일단 저장된 순서 유지
+      return arr;
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
-      // 0) 로그인 상태에 따라 사람 아이콘 목적지 변경
+      // 로그인 상태에 따라 사람 아이콘 목적지 변경
       const userLink = document.getElementById('userIconLink');
       if (userLink) {
         const isLoggedIn = localStorage.getItem('fonLoggedIn') === 'true';
         userLink.href = isLoggedIn ? 'mypage.html' : 'login.html';
       }
 
-      // 1) 관리자 플러스 아이콘 표시
+      // 관리자 플러스 아이콘 표시
       if (localStorage.getItem('isAdmin') === 'true') {
         document
           .querySelectorAll('.admin-add')
           .forEach((el) => (el.style.display = 'flex'));
       }
 
-      // 2) 검색 레이어 관련 요소
+      // 검색 레이어 관련 요소
       const openBtn = document.getElementById('searchOpenBtn');
       const dim = document.getElementById('searchDim');
       const layer = document.getElementById('searchLayer');
@@ -638,6 +743,104 @@
           noResult.style.display = 'block';
         });
       }
+
+      // ===== BEST 리스트 렌더링 =====
+      const bestCountEl = document.querySelector('.best-count');
+      const bestEmptyEl = document.getElementById('best-empty');
+      const bestGridEl = document.getElementById('best-grid');
+      const sortSelect = document.getElementById('bestSortSelect');
+
+      function renderBestList() {
+        const mode = sortSelect ? sortSelect.value : 'popular';
+        const products = sortBestProducts(loadBestProducts(), mode);
+
+        const count = products.length;
+        if (bestCountEl) {
+          bestCountEl.textContent = `총 ${count}개`;
+        }
+
+        if (!count) {
+          if (bestEmptyEl) bestEmptyEl.style.display = 'block';
+          if (bestGridEl) bestGridEl.innerHTML = '';
+          return;
+        }
+
+        if (bestEmptyEl) bestEmptyEl.style.display = 'none';
+        if (!bestGridEl) return;
+
+        bestGridEl.innerHTML = '';
+
+        products.forEach((p) => {
+          const card = document.createElement('a');
+          card.className = 'best-card';
+          card.href = '#'; // 나중에 상품 상세 페이지 연결 시 변경
+
+          const img = document.createElement('img');
+          img.className = 'best-card-img';
+          img.src =
+            (p.images && (p.images.main1 || p.images.main2)) || '';
+          img.alt = p.name || '';
+
+          const body = document.createElement('div');
+          body.className = 'best-card-body';
+
+          const nameEl = document.createElement('div');
+          nameEl.className = 'best-card-name';
+          nameEl.textContent = p.name || '';
+
+          const priceWrap = document.createElement('div');
+          priceWrap.className = 'best-card-price';
+
+          // 할인 가격이 있는 경우 (salePrice 사용)
+          if (p.salePrice) {
+            const origin = document.createElement('span');
+            origin.className = 'best-card-price-original';
+            origin.textContent =
+              (typeof p.price === 'number'
+                ? p.price.toLocaleString()
+                : p.price) + '원';
+
+            const sale = document.createElement('span');
+            sale.className = 'best-card-price-sale';
+            sale.textContent =
+              (typeof p.salePrice === 'number'
+                ? p.salePrice.toLocaleString()
+                : p.salePrice) + '원';
+
+            priceWrap.appendChild(origin);
+            priceWrap.appendChild(sale);
+
+            if (p.discountRate) {
+              const rate = document.createElement('span');
+              rate.className = 'best-card-price-rate';
+              rate.textContent = `${p.discountRate}% OFF`;
+              priceWrap.appendChild(rate);
+            }
+          } else {
+            // 일반 가격만 있는 경우
+            const normal = document.createElement('span');
+            normal.textContent =
+              (typeof p.price === 'number'
+                ? p.price.toLocaleString()
+                : p.price) + '원';
+            priceWrap.appendChild(normal);
+          }
+
+          body.appendChild(nameEl);
+          body.appendChild(priceWrap);
+
+          card.appendChild(img);
+          card.appendChild(body);
+
+          bestGridEl.appendChild(card);
+        });
+      }
+
+      if (sortSelect) {
+        sortSelect.addEventListener('change', renderBestList);
+      }
+
+      renderBestList();
     });
   </script>
 </body>

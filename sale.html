@@ -141,18 +141,104 @@
     }
 
     .sale-header {
-      margin-bottom: 60px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 24px;
     }
 
     .sale-header-title {
       font-size: 18px;
       font-weight: 600;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
 
     .sale-header-count {
       font-size: 13px;
       color: #666;
+    }
+
+    .sale-header-right {
+      display: flex;
+      align-items: center;
+    }
+
+    .select-sort {
+      height: 34px;
+      padding: 0 10px;
+      border-radius: 3px;
+      border: 1px solid #ddd;
+      font-size: 13px;
+      background-color: #fff;
+    }
+
+    /* 상품 그리드 */
+    .sale-list-area {
+      min-height: 260px;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 24px;
+    }
+
+    .product-card {
+      text-align: left;
+      font-size: 13px;
+    }
+
+    .product-link {
+      display: block;
+    }
+
+    .product-thumb {
+      position: relative;
+      width: 100%;
+      padding-top: 130%;
+      overflow: hidden;
+      background-color: #f7f7f7;
+      border-radius: 6px;
+    }
+
+    .product-thumb img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: opacity 0.25s ease-out, transform 0.25s ease-out;
+    }
+
+    .product-thumb img.hover-img {
+      opacity: 0;
+    }
+
+    .product-card:hover .product-thumb img.hover-img {
+      opacity: 1;
+    }
+
+    .product-card:hover .product-thumb img:first-child {
+      transform: scale(1.03);
+    }
+
+    .product-info {
+      margin-top: 8px;
+    }
+
+    .product-name {
+      font-size: 13px;
+      margin-bottom: 4px;
+      color: #222;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .product-price {
+      font-size: 13px;
+      color: #333;
     }
 
     .sale-empty-box {
@@ -346,6 +432,12 @@
       text-align: left;
     }
 
+    @media (max-width: 1024px) {
+      .product-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
     @media (max-width: 768px) {
       .gnb {
         padding: 0 16px;
@@ -361,6 +453,16 @@
 
       .search-box {
         width: calc(100% - 32px);
+      }
+
+      .product-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .sale-header {
+        flex-direction: column;
+        align-items: flex-start;
       }
     }
   </style>
@@ -382,7 +484,7 @@
         <a href="bottom.html">하의</a>
         <a href="accessory.html">악세서리</a>
         <a href="community.html">커뮤니티</a>
-        <a href="#">코디하기</a>
+
       </div>
 
       <!-- 우측 아이콘 -->
@@ -473,13 +575,27 @@
   <!-- 할인 상품 리스트 영역 -->
   <main class="sale-wrapper">
     <div class="sale-header">
-      <h2 class="sale-header-title">할인 상품</h2>
-      <p class="sale-header-count">0개의 상품</p>
+      <div>
+        <h2 class="sale-header-title">할인 상품</h2>
+        <p class="sale-header-count" id="saleCountText">0개의 상품</p>
+      </div>
+      <div class="sale-header-right">
+        <select class="select-sort" id="saleSortSelect">
+          <option value="latest">최신순</option>
+          <option value="sales">판매 많은순</option>
+          <option value="priceLow">낮은 가격순</option>
+          <option value="priceHigh">높은 가격순</option>
+        </select>
+      </div>
     </div>
 
-    <div class="sale-empty-box">
-      등록된 할인 상품이 없습니다.
-    </div>
+    <section class="sale-list-area">
+      <div class="product-grid" id="saleProductList"></div>
+
+      <div class="sale-empty-box" id="saleEmptyBox" style="display: none;">
+        등록된 할인 상품이 없습니다.
+      </div>
+    </section>
   </main>
 
   <!-- 공통 푸터 -->
@@ -528,85 +644,246 @@
     </div>
   </footer>
 
-  <!-- 관리자 플러스 아이콘 + 로그인 아이콘 전환 + 검색 기능 -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      // 0) 로그인 상태에 따른 사람 아이콘 링크 변경
-      const userLink = document.getElementById('userIconLink');
-      if (userLink) {
-        const isLoggedIn = localStorage.getItem('fonLoggedIn') === 'true';
-        userLink.href = isLoggedIn ? 'mypage.html' : 'login.html';
-      }
+ <script>
+  // 할인 상품 불러오기 (localStorage: fonDiscountProducts)
+  function loadDiscountProducts() {
+    const raw = localStorage.getItem('fonDiscountProducts');
+    if (!raw) return [];
+    try {
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+      console.error(e);
+      return [];
+    }
+  }
 
-      // 관리자 플러스 아이콘 표시
-      if (localStorage.getItem('isAdmin') === 'true') {
-        document
-          .querySelectorAll('.admin-add')
-          .forEach((el) => (el.style.display = 'flex'));
-      }
+  // 숫자만 뽑기
+  function normalizePrice(value) {
+    if (value == null) return null;
+    const num = Number(String(value).replace(/[^0-9.-]/g, ''));
+    return Number.isNaN(num) ? null : num;
+  }
 
-      // 검색 레이어 관련 요소
-      const openBtn = document.getElementById('searchOpenBtn');
-      const dim = document.getElementById('searchDim');
-      const layer = document.getElementById('searchLayer');
-      const input = document.getElementById('searchInput');
-      const closeBtn = document.getElementById('searchCloseBtn');
-      const noResult = document.getElementById('searchNoResult');
-      const helpText = document.getElementById('searchHelp');
+  function formatPrice(price) {
+    const num = normalizePrice(price);
+    if (num == null) return '';
+    return num.toLocaleString('ko-KR') + '원';
+  }
 
-      function openSearch() {
-        if (!dim || !layer) return;
-        dim.classList.add('is-active');
-        layer.classList.add('is-active');
-        if (input) {
-          input.value = '';
-        }
-        if (noResult) noResult.style.display = 'none';
-        if (helpText) helpText.style.display = 'block';
-        setTimeout(() => {
-          if (input) input.focus();
-        }, 10);
-      }
+  document.addEventListener('DOMContentLoaded', function () {
+    /* ---------- 로그인 / 관리자 플래그 ---------- */
+    const userLink = document.getElementById('userIconLink');
+    if (userLink) {
+      const isLoggedIn = localStorage.getItem('fonLoggedIn') === 'true';
+      userLink.href = isLoggedIn ? 'mypage.html' : 'login.html';
+    }
 
-      function closeSearch() {
-        if (!dim || !layer) return;
-        dim.classList.remove('is-active');
-        layer.classList.remove('is-active');
-      }
+    if (localStorage.getItem('isAdmin') === 'true') {
+      document
+        .querySelectorAll('.admin-add')
+        .forEach((el) => (el.style.display = 'flex'));
+    }
 
-      if (openBtn) {
-        openBtn.addEventListener('click', openSearch);
-      }
+    /* ---------- 검색 레이어 ---------- */
+    const openBtn = document.getElementById('searchOpenBtn');
+    const dim = document.getElementById('searchDim');
+    const layer = document.getElementById('searchLayer');
+    const input = document.getElementById('searchInput');
+    const closeBtn = document.getElementById('searchCloseBtn');
+    const noResult = document.getElementById('searchNoResult');
+    const helpText = document.getElementById('searchHelp');
 
-      if (closeBtn) {
-        closeBtn.addEventListener('click', closeSearch);
-      }
+    function openSearch() {
+      if (!dim || !layer) return;
+      dim.classList.add('is-active');
+      layer.classList.add('is-active');
+      if (input) input.value = '';
+      if (noResult) noResult.style.display = 'none';
+      if (helpText) helpText.style.display = 'block';
+      setTimeout(() => {
+        if (input) input.focus();
+      }, 10);
+    }
 
-      if (dim) {
-        dim.addEventListener('click', closeSearch);
-      }
+    function closeSearch() {
+      if (!dim || !layer) return;
+      dim.classList.remove('is-active');
+      layer.classList.remove('is-active');
+    }
 
-      // ESC 키로 닫기
-      document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') {
-          closeSearch();
-        }
-      });
+    if (openBtn) openBtn.addEventListener('click', openSearch);
+    if (closeBtn) closeBtn.addEventListener('click', closeSearch);
+    if (dim) dim.addEventListener('click', closeSearch);
 
-      // 입력값 있을 때만 "검색 결과가 없습니다" 노출
-      if (input && noResult) {
-        input.addEventListener('input', function (e) {
-          const value = e.target.value.trim();
-          if (!value) {
-            noResult.style.display = 'none';
-            if (helpText) helpText.style.display = 'block';
-            return;
-          }
-          if (helpText) helpText.style.display = 'none';
-          noResult.style.display = 'block';
-        });
-      }
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeSearch();
     });
-  </script>
+
+    if (input && noResult) {
+      input.addEventListener('input', function (e) {
+        const value = e.target.value.trim();
+        if (!value) {
+          noResult.style.display = 'none';
+          if (helpText) helpText.style.display = 'block';
+          return;
+        }
+        if (helpText) helpText.style.display = 'none';
+        noResult.style.display = 'block';
+      });
+    }
+
+    /* ---------- SALE 상품 렌더링 ---------- */
+    const saleListEl  = document.getElementById('saleProductList');
+    const saleEmptyEl = document.getElementById('saleEmptyBox');
+    const saleCountEl = document.getElementById('saleCountText');
+    const saleSortSel = document.getElementById('saleSortSelect');
+
+    let saleProducts = loadDiscountProducts();
+
+    function applySaleSort(list) {
+      if (!saleSortSel) return list;
+      const mode = saleSortSel.value;
+      const copy = [...list];
+
+      if (mode === 'latest') {
+        copy.sort((a, b) => Number(b.id || 0) - Number(a.id || 0));
+      } else if (mode === 'sales') {
+        copy.sort((a, b) => (b.salesCount || 0) - (a.salesCount || 0));
+      } else if (mode === 'priceLow') {
+        copy.sort(
+          (a, b) =>
+            (normalizePrice(a.salePrice ?? a.discountPrice ?? a.price) || 0) -
+            (normalizePrice(b.salePrice ?? b.discountPrice ?? b.price) || 0)
+        );
+      } else if (mode === 'priceHigh') {
+        copy.sort(
+          (a, b) =>
+            (normalizePrice(b.salePrice ?? b.discountPrice ?? b.price) || 0) -
+            (normalizePrice(a.salePrice ?? a.discountPrice ?? a.price) || 0)
+        );
+      }
+
+      return copy;
+    }
+
+    function renderSaleProducts() {
+      if (!saleListEl) return;
+
+      if (!saleProducts.length) {
+        saleListEl.innerHTML = '';
+        if (saleEmptyEl) saleEmptyEl.style.display = 'flex';
+        if (saleCountEl) saleCountEl.textContent = '0개의 상품';
+        return;
+      }
+
+      const sorted = applySaleSort(saleProducts);
+
+      if (saleEmptyEl) saleEmptyEl.style.display = 'none';
+      if (saleCountEl) saleCountEl.textContent = `${sorted.length}개의 상품`;
+
+      const html = sorted
+        .map((p) => {
+          const img1 = p.images && p.images.main1 ? p.images.main1 : '';
+          const img2 = p.images && p.images.main2 ? p.images.main2 : '';
+          const name = p.name || '';
+
+          // 상세 페이지에서 사용할 id (원본상품 id와 같다고 가정)
+          const baseId =
+            p.originalProductId ||
+            p.baseProductId ||
+            p.productId ||
+            p.id ||
+            '';
+
+          const originalRaw =
+            p.originalPrice ?? p.price ?? p.basePrice ?? null;
+          const saleRaw =
+            p.salePrice ?? p.discountPrice ?? p.priceAfterDiscount ?? null;
+
+          const originalText = formatPrice(originalRaw);
+          const saleText = formatPrice(saleRaw);
+
+          const onlyPriceRaw =
+            originalRaw == null && saleRaw == null ? p.price : null;
+          const onlyPriceText =
+            originalRaw == null && saleRaw == null
+              ? formatPrice(onlyPriceRaw)
+              : '';
+
+          return `
+            <article class="product-card">
+              <a href="#"
+                 class="product-link"
+                 data-product-id="${baseId}">
+                <div class="product-thumb">
+                  ${img1 ? `<img src="${img1}" alt="${name}">` : ''}
+                  ${img2 ? `<img src="${img2}" alt="${name}" class="hover-img">` : ''}
+                </div>
+                <div class="product-info">
+                  <h3 class="product-name">${name}</h3>
+                  <p class="product-price">
+                    ${
+                      originalText && saleText
+                        ? `<span style="text-decoration:line-through; color:#aaa; margin-right:6px;">
+                             ${originalText}
+                           </span>
+                           <span style="font-weight:600;">${saleText}</span>`
+                        : saleText
+                        ? `<span style="font-weight:600;">${saleText}</span>`
+                        : originalText
+                        ? `<span style="font-weight:600;">${originalText}</span>`
+                        : onlyPriceText
+                        ? `<span style="font-weight:600;">${onlyPriceText}</span>`
+                        : ''
+                    }
+                    ${
+                      p.discountRate != null
+                        ? `<span style="color:#ff3b3b; margin-left:4px;">${p.discountRate}%</span>`
+                        : ''
+                    }
+                  </p>
+                </div>
+              </a>
+            </article>
+          `;
+        })
+        .join('');
+
+      saleListEl.innerHTML = html;
+    }
+
+    if (saleSortSel) {
+      saleSortSel.addEventListener('change', renderSaleProducts);
+    }
+
+    renderSaleProducts();
+
+    /* ---------- 클릭 시 상품상세로 이동 ---------- */
+    if (saleListEl) {
+      saleListEl.addEventListener('click', function (e) {
+        const link = e.target.closest('.product-link');
+        if (!link) return;
+
+        e.preventDefault();
+
+        const productId = link.getAttribute('data-product-id');
+        if (!productId) {
+          alert('상품 상세 정보를 찾을 수 없습니다.');
+          return;
+        }
+
+        // 그냥 상세 페이지로 보내고, 못 찾으면 product-detail 쪽에서 안내
+        window.location.href =
+          'product_detail.html?id=' + encodeURIComponent(productId);
+      });
+    }
+  });
+</script>
+
+
+
+
+
 </body>
 </html>

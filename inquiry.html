@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>FON - 1:1 문의</title>
+
+  <!-- 폰트 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    .status-done {
+  color: #16a34a;
+  font-weight: 500;
+}
+
+    /* 1:1 문의 목록 섹션 높이 확보해서 푸터를 아래로 밀기 */
+#qnaListSection {
+  min-height: calc(100vh - 260px);
+}
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background-color: #ffffff;
+      color: #111827;
+    }
+    
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    ul { list-style: none; }
+
+    /* ------------------ GNB ------------------ */
+    .gnb-wrapper {
+      width: 100%;
+      background-color: #000;
+      color: #fff;
+    }
+
+    .gnb {
+      max-width: 1200px;
+      margin: 0 auto;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .gnb-logo {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+
+    .gnb-menu {
+      display: flex;
+      gap: 30px;
+      font-size: 14px;
+    }
+
+    .gnb-menu a {
+      color: #fff;
+    }
+
+    .gnb-menu a.sale {
+      color: #ff3b3b;
+      font-weight: 600;
+    }
+
+    .gnb-icons {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      color: #fff;
+    }
+
+    .icon-button {
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+
+    .icon-button svg {
+      width: 24px;
+      height: 24px;
+      stroke: currentColor;
+      stroke-width: 1.4;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .icon-button:hover svg { opacity: 0.85; }
+
+    /* ---------- 검색 오버레이 ---------- */
+    .search-dim {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(3px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s ease-out;
+      z-index: 40;
+    }
+
+    .search-dim.is-active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .search-layer {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding-top: 110px;
+      pointer-events: none;
+      z-index: 50;
+    }
+
+    .search-layer.is-active {
+      pointer-events: none;
+    }
+
+    .search-box {
+      width: min(520px, 92vw);
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+      padding: 18px 18px 14px;
+      transform: translateY(-18px);
+      opacity: 0;
+      transition: transform 0.22s ease-out, opacity 0.22s ease-out;
+      pointer-events: auto;
+    }
+
+    .search-layer.is-active .search-box {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .search-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .search-input {
+      flex: 1;
+      height: 38px;
+      padding: 0 12px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      font-size: 13px;
+      outline: none;
+    }
+
+    .search-input:focus {
+      border-color: #111;
+    }
+
+    .search-close-btn {
+      background: none;
+      border: none;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 999px;
+    }
+
+    .search-close-btn svg {
+      width: 18px;
+      height: 18px;
+      stroke: #333;
+      stroke-width: 1.8;
+      fill: none;
+      stroke-linecap: round;
+    }
+
+    .search-close-btn:hover {
+      background-color: #f4f4f4;
+    }
+
+    .search-results {
+      margin-top: 6px;
+      padding: 10px 8px 6px;
+      border-radius: 6px;
+      background-color: #fafafa;
+    }
+
+    .search-help {
+      font-size: 12px;
+      color: #888;
+    }
+
+    .search-no-result {
+      display: none;
+      margin-top: 6px;
+      font-size: 13px;
+      color: #777;
+    }
+
+    /* ------------------ 페이지 헤더 ------------------ */
+    .qna-header {
+      max-width: 1200px;
+      margin: 60px auto 30px;
+      padding: 0 40px;
+    }
+
+    .qna-title {
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .qna-sub {
+      font-size: 14px;
+      color: #6b7280;
+    }
+
+    /* ------------------ 목록 영역 ------------------ */
+    .qna-wrapper {
+      max-width: 1200px;
+      margin: 0 auto 80px;
+      padding: 0 40px;
+    }
+
+    .qna-inner-card {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .qna-list-header-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 16px;
+    }
+
+    .btn-write {
+      padding: 9px 28px;
+      border-radius: 0;
+      border: none;
+      background-color: #000;
+      color: #fff;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .btn-write:hover {
+      background-color: #222;
+    }
+
+    .qna-table-wrap {
+      border: 1px solid #e5e7eb;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    table.qna-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 14px;
+    }
+
+    .qna-table thead {
+      background-color: #f9fafb;
+    }
+
+    .qna-table th,
+    .qna-table td {
+      padding: 14px 12px;
+      text-align: center;
+      border-bottom: 1px solid #f3f4f6;
+    }
+
+    .qna-table th {
+      font-weight: 500;
+      color: #4b5563;
+    }
+
+    .qna-table td.title-cell {
+      text-align: left;
+      padding-left: 20px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .qna-empty-row td {
+      padding: 40px 12px;
+      color: #9ca3af;
+      text-align: center;
+    }
+
+    .status-wait {
+      color: #f97316;
+      font-weight: 500;
+    }
+
+    .qna-delete-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      color: #ef4444;
+    }
+
+    .qna-delete-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    /* ------------------ 글쓰기 폼 ------------------ */
+    .qna-form-section {
+      display: none; /* 처음엔 숨김 */
+    }
+
+    .form-card {
+      max-width: 900px;
+      margin: 0 auto 80px;
+      padding: 40px 40px 36px;
+      border: 1px solid #e5e7eb;
+      background-color: #fff;
+    }
+
+    .form-row {
+      margin-bottom: 18px;
+    }
+
+    .form-label {
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .form-label span.required {
+      color: #ef4444;
+      margin-left: 2px;
+    }
+
+    .form-select,
+    .form-input {
+      width: 100%;
+      height: 42px;
+      border-radius: 2px;
+      border: 1px solid #e5e7eb;
+      padding: 0 12px;
+      font-size: 14px;
+    }
+
+    .form-textarea {
+      width: 100%;
+      min-height: 220px;
+      border-radius: 2px;
+      border: 1px solid #e5e7eb;
+      padding: 12px;
+      font-size: 14px;
+      resize: vertical;
+    }
+
+    .form-select:focus,
+    .form-input:focus,
+    .form-textarea:focus {
+      outline: none;
+      border-color: #111;
+    }
+
+    .file-area {
+      border: 1px dashed #d1d5db;
+      background-color: #fafafa;
+      padding: 16px 18px 14px;
+      font-size: 13px;
+    }
+
+    .file-main-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+
+    .file-label-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 14px;
+      border: 1px solid #d1d5db;
+      font-size: 13px;
+      cursor: pointer;
+      background-color: #fff;
+    }
+
+    .file-name-text {
+      font-size: 13px;
+      color: #6b7280;
+    }
+
+    .file-add-row {
+      margin-top: 10px;
+      text-align: center;
+      font-size: 13px;
+      padding-top: 8px;
+      border-top: 1px dashed #e5e7eb;
+      color: #6b7280;
+    }
+
+    .agree-box {
+      margin-top: 26px;
+      padding: 18px 18px 16px;
+      background-color: #f9fafb;
+      border: 1px solid #e5e7eb;
+      font-size: 13px;
+    }
+
+    .agree-title-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .agree-title-row input {
+      width: 16px;
+      height: 16px;
+    }
+
+    .agree-desc {
+      font-size: 12px;
+      color: #6b7280;
+      line-height: 1.6;
+    }
+
+    .form-footer-buttons {
+      margin-top: 26px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .btn-cancel,
+    .btn-submit {
+      min-width: 110px;
+      height: 42px;
+      font-size: 14px;
+      border-radius: 0;
+      border: 1px solid #d1d5db;
+      background-color: #fff;
+      cursor: pointer;
+    }
+
+    .btn-submit {
+      background-color: #000;
+      color: #fff;
+      border-color: #000;
+    }
+
+    .btn-submit:hover {
+      background-color: #222;
+    }
+
+    .btn-cancel:hover {
+      background-color: #f4f4f5;
+    }
+
+    /* ------------------ FOOTER ------------------ */
+    .site-footer {
+      background-color: #000;
+      color: #fff;
+      padding: 40px 0 20px;
+      margin-top: 40px;
+      font-size: 14px;
+    }
+
+    .site-footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .footer-columns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 60px;
+      margin-bottom: 30px;
+      justify-content: space-between;
+    }
+
+    .footer-col-title {
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .footer-col li + li {
+      margin-top: 6px;
+    }
+
+    .footer-col a {
+      color: #ddd;
+      font-size: 13px;
+    }
+
+    .footer-col a:hover {
+      color: #fff;
+    }
+
+    .footer-desc {
+      font-size: 13px;
+      color: #ccc;
+      line-height: 1.6;
+    }
+
+    .footer-sns {
+      display: flex;
+      gap: 16px;
+      margin-top: 8px;
+      font-size: 18px;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid #333;
+      padding-top: 15px;
+      font-size: 12px;
+      color: #aaa;
+      text-align: left;
+    }
+
+    @media (max-width: 768px) {
+      .qna-header,
+      .qna-wrapper {
+        padding: 0 20px;
+      }
+
+      .form-card {
+        padding: 30px 20px 26px;
+      }
+
+      .footer-columns {
+        flex-direction: column;
+        gap: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- GNB -->
+  <header class="gnb-wrapper">
+    <nav class="gnb">
+      <div class="gnb-logo">
+        <a href="main.html">FON</a>
+      </div>
+
+      <div class="gnb-menu">
+        <a href="main.html">Best</a>
+        <a href="sale.html" class="sale">SALE</a>
+        <a href="outer.html">아우터</a>
+        <a href="top.html">상의</a>
+        <a href="bottom.html">하의</a>
+        <a href="accessory.html">악세서리</a>
+        <a href="community.html">커뮤니티</a>
+      
+      </div>
+
+      <div class="gnb-icons">
+        <!-- 검색 버튼 -->
+        <button class="icon-button" id="searchOpenBtn" aria-label="검색">
+          <svg viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="6.3"></circle>
+            <line x1="15.4" y1="15.4" x2="20" y2="20"></line>
+          </svg>
+        </button>
+
+        <!-- 로그인/마이페이지 -->
+        <a href="login.html" class="icon-button" id="userIconLink" aria-label="로그인 / 마이페이지">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="9" r="3.1"></circle>
+            <path d="M6.5 19c.8-2.6 2.8-4.3 5.5-4.3s4.7 1.7 5.5 4.3"></path>
+          </svg>
+        </a>
+
+        <!-- 장바구니 -->
+        <a href="cart.html" class="icon-button" aria-label="장바구니">
+          <svg viewBox="0 0 24 24">
+            <rect x="6.5" y="8" width="11" height="10" rx="1.8" ry="1.8"></rect>
+            <path d="M9 8V6.7A2.2 2.2 0 0 1 12 4.5A2.2 2.2 0 0 1 15 6.7V8"></path>
+            <path d="M9.3 12.2c.6.8 1.5 1.3 2.7 1.3s2.1-.5 2.7-1.3"></path>
+          </svg>
+        </a>
+
+        <!-- 관리자 플러스 버튼 -->
+        <button
+          class="icon-button admin-add"
+          aria-label="관리자 대시보드"
+          style="display: none"
+          onclick="window.location.href='admin.html'">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="7.5"></circle>
+            <line x1="12" y1="9" x2="12" y2="15"></line>
+            <line x1="9" y1="12" x2="15" y2="12"></line>
+          </svg>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- 검색 오버레이 -->
+  <div class="search-dim" id="searchDim"></div>
+  <div class="search-layer" id="searchLayer">
+    <div class="search-box" role="dialog" aria-modal="true">
+      <div class="search-header">
+        <input
+          type="text"
+          id="searchInput"
+          class="search-input"
+          placeholder="원하는 상품, 게시글을 검색해보세요."
+        />
+        <button class="search-close-btn" id="searchCloseBtn" aria-label="검색 닫기">
+          <svg viewBox="0 0 24 24">
+            <line x1="8" y1="8" x2="16" y2="16"></line>
+            <line x1="16" y1="8" x2="8" y2="16"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="search-results">
+        <p class="search-help" id="searchHelp">
+          검색어를 입력하면 결과를 보여드릴게요.
+        </p>
+        <p class="search-no-result" id="searchNoResult">
+          검색 결과가 없습니다.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 페이지 헤더 -->
+  <section class="qna-header">
+    <h1 class="qna-title">1:1 문의</h1>
+    <p class="qna-sub">궁금하신 사항을 문의해주세요</p>
+  </section>
+
+  <!-- 1) 목록 섹션 -->
+  <section class="qna-wrapper" id="qnaListSection">
+    <div class="qna-inner-card">
+      <div class="qna-list-header-row">
+        <button type="button" class="btn-write" id="btnGoWrite">글쓰기</button>
+      </div>
+
+      <div class="qna-table-wrap">
+        <table class="qna-table">
+          <thead>
+            <tr>
+              <th style="width: 70px;">번호</th>
+              <th style="width: 120px;">카테고리</th>
+              <th>제목</th>
+              <th style="width: 140px;">작성일</th>
+              <th style="width: 110px;">상태</th>
+              <th style="width: 70px;">삭제</th>
+            </tr>
+          </thead>
+          <tbody id="qnaTableBody">
+            <!-- JS 렌더링 -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2) 글쓰기 섹션 -->
+  <section class="qna-wrapper qna-form-section" id="qnaFormSection">
+    <div class="form-card">
+      <div class="form-row">
+        <label class="form-label" for="qnaCategory">
+          카테고리 <span class="required">*</span>
+        </label>
+        <select id="qnaCategory" class="form-select">
+          <option value="배송문의">배송문의</option>
+          <option value="상품문의">상품문의</option>
+          <option value="교환/반품">교환/반품</option>
+          <option value="기타문의">기타문의</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label" for="qnaTitle">
+          제목 <span class="required">*</span>
+        </label>
+        <input
+          type="text"
+          id="qnaTitle"
+          class="form-input"
+          placeholder="제목을 입력해주세요"
+        />
+      </div>
+
+      <div class="form-row">
+        <label class="form-label" for="qnaContent">
+          문의내용 <span class="required">*</span>
+        </label>
+        <textarea
+          id="qnaContent"
+          class="form-textarea"
+          placeholder="문의하실 내용을 자세히 작성해주세요."
+        ></textarea>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">
+          첨부파일
+        </label>
+        <div class="file-area">
+          <div class="file-main-row">
+            <span style="font-size:13px;">첨부파일 1</span>
+            <input type="file" id="qnaFile" style="display:none;" />
+            <label for="qnaFile" class="file-label-btn">
+              ⬆ 파일 선택
+            </label>
+            <span class="file-name-text" id="fileNameText">파일이 없습니다</span>
+          </div>
+          <div class="file-add-row">
+            + 첨부파일 추가
+          </div>
+          <div style="margin-top:8px; font-size:11px; color:#9ca3af;">
+            * 이미지 파일만 업로드 가능합니다 (최대 5MB)
+          </div>
+        </div>
+      </div>
+
+      <div class="agree-box">
+        <div class="agree-title-row">
+          <input type="checkbox" id="agreeCheck" />
+          <label for="agreeCheck">개인정보 수집 및 이용에 동의합니다.</label>
+        </div>
+        <div class="agree-desc">
+          1. 개인정보의 수집 및 이용 목적: 게시글 확인 및 상담을 위한 본인 확인, 문의 내용 처리<br />
+          2. 수집하는 개인정보: 작성자명, 문의 내용<br />
+          3. 개인정보의 보유 및 이용 기간: 문의 처리 후 3개월
+        </div>
+      </div>
+
+      <div class="form-footer-buttons">
+        <button type="button" class="btn-cancel" id="btnCancelForm">취소</button>
+        <button type="button" class="btn-submit" id="btnSubmitForm">등록</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <div class="footer-columns">
+        <div class="footer-col">
+          <div class="footer-col-title">FON</div>
+          <div class="footer-desc">
+            트렌디한 패션을 제안하는<br />온라인 셀렉트샵
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-col-title">고객센터</div>
+          <ul>
+            <li><a href="notice.html">공지사항</a></li>
+            <li><a href="faq.html">자주묻는질문</a></li>
+            <li><a href="inquiry.html">1:1 문의</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-col-title">정보</div>
+          <ul>
+            <li><a href="#">회사 소개</a></li>
+            <li><a href="#">이용약관</a></li>
+            <li><a href="#">개인정보처리방침</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-col-title">소셜 미디어</div>
+          <div class="footer-sns">
+            <a href="#">📷</a>
+            <a href="#">📘</a>
+            <a href="#">▶️</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        © 2024 FON. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      /* ---------- 로그인 & 관리자 플래그 ---------- */
+      const userLink = document.getElementById('userIconLink');
+      if (userLink) {
+        const isLoggedIn = localStorage.getItem('fonLoggedIn') === 'true';
+        userLink.href = isLoggedIn ? 'mypage.html' : 'login.html';
+      }
+
+      if (localStorage.getItem('isAdmin') === 'true') {
+        document
+          .querySelectorAll('.admin-add')
+          .forEach((el) => (el.style.display = 'flex'));
+      }
+
+      /* ---------- 검색 레이어 ---------- */
+      const openBtn = document.getElementById('searchOpenBtn');
+      const dim = document.getElementById('searchDim');
+      const layer = document.getElementById('searchLayer');
+      const input = document.getElementById('searchInput');
+      const closeBtn = document.getElementById('searchCloseBtn');
+      const noResult = document.getElementById('searchNoResult');
+      const helpText = document.getElementById('searchHelp');
+
+      function openSearch() {
+        if (!dim || !layer) return;
+        dim.classList.add('is-active');
+        layer.classList.add('is-active');
+        if (input) input.value = '';
+        if (noResult) noResult.style.display = 'none';
+        if (helpText) helpText.style.display = 'block';
+        setTimeout(() => {
+          if (input) input.focus();
+        }, 10);
+      }
+
+      function closeSearch() {
+        if (!dim || !layer) return;
+        dim.classList.remove('is-active');
+        layer.classList.remove('is-active');
+      }
+
+      if (openBtn) openBtn.addEventListener('click', openSearch);
+      if (closeBtn) closeBtn.addEventListener('click', closeSearch);
+      if (dim) dim.addEventListener('click', closeSearch);
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeSearch();
+      });
+
+      if (input && noResult) {
+        input.addEventListener('input', function (e) {
+          const value = e.target.value.trim();
+          if (!value) {
+            noResult.style.display = 'none';
+            if (helpText) helpText.style.display = 'block';
+            return;
+          }
+          if (helpText) helpText.style.display = 'none';
+          noResult.style.display = 'block';
+        });
+      }
+
+      /* ---------- 1:1 문의 로직 ---------- */
+      const listSection = document.getElementById('qnaListSection');
+      const formSection = document.getElementById('qnaFormSection');
+      const btnGoWrite = document.getElementById('btnGoWrite');
+      const btnCancelForm = document.getElementById('btnCancelForm');
+      const btnSubmitForm = document.getElementById('btnSubmitForm');
+      const tableBody = document.getElementById('qnaTableBody');
+
+      const categoryEl = document.getElementById('qnaCategory');
+      const titleEl = document.getElementById('qnaTitle');
+      const contentEl = document.getElementById('qnaContent');
+      const fileInput = document.getElementById('qnaFile');
+      const fileNameText = document.getElementById('fileNameText');
+      const agreeCheck = document.getElementById('agreeCheck');
+
+      function loadQnas() {
+        const raw = localStorage.getItem('qnaItems');
+        if (!raw) return [];
+        try {
+          const parsed = JSON.parse(raw);
+          return Array.isArray(parsed) ? parsed : [];
+        } catch (e) {
+          console.error('qnaItems parse error', e);
+          return [];
+        }
+      }
+
+      function saveQnas(arr) {
+        localStorage.setItem('qnaItems', JSON.stringify(arr));
+      }
+
+      function formatDate(d) {
+        const year = d.getFullYear();
+        const month = d.getMonth() + 1;
+        const day = d.getDate();
+        return year + '. ' + month + '. ' + day + '.';
+      }
+
+      function renderTable() {
+  const items = loadQnas();
+  if (!items.length) {
+    tableBody.innerHTML = `
+      <tr class="qna-empty-row">
+        <td colspan="6">등록된 문의가 없습니다.</td>
+      </tr>
+    `;
+    return;
+  }
+
+  const rowsHtml = items
+    .map((item, index) => {
+      // ✅ 상태에 따라 클래스 선택
+      const isDone = item.status === '답변완료';
+      const statusClass = isDone ? 'status-done' : 'status-wait';
+
+      return `
+        <tr data-id="${item.id}">
+          <td>${items.length - index}</td>
+          <td>${item.category}</td>
+          <td class="title-cell">${item.title}</td>
+          <td>${item.date}</td>
+          <td><span class="${statusClass}">${item.status}</span></td>
+          <td>
+            <button type="button"
+                    class="qna-delete-btn"
+                    data-id="${item.id}"
+                    aria-label="삭제">
+              🗑
+            </button>
+          </td>
+        </tr>
+      `;
+    })
+    .join('');
+
+  tableBody.innerHTML = rowsHtml;
+}
+
+
+      function switchToForm() {
+        listSection.style.display = 'none';
+        formSection.style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      function switchToList() {
+        formSection.style.display = 'none';
+        listSection.style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      btnGoWrite.addEventListener('click', switchToForm);
+      btnCancelForm.addEventListener('click', switchToList);
+
+      fileInput.addEventListener('change', function () {
+        if (fileInput.files && fileInput.files[0]) {
+          fileNameText.textContent = fileInput.files[0].name;
+        } else {
+          fileNameText.textContent = '파일이 없습니다';
+        }
+      });
+
+      btnSubmitForm.addEventListener('click', function () {
+        const category = categoryEl.value.trim();
+        const title = titleEl.value.trim();
+        const content = contentEl.value.trim();
+
+        if (!category || !title || !content) {
+          alert('카테고리, 제목, 문의내용을 모두 입력해주세요.');
+          return;
+        }
+
+        if (!agreeCheck.checked) {
+          alert('개인정보 수집 및 이용에 동의해 주세요.');
+          return;
+        }
+
+        const items = loadQnas();
+        const newId = items.length ? items[items.length - 1].id + 1 : 1;
+        const now = new Date();
+
+        const newItem = {
+          id: newId,
+          category,
+          title,
+          content,
+          date: formatDate(now),
+          status: '답변대기'
+        };
+
+        items.push(newItem);
+        saveQnas(items);
+
+        // 폼 초기화
+        titleEl.value = '';
+        contentEl.value = '';
+        fileInput.value = '';
+        fileNameText.textContent = '파일이 없습니다';
+        agreeCheck.checked = false;
+        categoryEl.value = '배송문의';
+
+        renderTable();
+        switchToList();
+      });
+
+      // 삭제 버튼
+      tableBody.addEventListener('click', function (e) {
+        const btn = e.target.closest('.qna-delete-btn');
+        if (!btn) return;
+
+        const id = btn.getAttribute('data-id');
+        if (!id) return;
+
+        if (!confirm('해당 문의를 삭제하시겠습니까?')) return;
+
+        let items = loadQnas();
+        items = items.filter((item) => String(item.id) !== String(id));
+        saveQnas(items);
+        renderTable();
+      });
+
+      // 초기 렌더링
+      renderTable();
+    });
+  </script>
+</body>
+</html>

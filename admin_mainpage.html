@@ -26,11 +26,7 @@
       color: #111;
     }
 
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
-
+    a { text-decoration: none; color: inherit; }
     ul { list-style: none; }
 
     /* ---------- 상단 네비게이션 (공통) ---------- */
@@ -315,18 +311,12 @@
       align-items: center;
       justify-content: space-between;
       margin-bottom: 18px;
-      gap: 12px;
+      gap: 10px;
     }
 
     .section-title {
       font-size: 16px;
       font-weight: 600;
-    }
-
-    .section-title small {
-      font-size: 13px;
-      color: #888;
-      margin-left: 4px;
     }
 
     .field-group {
@@ -414,7 +404,7 @@
       display: none;
     }
 
-    /* 인기상품 고정 카드 */
+    /* 인기 상품 고정 카드 */
     .popular-fixed-list {
       display: flex;
       flex-wrap: wrap;
@@ -443,6 +433,7 @@
       border: 1px solid #e2e8f0;
       overflow: hidden;
       box-shadow: 0 12px 25px rgba(15, 23, 42, 0.08);
+      position: relative;
     }
 
     .popular-card-img {
@@ -468,6 +459,29 @@
       font-weight: 600;
     }
 
+    /* X 버튼 */
+    .popular-card-close {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      border: none;
+      background: rgba(15, 23, 42, 0.8);
+      color: #fff;
+      font-size: 13px;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .popular-card-close:hover {
+      background: rgba(15, 23, 42, 0.96);
+    }
+
     .btn-select-product {
       padding: 8px 18px;
       border-radius: 16px;
@@ -479,17 +493,6 @@
     }
 
     .btn-select-product:hover { background-color: #222; }
-
-    .popular-actions {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .popular-auto-text {
-      font-size: 12px;
-      color: #9ca3af;
-    }
 
     /* ---------- 인기상품 선택 모달 ---------- */
     .popular-modal-backdrop {
@@ -656,7 +659,6 @@
     }
 
     .footer-col ul { padding: 0; }
-
     .footer-col li + li { margin-top: 6px; }
 
     .footer-col a {
@@ -721,7 +723,7 @@
         <a href="bottom.html">하의</a>
         <a href="accessory.html">악세서리</a>
         <a href="community.html">커뮤니티</a>
-        <a href="#">코디하기</a>
+
       </div>
 
       <div class="gnb-icons">
@@ -755,7 +757,7 @@
           </svg>
         </a>
 
-        <!-- 관리자 전용 플러스 -->
+        <!-- 관리자 플러스 -->
         <button
           class="icon-button admin-add"
           aria-label="관리자 대시보드"
@@ -837,7 +839,7 @@
         <!-- 히어로 이미지 카드 -->
         <div class="section-card">
           <div class="section-title-row">
-            <h2 class="section-title">메인 페이지 관리</h2>
+            <h2 class="section-title">메인 이미지 관리</h2>
           </div>
 
           <div class="field-group">
@@ -875,30 +877,25 @@
             메인 이미지 적용
           </button>
 
-          <p id="status" class="status-text">메인 이미지가 저장되었습니다.</p>
+          <p id="status" class="status-text">
+            메인 이미지가 저장되었습니다. 메인 페이지를 새로고침 해주세요.
+          </p>
         </div>
 
         <!-- 인기 상품 고정 카드 -->
         <div class="section-card">
           <div class="section-title-row">
-            <h2 class="section-title">
-              인기 상품 고정 <small id="popularCountLabel">(0/4)</small>
-            </h2>
-            <div class="popular-actions">
-              <button class="btn-select-product" type="button" id="openPopularModal">
-                상품 선택
-              </button>
-              <span class="popular-auto-text">
-                선택하지 않으면 구매 횟수 기준 자동 노출
-              </span>
-            </div>
+            <h2 class="section-title" id="popular-title">인기 상품 고정 (0/4)</h2>
+            <button class="btn-select-product" type="button" id="open-popular-modal">
+              상품 선택
+            </button>
           </div>
 
-          <div id="popularFixedList" class="popular-fixed-list">
-            <div class="popular-empty-box" id="popularEmptyBox">
-              고정된 인기상품이 없습니다.<br />
-              현재 구매 횟수 기반으로 자동 표시됩니다.
+          <div id="popular-fixed-container">
+            <div class="popular-empty-box" id="popular-empty">
+              고정된 인기상품이 없습니다.
             </div>
+            <div class="popular-fixed-list" id="popular-fixed-list" style="display:none;"></div>
           </div>
         </div>
       </section>
@@ -906,30 +903,32 @@
   </main>
 
   <!-- 인기상품 선택 모달 -->
-  <div class="popular-modal-backdrop" id="popularModal">
+  <div class="popular-modal-backdrop" id="popular-modal-backdrop">
     <div class="popular-modal">
       <div class="popular-modal-header">
         <div>
-          <div class="popular-modal-title">
-            상품을 선택하세요 (최대 4개)
-          </div>
+          <div class="popular-modal-title">상품을 선택하세요 (최대 4개)</div>
           <div class="popular-modal-sub">
-            인기 상품 영역에 고정할 상품을 선택합니다. 선택하지 않으면 구매 횟수 기준 자동 노출됩니다.
+            인기 상품 영역에 고정할 상품을 선택합니다.
           </div>
         </div>
         <div class="popular-modal-right">
-          <span id="popularSelectedCount">선택 0/4</span>
-          <span class="popular-modal-close" id="popularModalClose">닫기</span>
+          <span id="popular-count-text">선택 0/4</span>
+          <span class="popular-modal-close" id="popular-modal-close">닫기</span>
         </div>
       </div>
 
-      <div class="popular-select-grid" id="popularSelectGrid">
-        <!-- 상품 카드가 js로 채워짐 -->
+      <div class="popular-select-grid" id="popular-select-grid">
+        <!-- 상품 카드들 JS로 채움 -->
       </div>
 
       <div class="popular-modal-footer">
-        <button class="btn-modal-secondary" id="popularModalCancel">닫기</button>
-        <button class="btn-modal-primary" id="popularModalConfirm">상품 선택</button>
+        <button type="button" class="btn-modal-secondary" id="popular-modal-cancel">
+          취소
+        </button>
+        <button type="button" class="btn-modal-primary" id="popular-modal-apply">
+          상품 선택
+        </button>
       </div>
     </div>
   </div>
@@ -980,302 +979,355 @@
     </div>
   </footer>
 
-  <!-- 스크립트 -->
   <script>
-    function loadProducts() {
-      try {
-        const raw = localStorage.getItem('fonProducts');
-        const parsed = raw ? JSON.parse(raw) : [];
-        return Array.isArray(parsed) ? parsed : [];
-      } catch (e) {
-        console.error(e);
-        return [];
+  // 공용: 제품 로드
+  function loadProducts() {
+    const raw = localStorage.getItem('fonProducts');
+    if (!raw) return [];
+    try {
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+      console.error('loadProducts 파싱 오류:', e);
+      return [];
+    }
+  }
+
+  // 공용: 제품 저장 (id 정리 후 다시 저장할 때 사용)
+  function saveProducts(list) {
+    localStorage.setItem('fonProducts', JSON.stringify(list));
+  }
+
+  // 공용: 인기상품 로드/저장
+  function loadPopularProducts() {
+    const raw = localStorage.getItem('popularProducts');
+    if (!raw) return [];
+    try {
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function savePopularProducts(list) {
+    localStorage.setItem('popularProducts', JSON.stringify(list));
+  }
+
+  // ✅ 핵심: id가 없거나 중복된 상품들을 자동으로 정리해주는 함수
+  function normalizeProducts(all) {
+    let changed = false;
+    const seen = new Set();
+    let maxNum = 0;
+
+    // 현재까지 숫자 id 중 가장 큰 값 찾기
+    all.forEach((p) => {
+      const num = parseInt(p.id, 10);
+      if (!isNaN(num) && num > maxNum) maxNum = num;
+    });
+
+    all.forEach((p) => {
+      const idStr = p.id != null ? String(p.id) : '';
+      if (!idStr || seen.has(idStr)) {
+        // id가 없거나, 이미 사용된 id면 새 id 부여
+        maxNum += 1;
+        p.id = String(maxNum);
+        changed = true;
       }
+      seen.add(String(p.id));
+    });
+
+    if (changed) {
+      console.log('normalizeProducts: id 정리 후 저장됨', all);
+      saveProducts(all);
+    }
+    return all;
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    // 로그인/마이페이지 링크
+    const userLink = document.getElementById('userIconLink');
+    if (userLink) {
+      const isLoggedIn = localStorage.getItem('fonLoggedIn') === 'true';
+      userLink.href = isLoggedIn ? 'mypage.html' : 'login.html';
     }
 
-    function loadFixedPopularIds() {
-      try {
-        const raw = localStorage.getItem('fixedPopularProducts');
-        const parsed = raw ? JSON.parse(raw) : [];
-        return Array.isArray(parsed) ? parsed : [];
-      } catch (e) {
-        console.error(e);
-        return [];
-      }
+    // 관리자 플러스 아이콘
+    if (localStorage.getItem('isAdmin') === 'true') {
+      document
+        .querySelectorAll('.admin-add')
+        .forEach((el) => (el.style.display = 'flex'));
     }
 
-    function saveFixedPopularIds(arr) {
-      localStorage.setItem('fixedPopularProducts', JSON.stringify(arr));
+    // 검색 레이어
+    const openBtn = document.getElementById('searchOpenBtn');
+    const dim = document.getElementById('searchDim');
+    const layer = document.getElementById('searchLayer');
+    const input = document.getElementById('searchInput');
+    const closeBtn = document.getElementById('searchCloseBtn');
+    const noResult = document.getElementById('searchNoResult');
+    const helpText = document.getElementById('searchHelp');
+
+    function openSearch() {
+      if (!dim || !layer) return;
+      dim.classList.add('is-active');
+      layer.classList.add('is-active');
+      if (input) input.value = '';
+      if (noResult) noResult.style.display = 'none';
+      if (helpText) helpText.style.display = 'block';
+      setTimeout(() => { if (input) input.focus(); }, 10);
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
-      // 로그인 상태에 따라 사람 아이콘 이동
-      const userLink = document.getElementById('userIconLink');
-      if (userLink) {
-        const isLoggedIn = localStorage.getItem('fonLoggedIn') === 'true';
-        userLink.href = isLoggedIn ? 'mypage.html' : 'login.html';
-      }
+    function closeSearch() {
+      if (!dim || !layer) return;
+      dim.classList.remove('is-active');
+      layer.classList.remove('is-active');
+    }
 
-      // 관리자 플러스 버튼
-      if (localStorage.getItem('isAdmin') === 'true') {
-        document
-          .querySelectorAll('.admin-add')
-          .forEach((el) => (el.style.display = 'flex'));
-      }
+    if (openBtn) openBtn.addEventListener('click', openSearch);
+    if (closeBtn) closeBtn.addEventListener('click', closeSearch);
+    if (dim) dim.addEventListener('click', closeSearch);
 
-      // 검색 레이어
-      const openBtn = document.getElementById('searchOpenBtn');
-      const dim = document.getElementById('searchDim');
-      const layer = document.getElementById('searchLayer');
-      const input = document.getElementById('searchInput');
-      const closeBtn = document.getElementById('searchCloseBtn');
-      const noResult = document.getElementById('searchNoResult');
-      const helpText = document.getElementById('searchHelp');
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeSearch();
+    });
 
-      function openSearch() {
-        if (!dim || !layer) return;
-        dim.classList.add('is-active');
-        layer.classList.add('is-active');
-        if (input) input.value = '';
-        if (noResult) noResult.style.display = 'none';
-        if (helpText) helpText.style.display = 'block';
-        setTimeout(() => { if (input) input.focus(); }, 10);
-      }
-
-      function closeSearch() {
-        if (!dim || !layer) return;
-        dim.classList.remove('is-active');
-        layer.classList.remove('is-active');
-      }
-
-      if (openBtn) openBtn.addEventListener('click', openSearch);
-      if (closeBtn) closeBtn.addEventListener('click', closeSearch);
-      if (dim) dim.addEventListener('click', closeSearch);
-
-      document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') closeSearch();
-      });
-
-      if (input && noResult) {
-        input.addEventListener('input', function (e) {
-          const value = e.target.value.trim();
-          if (!value) {
-            noResult.style.display = 'none';
-            if (helpText) helpText.style.display = 'block';
-            return;
-          }
+    if (input && noResult) {
+      input.addEventListener('input', function (e) {
+        const value = e.target.value.trim();
+        if (!value) {
+          noResult.style.display = 'none';
+          if (helpText) helpText.style.display = 'block';
+        } else {
           if (helpText) helpText.style.display = 'none';
           noResult.style.display = 'block';
+        }
+      });
+    }
+
+    // 히어로 이미지 저장
+    const heroUrlInput = document.getElementById('hero-url');
+    const heroFileInput = document.getElementById('hero-file');
+    const fileNameSpan = document.getElementById('file-name');
+    const applyBtn = document.getElementById('apply-hero');
+    const status = document.getElementById('status');
+
+    const savedHero = localStorage.getItem('heroImage');
+    if (savedHero && !savedHero.startsWith('data:')) {
+      heroUrlInput.value = savedHero;
+    }
+
+    heroFileInput.addEventListener('change', function () {
+      if (heroFileInput.files && heroFileInput.files[0]) {
+        fileNameSpan.textContent = heroFileInput.files[0].name;
+      } else {
+        fileNameSpan.textContent = '선택된 파일 없음';
+      }
+    });
+
+    applyBtn.addEventListener('click', function () {
+      const urlValue = heroUrlInput.value.trim();
+      if (heroFileInput.files && heroFileInput.files[0]) {
+        const file = heroFileInput.files[0];
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          localStorage.setItem('heroImage', e.target.result);
+          showStatus();
+        };
+        reader.readAsDataURL(file);
+      } else if (urlValue) {
+        localStorage.setItem('heroImage', urlValue);
+        showStatus();
+      } else {
+        alert('이미지 URL을 입력하거나 파일을 업로드 해주세요.');
+      }
+    });
+
+    function showStatus() {
+      status.style.display = 'block';
+      setTimeout(() => { status.style.display = 'none'; }, 2500);
+    }
+
+    /* ---------- 인기상품 고정 렌더링 ---------- */
+    const popularTitle = document.getElementById('popular-title');
+    const popularEmpty = document.getElementById('popular-empty');
+    const popularListEl = document.getElementById('popular-fixed-list');
+
+    function renderPopularFixed() {
+      const popular = loadPopularProducts();
+      const count = popular.length;
+
+      popularTitle.textContent = `인기 상품 고정 (${count}/4)`;
+
+      if (!count) {
+        popularEmpty.style.display = 'flex';
+        popularListEl.style.display = 'none';
+        popularListEl.innerHTML = '';
+        return;
+      }
+
+      popularEmpty.style.display = 'none';
+      popularListEl.style.display = 'flex';
+      popularListEl.innerHTML = '';
+
+      popular.forEach((p) => {
+        const card = document.createElement('div');
+        card.className = 'popular-card';
+
+        const img = document.createElement('img');
+        img.className = 'popular-card-img';
+        img.src = (p.images && (p.images.main1 || p.images.main2)) || '';
+        img.alt = p.name || '';
+
+        const body = document.createElement('div');
+        body.className = 'popular-card-body';
+
+        const nameEl = document.createElement('div');
+        nameEl.className = 'popular-card-name';
+        nameEl.textContent = p.name || '';
+
+        const priceEl = document.createElement('div');
+        priceEl.className = 'popular-card-price';
+        if (typeof p.price === 'number') {
+          priceEl.textContent = p.price.toLocaleString() + '원';
+        } else {
+          priceEl.textContent = p.price || '';
+        }
+
+        body.appendChild(nameEl);
+        body.appendChild(priceEl);
+
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'popular-card-close';
+        closeBtn.type = 'button';
+        closeBtn.textContent = '×';
+        closeBtn.addEventListener('click', function () {
+          const updated = loadPopularProducts().filter(
+            (item) => String(item.id) !== String(p.id),
+          );
+          savePopularProducts(updated);
+          renderPopularFixed();
         });
-      }
 
-      // 히어로 이미지 저장 로직
-      const heroUrlInput = document.getElementById('hero-url');
-      const heroFileInput = document.getElementById('hero-file');
-      const fileNameSpan = document.getElementById('file-name');
-      const applyBtn = document.getElementById('apply-hero');
-      const status = document.getElementById('status');
-
-      const savedHero = localStorage.getItem('heroImage');
-      if (savedHero && !savedHero.startsWith('data:')) {
-        heroUrlInput.value = savedHero;
-      }
-
-      heroFileInput.addEventListener('change', function () {
-        if (heroFileInput.files && heroFileInput.files[0]) {
-          fileNameSpan.textContent = heroFileInput.files[0].name;
-        } else {
-          fileNameSpan.textContent = '선택된 파일 없음';
-        }
+        card.appendChild(img);
+        card.appendChild(closeBtn);
+        card.appendChild(body);
+        popularListEl.appendChild(card);
       });
+    }
 
-      applyBtn.addEventListener('click', function () {
-        const urlValue = heroUrlInput.value.trim();
-        if (heroFileInput.files && heroFileInput.files[0]) {
-          const file = heroFileInput.files[0];
-          const reader = new FileReader();
-          reader.onload = function (e) {
-            localStorage.setItem('heroImage', e.target.result);
-            showHeroStatus();
-          };
-          reader.readAsDataURL(file);
-        } else if (urlValue) {
-          localStorage.setItem('heroImage', urlValue);
-          showHeroStatus();
+    renderPopularFixed();
+
+    /* ---------- 인기상품 선택 모달 ---------- */
+    const modalBackdrop = document.getElementById('popular-modal-backdrop');
+    const modalOpenBtn = document.getElementById('open-popular-modal');
+    const modalCloseBtn = document.getElementById('popular-modal-close');
+    const modalCancelBtn = document.getElementById('popular-modal-cancel');
+    const modalApplyBtn = document.getElementById('popular-modal-apply');
+    const modalGrid = document.getElementById('popular-select-grid');
+    const countText = document.getElementById('popular-count-text');
+
+    let currentSelectedIds = [];
+
+    function openPopularModal() {
+      // ✅ 여기서 한 번 id 정리하고 나서 사용
+      let allProducts = loadProducts();
+      allProducts = normalizeProducts(allProducts);
+
+      const popular = loadPopularProducts();
+      currentSelectedIds = popular.map((p) => String(p.id));
+
+      modalGrid.innerHTML = '';
+
+      allProducts.forEach((p) => {
+        const item = document.createElement('div');
+        item.className = 'popular-select-item';
+        item.dataset.id = p.id;
+
+        if (currentSelectedIds.includes(String(p.id))) {
+          item.classList.add('selected');
+        }
+
+        const img = document.createElement('img');
+        img.src = (p.images && (p.images.main1 || p.images.main2)) || '';
+        img.alt = p.name || '';
+
+        const body = document.createElement('div');
+        body.className = 'popular-select-body';
+
+        const nameEl = document.createElement('div');
+        nameEl.className = 'popular-select-name';
+        nameEl.textContent = p.name || '';
+
+        const priceEl = document.createElement('div');
+        priceEl.className = 'popular-select-price';
+        if (typeof p.price === 'number') {
+          priceEl.textContent = p.price.toLocaleString() + '원';
         } else {
-          alert('이미지 URL을 입력하거나 파일을 업로드 해주세요.');
-        }
-      });
-
-      function showHeroStatus() {
-        status.style.display = 'block';
-        status.textContent = '메인 이미지가 저장되었습니다. 메인 페이지를 새로고침 해주세요.';
-        setTimeout(() => {
-          status.style.display = 'none';
-        }, 2500);
-      }
-
-      // ---------- 인기상품 고정 로직 ----------
-      const products = loadProducts();
-      let fixedIds = loadFixedPopularIds();       // ['id1','id2',...]
-      const popularFixedList = document.getElementById('popularFixedList');
-      const popularEmptyBox = document.getElementById('popularEmptyBox');
-      const popularCountLabel = document.getElementById('popularCountLabel');
-
-      function renderFixedPopular() {
-        popularFixedList.innerHTML = '';
-        if (!fixedIds.length) {
-          popularFixedList.appendChild(popularEmptyBox);
-          popularEmptyBox.style.display = 'flex';
-        } else {
-          fixedIds.forEach((id) => {
-            const p = products.find((x) => String(x.id) === String(id));
-            if (!p) return;
-            const card = document.createElement('div');
-            card.className = 'popular-card';
-
-            const img = document.createElement('img');
-            img.className = 'popular-card-img';
-            img.src =
-              (p.images && (p.images.main1 || p.images.main2)) ||
-              'https://via.placeholder.com/300x400?text=No+Image';
-
-            const body = document.createElement('div');
-            body.className = 'popular-card-body';
-
-            const nameEl = document.createElement('div');
-            nameEl.className = 'popular-card-name';
-            nameEl.textContent = p.name || '상품명 없음';
-
-            const priceEl = document.createElement('div');
-            priceEl.className = 'popular-card-price';
-            priceEl.textContent =
-              (p.price ? p.price.toLocaleString('ko-KR') : '0') + '원';
-
-            body.appendChild(nameEl);
-            body.appendChild(priceEl);
-
-            card.appendChild(img);
-            card.appendChild(body);
-
-            popularFixedList.appendChild(card);
-          });
-          popularEmptyBox.style.display = 'none';
-        }
-        popularCountLabel.textContent = '(' + fixedIds.length + '/4)';
-      }
-
-      renderFixedPopular();
-
-      // 모달
-      const modalBackdrop = document.getElementById('popularModal');
-      const openPopularModalBtn = document.getElementById('openPopularModal');
-      const modalCloseSpan = document.getElementById('popularModalClose');
-      const modalCancelBtn = document.getElementById('popularModalCancel');
-      const modalConfirmBtn = document.getElementById('popularModalConfirm');
-      const popularSelectGrid = document.getElementById('popularSelectGrid');
-      const popularSelectedCount = document.getElementById('popularSelectedCount');
-
-      let selectedIds = new Set(fixedIds); // 초기 선택값
-
-      function openPopularModal() {
-        selectedIds = new Set(fixedIds);
-        buildSelectGrid();
-        updateSelectedCount();
-        modalBackdrop.classList.add('is-open');
-      }
-
-      function closePopularModal() {
-        modalBackdrop.classList.remove('is-open');
-      }
-
-      function buildSelectGrid() {
-        popularSelectGrid.innerHTML = '';
-        if (!products.length) {
-          const msg = document.createElement('div');
-          msg.style.padding = '40px 0';
-          msg.style.width = '100%';
-          msg.style.textAlign = 'center';
-          msg.style.color = '#6b7280';
-          msg.textContent = '등록된 상품이 없습니다. 먼저 상품 관리에서 상품을 등록해주세요.';
-          popularSelectGrid.appendChild(msg);
-          return;
+          priceEl.textContent = p.price || '';
         }
 
-        products.forEach((p) => {
-          const item = document.createElement('div');
-          item.className = 'popular-select-item';
-          item.dataset.id = p.id;
+        body.appendChild(nameEl);
+        body.appendChild(priceEl);
 
-          if (selectedIds.has(String(p.id))) {
+        item.appendChild(img);
+        item.appendChild(body);
+
+        item.addEventListener('click', function () {
+          const id = String(p.id);
+          const idx = currentSelectedIds.indexOf(id);
+          if (idx !== -1) {
+            // 선택 해제
+            currentSelectedIds.splice(idx, 1);
+            item.classList.remove('selected');
+          } else {
+            // 새로 선택 (최대 4개)
+            if (currentSelectedIds.length >= 4) {
+              alert('인기 상품은 최대 4개까지 고정할 수 있습니다.');
+              return;
+            }
+            currentSelectedIds.push(id);
             item.classList.add('selected');
           }
-
-          const img = document.createElement('img');
-          img.src =
-            (p.images && (p.images.main1 || p.images.main2)) ||
-            'https://via.placeholder.com/300x400?text=No+Image';
-
-          const body = document.createElement('div');
-          body.className = 'popular-select-body';
-
-          const nameEl = document.createElement('div');
-          nameEl.className = 'popular-select-name';
-          nameEl.textContent = p.name || '상품명 없음';
-
-          const priceEl = document.createElement('div');
-          priceEl.className = 'popular-select-price';
-          priceEl.textContent =
-            (p.price ? p.price.toLocaleString('ko-KR') : '0') + '원';
-
-          body.appendChild(nameEl);
-          body.appendChild(priceEl);
-
-          item.appendChild(img);
-          item.appendChild(body);
-
-          item.addEventListener('click', function () {
-            const id = String(p.id);
-            if (selectedIds.has(id)) {
-              selectedIds.delete(id);
-              item.classList.remove('selected');
-            } else {
-              if (selectedIds.size >= 4) {
-                alert('인기상품은 최대 4개까지 선택할 수 있습니다.');
-                return;
-              }
-              selectedIds.add(id);
-              item.classList.add('selected');
-            }
-            updateSelectedCount();
-          });
-
-          popularSelectGrid.appendChild(item);
+          updateCountText();
         });
-      }
 
-      function updateSelectedCount() {
-        popularSelectedCount.textContent = '선택 ' + selectedIds.size + '/4';
-      }
-
-      openPopularModalBtn.addEventListener('click', openPopularModal);
-      modalCloseSpan.addEventListener('click', closePopularModal);
-      modalCancelBtn.addEventListener('click', closePopularModal);
-
-      modalConfirmBtn.addEventListener('click', function () {
-        fixedIds = Array.from(selectedIds);
-        saveFixedPopularIds(fixedIds);
-        renderFixedPopular();
-        closePopularModal();
+        modalGrid.appendChild(item);
       });
 
-      // 오버레이 클릭 시 닫기 (모달 밖만)
-      modalBackdrop.addEventListener('click', function (e) {
-        if (e.target === modalBackdrop) {
-          closePopularModal();
-        }
-      });
+      updateCountText();
+      modalBackdrop.classList.add('is-open');
+    }
+
+    function closePopularModal() {
+      modalBackdrop.classList.remove('is-open');
+    }
+
+    function updateCountText() {
+      countText.textContent = `선택 ${currentSelectedIds.length}/4`;
+    }
+
+    modalOpenBtn.addEventListener('click', openPopularModal);
+    modalCloseBtn.addEventListener('click', closePopularModal);
+    modalCancelBtn.addEventListener('click', closePopularModal);
+    modalBackdrop.addEventListener('click', function (e) {
+      if (e.target === modalBackdrop) closePopularModal();
     });
-  </script>
+
+    modalApplyBtn.addEventListener('click', function () {
+      const allProducts = loadProducts();
+      const normalized = normalizeProducts(allProducts);
+      const selected = normalized.filter((p) =>
+        currentSelectedIds.includes(String(p.id)),
+      );
+      savePopularProducts(selected);
+      renderPopularFixed();
+      closePopularModal();
+    });
+  });
+</script>
+
+
+
 </body>
 </html>

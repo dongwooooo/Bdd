@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <title>FON - 공지사항</title>
+  <title>FON - 관리자 FAQ 관리</title>
 
   <!-- 폰트 -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -20,9 +20,10 @@
     }
 
     body {
-      font-family: 'Noto Sans KR', sans-serif;
+      font-family: 'Noto Sans KR', system-ui, -apple-system, BlinkMacSystemFont,
+        sans-serif;
       background-color: #ffffff;
-      color: #111827;
+      color: #111;
     }
 
     a {
@@ -32,7 +33,7 @@
 
     ul { list-style: none; }
 
-    /* ------------------ GNB ------------------ */
+    /* ---------- 상단 네비게이션 (admin_inquiry와 동일) ---------- */
     .gnb-wrapper {
       width: 100%;
       background-color: #000;
@@ -60,9 +61,7 @@
       font-size: 14px;
     }
 
-    .gnb-menu a {
-      color: #fff;
-    }
+    .gnb-menu a { color: #fff; }
 
     .gnb-menu a.sale {
       color: #ff3b3b;
@@ -99,7 +98,7 @@
 
     .icon-button:hover svg { opacity: 0.85; }
 
-    /* ---------- 검색 오버레이 & 검색 박스 ---------- */
+    /* ---------- 검색 오버레이 (공통) ---------- */
     .search-dim {
       position: fixed;
       inset: 0;
@@ -110,7 +109,6 @@
       transition: opacity 0.18s ease-out;
       z-index: 40;
     }
-
     .search-dim.is-active {
       opacity: 1;
       pointer-events: auto;
@@ -126,7 +124,6 @@
       pointer-events: none;
       z-index: 50;
     }
-
     .search-layer.is-active {
       pointer-events: none;
     }
@@ -213,92 +210,239 @@
       color: #777;
     }
 
-    /* ------------------ 페이지 헤더 ------------------ */
-    .notice-header {
+    /* ---------- 상단 검정 배경 + 브레드크럼 ---------- */
+    .admin-top-bar {
+      background-color: #000;
+      color: #fff;
+      padding: 18px 0 22px;
+    }
+
+    .admin-top-inner {
       max-width: 1200px;
-      margin: 60px auto 30px;
-      padding: 0 40px;
-    }
-
-    .notice-title {
-      font-size: 26px;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-
-    .notice-sub {
-      font-size: 14px;
-      color: #6b7280;
-    }
-
-    /* ------------------ 공지 리스트 ------------------ */
-    .notice-wrapper {
-      max-width: 1200px;
-      margin: 0 auto 80px;
-      padding: 0 40px;
-    }
-
-    .notice-list {
-      max-width: 800px;
-      margin-left: auto;
-      margin-right: auto;
-      border: 1px solid #e5e7eb;
-      border-radius: 2px;
-      background-color: #ffffff;
-    }
-
-    .notice-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 18px 22px;
-      border-bottom: 1px solid #f3f4f6;
+      margin: 0 auto;
+      padding: 0 20px;
       font-size: 14px;
     }
 
-    .notice-item:last-child {
-      border-bottom: none;
-    }
-
-    .notice-left {
+    .admin-breadcrumb {
       display: flex;
       flex-direction: column;
       gap: 4px;
-      max-width: 85%;
     }
 
-    .notice-title-text {
-      font-size: 14px;
-      font-weight: 500;
-    }
-
-    .notice-preview {
-      font-size: 13px;
-      color: #6b7280;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .notice-date {
-      font-size: 12px;
-      color: #9ca3af;
-      white-space: nowrap;
-      margin-left: 14px;
+    .admin-back-row {
       display: flex;
       align-items: center;
+      gap: 4px;
+      font-size: 13px;
+      cursor: pointer;
+      opacity: 0.8;
     }
 
-    .notice-item:hover {
-      background-color: #fafafa;
+    .admin-back-row span.icon {
+      font-size: 16px;
     }
 
-    /* ------------------ FOOTER ------------------ */
+    .admin-title-main {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .admin-title-sub {
+      font-size: 13px;
+      color: #e5e7eb;
+      opacity: 0.9;
+    }
+
+    /* ---------- 메인 영역 ---------- */
+    .admin-faq-main {
+      background-color: #f5f6f8;
+      min-height: calc(100vh - 60px - 140px);
+      padding: 32px 0 40px;
+    }
+
+    .admin-faq-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .faq-card {
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 0 0 1px rgba(15,23,42,0.06);
+      padding: 22px 24px 24px;
+      margin-bottom: 20px;
+    }
+
+    .faq-card-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 18px;
+    }
+
+    .form-row {
+      margin-bottom: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #374151;
+    }
+
+    .form-label span.required {
+      color: #ef4444;
+      margin-left: 2px;
+    }
+
+    .select-input,
+    .text-input,
+    .textarea-input {
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      font-size: 14px;
+      padding: 9px 12px;
+      outline: none;
+    }
+
+    .select-input:focus,
+    .text-input:focus,
+    .textarea-input:focus {
+      border-color: #111;
+    }
+
+    .select-input {
+      height: 40px;
+      background-color: #fff;
+    }
+
+    .textarea-input {
+      min-height: 160px;
+      resize: vertical;
+    }
+
+    .btn-submit {
+      margin-top: 8px;
+      width: 100%;
+      height: 42px;
+      border-radius: 8px;
+      border: none;
+      background-color: #000;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .btn-submit:hover {
+      opacity: 0.9;
+    }
+
+    /* ---------- FAQ 리스트 카드 ---------- */
+    .faq-list-header {
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 12px;
+    }
+
+    .faq-empty {
+      font-size: 14px;
+      color: #6b7280;
+      text-align: center;
+      padding: 40px 0 30px;
+    }
+
+    .faq-item-card {
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
+      padding: 14px 16px 12px;
+      margin-bottom: 10px;
+      background-color: #f9fafb;
+    }
+
+    .faq-item-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    .faq-category-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 500;
+      background-color: #eef2ff;
+      color: #4338ca;
+    }
+
+    .faq-date {
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    .faq-q {
+      font-size: 14px;
+      font-weight: 500;
+      color: #111827;
+      margin-bottom: 4px;
+      white-space: pre-wrap;
+    }
+
+    .faq-a {
+      font-size: 13px;
+      color: #4b5563;
+      white-space: pre-wrap;
+      margin-bottom: 8px;
+    }
+
+    .faq-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 6px;
+    }
+
+    .btn-sm-secondary {
+      min-width: 70px;
+      height: 30px;
+      border-radius: 6px;
+      border: 1px solid #d1d5db;
+      background-color: #fff;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .btn-sm-secondary:hover {
+      background-color: #f3f4f6;
+    }
+
+    @media (max-width: 640px) {
+      .admin-top-inner,
+      .admin-faq-inner,
+      .site-footer-inner {
+        padding: 0 16px;
+      }
+      .faq-card {
+        padding: 18px 16px 20px;
+      }
+    }
+
+    /* ---------- FOOTER (공통) ---------- */
     .site-footer {
       background-color: #000;
       color: #fff;
       padding: 40px 0 20px;
-      margin-top: 40px;
       font-size: 14px;
+      margin-top: 40px;
     }
 
     .site-footer-inner {
@@ -320,23 +464,16 @@
       margin-bottom: 14px;
     }
 
-    .footer-col ul {
-      list-style: none;
-      padding: 0;
-    }
+    .footer-col ul { padding: 0; }
 
-    .footer-col li + li {
-      margin-top: 6px;
-    }
+    .footer-col li + li { margin-top: 6px; }
 
     .footer-col a {
       color: #ddd;
       font-size: 13px;
     }
 
-    .footer-col a:hover {
-      color: #fff;
-    }
+    .footer-col a:hover { color: #fff; }
 
     .footer-desc {
       font-size: 13px;
@@ -358,28 +495,10 @@
       color: #aaa;
       text-align: left;
     }
-
-    @media (max-width: 768px) {
-      .notice-header,
-      .notice-wrapper {
-        padding: 0 20px;
-      }
-
-      .notice-item {
-        flex-direction: column;
-        gap: 6px;
-      }
-
-      .footer-columns {
-        flex-direction: column;
-        gap: 24px;
-      }
-    }
   </style>
 </head>
-
 <body>
-  <!-- GNB -->
+  <!-- 상단 네비게이션 -->
   <header class="gnb-wrapper">
     <nav class="gnb">
       <div class="gnb-logo">
@@ -387,19 +506,18 @@
       </div>
 
       <div class="gnb-menu">
-        <a href="main.html">Best</a>
+        <a href="best.html">Best</a>
         <a href="sale.html" class="sale">SALE</a>
         <a href="outer.html">아우터</a>
         <a href="top.html">상의</a>
         <a href="bottom.html">하의</a>
         <a href="accessory.html">악세서리</a>
         <a href="community.html">커뮤니티</a>
- 
       </div>
 
       <div class="gnb-icons">
-        <!-- 검색 버튼 -->
-        <button class="icon-button" id="searchOpenBtn" aria-label="검색">
+        <!-- 검색 -->
+        <button class="icon-button" aria-label="검색" id="searchOpenBtn">
           <svg viewBox="0 0 24 24">
             <circle cx="11" cy="11" r="6.3"></circle>
             <line x1="15.4" y1="15.4" x2="20" y2="20"></line>
@@ -407,7 +525,12 @@
         </button>
 
         <!-- 로그인/마이페이지 -->
-        <a href="login.html" class="icon-button" id="userIconLink" aria-label="로그인 / 마이페이지">
+        <a
+          href="login.html"
+          class="icon-button"
+          aria-label="로그인 / 마이페이지"
+          id="userIconLink"
+        >
           <svg viewBox="0 0 24 24">
             <circle cx="12" cy="9" r="3.1"></circle>
             <path d="M6.5 19c.8-2.6 2.8-4.3 5.5-4.3s4.7 1.7 5.5 4.3"></path>
@@ -423,12 +546,13 @@
           </svg>
         </a>
 
-        <!-- 관리자 플러스 버튼 -->
+        <!-- 관리자 전용 플러스 -->
         <button
           class="icon-button admin-add"
           aria-label="관리자 대시보드"
           style="display: none"
-          onclick="window.location.href='admin.html'">
+          onclick="window.location.href='admin.html'"
+        >
           <svg viewBox="0 0 24 24">
             <circle cx="12" cy="12" r="7.5"></circle>
             <line x1="12" y1="9" x2="12" y2="15"></line>
@@ -468,77 +592,89 @@
     </div>
   </div>
 
-  <!-- 공지사항 헤더 -->
-  <section class="notice-header">
-    <h1 class="notice-title">공지사항</h1>
-    <p class="notice-sub">FON의 새로운 소식을 확인해보세요.</p>
-  </section>
-
-  <!-- 공지 리스트 -->
-  <section class="notice-wrapper">
-    <div class="notice-list">
-
-      <a href="#" class="notice-item">
-        <div class="notice-left">
-          <div class="notice-title-text">[공지] 2024년 설 연휴 배송 및 고객센터 운영 안내</div>
-          <div class="notice-preview">
-            설 연휴 기간 동안의 배송 일정 및 고객센터 운영 시간을 안내드립니다…
-          </div>
+  <!-- 상단 검정 배경 + 브레드크럼 -->
+  <section class="admin-top-bar">
+    <div class="admin-top-inner">
+      <div class="admin-breadcrumb">
+        <div class="admin-back-row" onclick="window.location.href='admin.html'">
+          <span class="icon">←</span>
+          <span>관리자 페이지로 돌아가기</span>
         </div>
-        <div class="notice-date">2024.01.15</div>
-      </a>
-
-      <a href="#" class="notice-item">
-        <div class="notice-left">
-          <div class="notice-title-text">[이벤트] 신규 회원 가입 10% 할인 쿠폰 지급</div>
-          <div class="notice-preview">
-            FON에 새롭게 가입한 회원님께 10% 할인 쿠폰을 드립니다…
-          </div>
-        </div>
-        <div class="notice-date">2024.01.10</div>
-      </a>
-
-      <a href="#" class="notice-item">
-        <div class="notice-left">
-          <div class="notice-title-text">[안내] 개인정보 처리방침 개정 안내</div>
-          <div class="notice-preview">
-            개인정보 처리방침의 일부가 개정되어 안내드립니다…
-          </div>
-        </div>
-        <div class="notice-date">2024.01.05</div>
-      </a>
-
-      <a href="#" class="notice-item">
-        <div class="notice-left">
-          <div class="notice-title-text">[공지] 겨울 시즌 신상품 입고 안내</div>
-          <div class="notice-preview">
-            2024 겨울 시즌 신상품이 대거 입고되었습니다…
-          </div>
-        </div>
-        <div class="notice-date">2023.12.28</div>
-      </a>
-
-      <a href="#" class="notice-item">
-        <div class="notice-left">
-          <div class="notice-title-text">[이벤트] 연말 감사 페스티벌 최대 50% 할인</div>
-          <div class="notice-preview">
-            한 해 동안 사랑해주신 고객님께 감사의 마음을 담아 연말 페스티벌을 준비했습니다…
-          </div>
-        </div>
-        <div class="notice-date">2023.12.20</div>
-      </a>
-
+        <div class="admin-title-main">FAQ 관리</div>
+        <div class="admin-title-sub">자주 묻는 질문 등록 및 관리</div>
+      </div>
     </div>
   </section>
 
-  <!-- FOOTER -->
+  <!-- 메인 -->
+  <main class="admin-faq-main">
+    <div class="admin-faq-inner">
+      <!-- FAQ 등록 카드 -->
+      <section class="faq-card">
+        <h2 class="faq-card-title">FAQ 등록</h2>
+
+        <div class="form-row">
+          <label class="form-label" for="faqCategory">
+            카테고리<span class="required">*</span>
+          </label>
+          <select id="faqCategory" class="select-input">
+            <option value="배송">배송</option>
+            <option value="교환/반품">교환/반품</option>
+            <option value="회원/로그인">회원/로그인</option>
+            <option value="쿠폰/혜택">쿠폰/혜택</option>
+            <option value="기타">기타</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <label class="form-label" for="faqQuestion">
+            질문<span class="required">*</span>
+          </label>
+          <input
+            id="faqQuestion"
+            type="text"
+            class="text-input"
+            placeholder="자주 묻는 질문을 입력하세요"
+          />
+        </div>
+
+        <div class="form-row">
+          <label class="form-label" for="faqAnswer">
+            답변<span class="required">*</span>
+          </label>
+          <textarea
+            id="faqAnswer"
+            class="textarea-input"
+            placeholder="답변을 입력하세요"
+          ></textarea>
+        </div>
+
+        <button type="button" class="btn-submit" id="btnFaqSubmit">
+          등록하기
+        </button>
+      </section>
+
+      <!-- FAQ 리스트 카드 -->
+      <section class="faq-card">
+        <div class="faq-list-header" id="faqListHeader">
+          등록된 FAQ (0개)
+        </div>
+        <div id="faqListContainer">
+          <p class="faq-empty">등록된 FAQ가 없습니다.</p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- 공통 푸터 -->
   <footer class="site-footer">
     <div class="site-footer-inner">
       <div class="footer-columns">
         <div class="footer-col">
           <div class="footer-col-title">FON</div>
           <div class="footer-desc">
-            트렌디한 패션을 제안하는<br />온라인 셀렉트샵
+            트렌디한 패션을 제안하는<br />
+            온라인 셀렉트샵
           </div>
         </div>
 
@@ -546,7 +682,7 @@
           <div class="footer-col-title">고객센터</div>
           <ul>
             <li><a href="notice.html">공지사항</a></li>
-            <li><a href="faq.html">자주묻는질문</a></li>
+            <li><a href="#">자주묻는질문</a></li>
             <li><a href="#">1:1 문의</a></li>
           </ul>
         </div>
@@ -578,21 +714,19 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      // 로그인 상태에 따라 사람 아이콘 링크 변경
+      /* ---------------- 공통: 로그인, 관리자 플래그 ---------------- */
       const userLink = document.getElementById('userIconLink');
       if (userLink) {
         const isLoggedIn = localStorage.getItem('fonLoggedIn') === 'true';
         userLink.href = isLoggedIn ? 'mypage.html' : 'login.html';
       }
-
-      // 관리자 플러스 아이콘 표시
       if (localStorage.getItem('isAdmin') === 'true') {
         document
           .querySelectorAll('.admin-add')
           .forEach((el) => (el.style.display = 'flex'));
       }
 
-      // 검색 레이어
+      /* ---------------- 검색 레이어 ---------------- */
       const openBtn = document.getElementById('searchOpenBtn');
       const dim = document.getElementById('searchDim');
       const layer = document.getElementById('searchLayer');
@@ -622,8 +756,7 @@
       if (openBtn) openBtn.addEventListener('click', openSearch);
       if (closeBtn) closeBtn.addEventListener('click', closeSearch);
       if (dim) dim.addEventListener('click', closeSearch);
-
-      document.addEventListener('keydown', function (e) {
+      document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') closeSearch();
       });
 
@@ -639,6 +772,117 @@
           noResult.style.display = 'block';
         });
       }
+
+      /* ---------------- FAQ 데이터 ---------------- */
+      function loadFaqs() {
+        const raw = localStorage.getItem('fonFaqs');
+        if (!raw) return [];
+        try {
+          const parsed = JSON.parse(raw);
+          return Array.isArray(parsed) ? parsed : [];
+        } catch (e) {
+          console.error(e);
+          return [];
+        }
+      }
+
+      function saveFaqs(list) {
+        localStorage.setItem('fonFaqs', JSON.stringify(list));
+      }
+
+      let faqs = loadFaqs();
+
+      const categoryEl = document.getElementById('faqCategory');
+      const questionEl = document.getElementById('faqQuestion');
+      const answerEl = document.getElementById('faqAnswer');
+      const submitBtn = document.getElementById('btnFaqSubmit');
+      const listHeader = document.getElementById('faqListHeader');
+      const listContainer = document.getElementById('faqListContainer');
+
+      function formatDate(d = new Date()) {
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${y}. ${m}. ${day}.`;
+      }
+
+      function renderFaqList() {
+        listHeader.textContent = `등록된 FAQ (${faqs.length}개)`;
+
+        if (!faqs.length) {
+          listContainer.innerHTML =
+            '<p class="faq-empty">등록된 FAQ가 없습니다.</p>';
+          return;
+        }
+
+        const html = faqs
+          .map(
+            (faq) => `
+          <article class="faq-item-card">
+            <div class="faq-item-top">
+              <span class="faq-category-pill">${faq.category}</span>
+              <span class="faq-date">${faq.date || ''}</span>
+            </div>
+            <div class="faq-q">${faq.question || ''}</div>
+            <div class="faq-a">${faq.answer || ''}</div>
+            <div class="faq-actions">
+              <button type="button"
+                      class="btn-sm-secondary"
+                      onclick="deleteFaq(${faq.id})">
+                삭제
+              </button>
+            </div>
+          </article>
+        `,
+          )
+          .join('');
+
+        listContainer.innerHTML = html;
+      }
+
+      // 삭제 함수는 window에 노출
+      window.deleteFaq = function (id) {
+        if (!confirm('해당 FAQ를 삭제하시겠습니까?')) return;
+        faqs = faqs.filter((f) => f.id !== id);
+        saveFaqs(faqs);
+        renderFaqList();
+      };
+
+      submitBtn.addEventListener('click', () => {
+        const category = categoryEl.value.trim();
+        const question = questionEl.value.trim();
+        const answer = answerEl.value.trim();
+
+        if (!category || !question || !answer) {
+          alert('카테고리, 질문, 답변을 모두 입력해주세요.');
+          return;
+        }
+
+        const nextId =
+          faqs.length === 0 ? 1 : Math.max(...faqs.map((f) => f.id)) + 1;
+
+        const newFaq = {
+          id: nextId,
+          category,
+          question,
+          answer,
+          date: formatDate(),
+        };
+
+        faqs.unshift(newFaq); // 최신순 위로
+        saveFaqs(faqs);
+        renderFaqList();
+
+        // 입력창 초기화
+        questionEl.value = '';
+        answerEl.value = '';
+        categoryEl.value = '배송';
+
+        alert('FAQ가 등록되었습니다.');
+      });
+
+      // 초기 렌더
+      renderFaqList();
     });
   </script>
 </body>

@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>FON - 관리자 1:1 문의</title>
+
+  <!-- 폰트 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Noto Sans KR', system-ui, -apple-system, BlinkMacSystemFont,
+        sans-serif;
+      background-color: #ffffff;
+      color: #111;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    ul { list-style: none; }
+
+    /* ---------- 상단 네비게이션 (공통: admin_mainpage와 동일) ---------- */
+    .gnb-wrapper {
+      width: 100%;
+      background-color: #000;
+      color: #fff;
+    }
+
+    .gnb {
+      max-width: 1200px;
+      margin: 0 auto;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .gnb-logo {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+
+    .gnb-menu {
+      display: flex;
+      gap: 30px;
+      font-size: 14px;
+    }
+
+    .gnb-menu a { color: #fff; }
+
+    .gnb-menu a.sale {
+      color: #ff3b3b;
+      font-weight: 600;
+    }
+
+    .gnb-icons {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      color: #fff;
+    }
+
+    .icon-button {
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+
+    .icon-button svg {
+      width: 24px;
+      height: 24px;
+      stroke: currentColor;
+      stroke-width: 1.4;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .icon-button:hover svg { opacity: 0.85; }
+
+    /* ---------- 검색 오버레이 (공통) ---------- */
+    .search-dim {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(3px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s ease-out;
+      z-index: 40;
+    }
+    .search-dim.is-active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .search-layer {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding-top: 110px;
+      pointer-events: none;
+      z-index: 50;
+    }
+    .search-layer.is-active {
+      pointer-events: none;
+    }
+
+    .search-box {
+      width: min(520px, 92vw);
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+      padding: 18px 18px 14px;
+      transform: translateY(-18px);
+      opacity: 0;
+      transition: transform 0.22s ease-out, opacity 0.22s ease-out;
+      pointer-events: auto;
+    }
+
+    .search-layer.is-active .search-box {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .search-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .search-input {
+      flex: 1;
+      height: 38px;
+      padding: 0 12px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      font-size: 13px;
+      outline: none;
+    }
+
+    .search-input:focus {
+      border-color: #111;
+    }
+
+    .search-close-btn {
+      background: none;
+      border: none;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 999px;
+    }
+
+    .search-close-btn svg {
+      width: 18px;
+      height: 18px;
+      stroke: #333;
+      stroke-width: 1.8;
+      fill: none;
+      stroke-linecap: round;
+    }
+
+    .search-close-btn:hover {
+      background-color: #f4f4f4;
+    }
+
+    .search-results {
+      margin-top: 6px;
+      padding: 10px 8px 6px;
+      border-radius: 6px;
+      background-color: #fafafa;
+    }
+
+    .search-help {
+      font-size: 12px;
+      color: #888;
+    }
+
+    .search-no-result {
+      display: none;
+      margin-top: 6px;
+      font-size: 13px;
+      color: #777;
+    }
+
+    /* ---------- 하단 Footer (공통) ---------- */
+    .site-footer {
+      background-color: #000;
+      color: #fff;
+      padding: 40px 0 20px;
+      font-size: 14px;
+      margin-top: 40px;
+    }
+
+    .site-footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .footer-columns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 60px;
+      margin-bottom: 30px;
+      justify-content: space-between;
+    }
+
+    .footer-col-title {
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+
+    .footer-col ul { padding: 0; }
+    .footer-col li + li { margin-top: 6px; }
+
+    .footer-col a {
+      color: #ddd;
+      font-size: 13px;
+    }
+    .footer-col a:hover { color: #fff; }
+
+    .footer-desc {
+      font-size: 13px;
+      color: #ccc;
+      line-height: 1.6;
+    }
+
+    .footer-sns {
+      display: flex;
+      gap: 16px;
+      margin-top: 8px;
+      font-size: 18px;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid #333;
+      padding-top: 15px;
+      font-size: 12px;
+      color: #aaa;
+      text-align: left;
+    }
+
+    /* ---------- 관리자 1:1 문의 레이아웃 ---------- */
+    .admin-top-bar {
+      background-color: #000;
+      color: #fff;
+      padding: 18px 0 22px;
+    }
+
+    .admin-top-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      font-size: 14px;
+    }
+
+    .admin-breadcrumb {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .admin-back-row {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 13px;
+      cursor: pointer;
+      opacity: 0.8;
+    }
+
+    .admin-back-row span.icon {
+      font-size: 16px;
+    }
+
+    .admin-title-main {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .admin-title-sub {
+      font-size: 13px;
+      color: #e5e7eb;
+      opacity: 0.9;
+    }
+
+    /* 메인 배경 */
+    .admin-inquiry-main {
+      background-color: #f5f6f8;
+      min-height: calc(100vh - 60px - 140px);
+      padding: 32px 0 40px;
+    }
+
+    .admin-inquiry-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* 카드 공통 */
+    .inquiry-card {
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.06);
+      padding: 20px 24px 22px;
+      margin-bottom: 16px;
+    }
+
+    /* 리스트 영역 */
+    #inquiryListSection {
+      margin-top: 4px;
+    }
+
+    .inquiry-item-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 13px;
+      color: #4b5563;
+    }
+
+    .inquiry-meta-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .inquiry-number {
+      font-weight: 500;
+    }
+
+    .status-pill {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .status-wait {
+      background-color: #fef9c3;
+      color: #854d0e;
+    }
+
+    .status-done {
+      background-color: #dcfce7;
+      color: #166534;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background-color: currentColor;
+    }
+
+    .inquiry-meta-right {
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    .inquiry-meta-right span + span::before {
+      content: " | ";
+      margin: 0 4px;
+      color: #d1d5db;
+    }
+
+    .inquiry-question {
+      margin: 6px 0 10px;
+      font-size: 14px;
+      color: #111827;
+      white-space: pre-wrap;
+    }
+
+    .inquiry-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .btn-sm {
+      min-width: 80px;
+      height: 32px;
+      font-size: 13px;
+      border-radius: 6px;
+      border: 1px solid #d1d5db;
+      background-color: #fff;
+      cursor: pointer;
+    }
+
+    .btn-sm-primary {
+      border-color: #000;
+      background-color: #000;
+      color: #fff;
+    }
+
+    .btn-sm-primary:hover {
+      opacity: 0.9;
+    }
+
+    /* 답변 카드 (상세 화면) */
+    #answerSection {
+      display: none;
+      margin-top: 4px;
+    }
+
+    .answer-card-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: #4b5563;
+      margin-bottom: 6px;
+    }
+
+    .answer-tag {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-weight: 500;
+      background-color: #fef9c3;
+      color: #854d0e;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .answer-meta-row {
+      font-size: 12px;
+      color: #6b7280;
+      margin-bottom: 8px;
+    }
+
+    .answer-meta-row span + span::before {
+      content: " | ";
+      margin: 0 4px;
+      color: #d1d5db;
+    }
+
+    .answer-question {
+      font-size: 14px;
+      color: #111827;
+      margin-bottom: 14px;
+      white-space: pre-wrap;
+    }
+
+    .answer-textarea {
+      width: 100%;
+      min-height: 160px;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      padding: 10px 12px;
+      font-size: 14px;
+      resize: vertical;
+      outline: none;
+    }
+
+    .answer-textarea:focus {
+      border-color: #111;
+    }
+
+    .answer-actions {
+      margin-top: 14px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-lg-primary,
+    .btn-lg-secondary {
+      min-width: 90px;
+      height: 36px;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-lg-primary {
+      background-color: #000;
+      color: #fff;
+    }
+
+    .btn-lg-primary:hover {
+      opacity: 0.9;
+    }
+
+    .btn-lg-secondary {
+      background-color: #e5e7eb;
+      color: #111827;
+    }
+
+    @media (max-width: 640px) {
+      .inquiry-card {
+        padding: 18px 16px 20px;
+      }
+      .admin-top-inner,
+      .admin-inquiry-inner,
+      .site-footer-inner {
+        padding: 0 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 상단 네비게이션 (admin_mainpage와 동일) -->
+  <header class="gnb-wrapper">
+    <nav class="gnb">
+      <div class="gnb-logo">
+        <a href="main.html">FON</a>
+      </div>
+
+      <div class="gnb-menu">
+        <a href="best.html">Best</a>
+        <a href="sale.html" class="sale">SALE</a>
+        <a href="outer.html">아우터</a>
+        <a href="top.html">상의</a>
+        <a href="bottom.html">하의</a>
+        <a href="accessory.html">악세서리</a>
+        <a href="community.html">커뮤니티</a>
+  
+      </div>
+
+      <div class="gnb-icons">
+        <!-- 검색 -->
+        <button class="icon-button" aria-label="검색" id="searchOpenBtn">
+          <svg viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="6.3"></circle>
+            <line x1="15.4" y1="15.4" x2="20" y2="20"></line>
+          </svg>
+        </button>
+
+        <!-- 로그인/마이페이지 -->
+        <a
+          href="login.html"
+          class="icon-button"
+          aria-label="로그인 / 마이페이지"
+          id="userIconLink"
+        >
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="9" r="3.1"></circle>
+            <path d="M6.5 19c.8-2.6 2.8-4.3 5.5-4.3s4.7 1.7 5.5 4.3"></path>
+          </svg>
+        </a>
+
+        <!-- 장바구니 -->
+        <a href="cart.html" class="icon-button" aria-label="장바구니">
+          <svg viewBox="0 0 24 24">
+            <rect x="6.5" y="8" width="11" height="10" rx="1.8" ry="1.8"></rect>
+            <path d="M9 8V6.7A2.2 2.2 0 0 1 12 4.5A2.2 2.2 0 0 1 15 6.7V8"></path>
+            <path d="M9.3 12.2c.6.8 1.5 1.3 2.7 1.3s2.1-.5 2.7-1.3"></path>
+          </svg>
+        </a>
+
+        <!-- 관리자 전용 플러스 -->
+        <button
+          class="icon-button admin-add"
+          aria-label="관리자 대시보드"
+          style="display: none"
+          onclick="window.location.href='admin.html'"
+        >
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="7.5"></circle>
+            <line x1="12" y1="9" x2="12" y2="15"></line>
+            <line x1="9" y1="12" x2="15" y2="12"></line>
+          </svg>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- 검색 오버레이 -->
+  <div class="search-dim" id="searchDim"></div>
+  <div class="search-layer" id="searchLayer">
+    <div class="search-box" role="dialog" aria-modal="true">
+      <div class="search-header">
+        <input
+          type="text"
+          id="searchInput"
+          class="search-input"
+          placeholder="원하는 상품, 게시글을 검색해보세요."
+        />
+        <button class="search-close-btn" id="searchCloseBtn" aria-label="검색 닫기">
+          <svg viewBox="0 0 24 24">
+            <line x1="8" y1="8" x2="16" y2="16"></line>
+            <line x1="16" y1="8" x2="8" y2="16"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="search-results">
+        <p class="search-help" id="searchHelp">
+          검색어를 입력하면 결과를 보여드릴게요.
+        </p>
+        <p class="search-no-result" id="searchNoResult">
+          검색 결과가 없습니다.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 상단 검정 배경 + 브레드크럼 -->
+  <section class="admin-top-bar">
+    <div class="admin-top-inner">
+      <div class="admin-breadcrumb">
+        <div class="admin-back-row" onclick="window.location.href='admin.html'">
+          <span class="icon">←</span>
+          <span>관리자 페이지로 돌아가기</span>
+        </div>
+        <div class="admin-title-main">1:1 문의 관리</div>
+        <div class="admin-title-sub">고객 문의 확인 및 답변</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 메인 내용 -->
+  <main class="admin-inquiry-main">
+    <div class="admin-inquiry-inner">
+
+      <!-- 1) 문의 리스트 영역 -->
+      <section id="inquiryListSection">
+        <!-- JS로 문의 목록 렌더링 -->
+      </section>
+
+      <!-- 2) 답변 상세 영역 (사진처럼) -->
+      <section id="answerSection">
+        <div class="inquiry-card">
+          <div class="answer-card-header">
+            <span>문의번호: <span id="detailNumber">-</span></span>
+            <span class="answer-tag" id="detailStatusTag">
+              <span class="status-dot"></span> 답변대기
+            </span>
+          </div>
+          <div class="answer-meta-row">
+            <span>작성자: <span id="detailWriter">-</span></span>
+            <span>작성일: <span id="detailDate">-</span></span>
+          </div>
+          <p class="answer-question" id="detailQuestion">-</p>
+
+          <textarea
+            id="answerText"
+            class="answer-textarea"
+            placeholder="답변을 입력하세요..."
+          ></textarea>
+
+          <div class="answer-actions">
+            <button type="button" class="btn-lg-primary" id="btnSubmitAnswer">
+              답변 등록
+            </button>
+            <button type="button" class="btn-lg-secondary" id="btnCancelAnswer">
+              취소
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- 공통 푸터 -->
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <div class="footer-columns">
+        <div class="footer-col">
+          <div class="footer-col-title">FON</div>
+          <div class="footer-desc">
+            트렌디한 패션을 제안하는<br />
+            온라인 셀렉트샵
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-col-title">고객센터</div>
+          <ul>
+            <li><a href="notice.html">공지사항</a></li>
+            <li><a href="#">자주묻는질문</a></li>
+            <li><a href="#">1:1 문의</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-col-title">정보</div>
+          <ul>
+            <li><a href="#">회사 소개</a></li>
+            <li><a href="#">이용약관</a></li>
+            <li><a href="#">개인정보처리방침</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-col-title">소셜 미디어</div>
+          <div class="footer-sns">
+            <a href="#">📷</a>
+            <a href="#">📘</a>
+            <a href="#">▶️</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        © 2024 FON. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      /* ---------------- 공통: 로그인, 관리자 플래그 ---------------- */
+      const userLink = document.getElementById('userIconLink');
+      if (userLink) {
+        const isLoggedIn = localStorage.getItem('fonLoggedIn') === 'true';
+        userLink.href = isLoggedIn ? 'mypage.html' : 'login.html';
+      }
+      if (localStorage.getItem('isAdmin') === 'true') {
+        document
+          .querySelectorAll('.admin-add')
+          .forEach((el) => (el.style.display = 'flex'));
+      }
+
+      /* ---------------- 검색 레이어 ---------------- */
+      const openBtn = document.getElementById('searchOpenBtn');
+      const dim = document.getElementById('searchDim');
+      const layer = document.getElementById('searchLayer');
+      const input = document.getElementById('searchInput');
+      const closeBtn = document.getElementById('searchCloseBtn');
+      const noResult = document.getElementById('searchNoResult');
+      const helpText = document.getElementById('searchHelp');
+
+      function openSearch() {
+        if (!dim || !layer) return;
+        dim.classList.add('is-active');
+        layer.classList.add('is-active');
+        if (input) input.value = '';
+        if (noResult) noResult.style.display = 'none';
+        if (helpText) helpText.style.display = 'block';
+        setTimeout(() => {
+          if (input) input.focus();
+        }, 10);
+      }
+
+      function closeSearch() {
+        if (!dim || !layer) return;
+        dim.classList.remove('is-active');
+        layer.classList.remove('is-active');
+      }
+
+      if (openBtn) openBtn.addEventListener('click', openSearch);
+      if (closeBtn) closeBtn.addEventListener('click', closeSearch);
+      if (dim) dim.addEventListener('click', closeSearch);
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeSearch();
+      });
+
+      if (input && noResult) {
+        input.addEventListener('input', function (e) {
+          const value = e.target.value.trim();
+          if (!value) {
+            noResult.style.display = 'none';
+            if (helpText) helpText.style.display = 'block';
+            return;
+          }
+          if (helpText) helpText.style.display = 'none';
+          noResult.style.display = 'block';
+        });
+      }
+
+      /* ---------------- 문의 데이터 (임시) ----------------
+         실제로는 inquiry.html 에서 localStorage나 서버로 저장해놓은 데이터를
+         여기서 불러오면 됨.
+         예시 구조:
+         [
+           { id: 1, writer: 'admin', date: '2025. 12. 8.', content: 'd', status: 'waiting', answer: '' }
+         ]
+      ---------------------------------------------------- */
+      function loadInquiries() {
+        const raw = localStorage.getItem('qnaItems');
+        if (!raw) {
+          // 데모용 더미 데이터
+          return [
+            {
+              id: 1,
+              writer: 'admin',
+              date: '2025. 12. 8.',
+              content: 'd',
+              status: 'waiting',
+              answer: ''
+            }
+          ];
+        }
+        try {
+          const arr = JSON.parse(raw);
+          return Array.isArray(arr) ? arr : [];
+        } catch (e) {
+          console.error(e);
+          return [];
+        }
+      }
+
+      function saveInquiries(list) {
+        localStorage.setItem('qnaItems', JSON.stringify(list));
+
+      }
+
+      let inquiries = loadInquiries();
+
+      const listSection = document.getElementById('inquiryListSection');
+      const answerSection = document.getElementById('answerSection');
+
+      const detailNumber = document.getElementById('detailNumber');
+      const detailWriter = document.getElementById('detailWriter');
+      const detailDate = document.getElementById('detailDate');
+      const detailQuestion = document.getElementById('detailQuestion');
+      const detailStatusTag = document.getElementById('detailStatusTag');
+      const answerText = document.getElementById('answerText');
+
+      let currentInquiryId = null;
+
+      function renderList() {
+        if (!inquiries.length) {
+          listSection.innerHTML = `
+            <div class="inquiry-card">
+              <p style="font-size:14px;color:#6b7280;">
+                등록된 문의가 없습니다.
+              </p>
+            </div>`;
+          return;
+        }
+
+        const html = inquiries
+          .map((q) => {
+            const isDone = q.status === '답변완료';
+            const statusClass = isDone ? 'status-done' : 'status-wait';
+            const statusText = q.status;
+            const dotColor = isDone ? '#16a34a' : '#dc2626';
+
+            return `
+              <article class="inquiry-card">
+                <div class="inquiry-item-header">
+                  <div class="inquiry-meta-left">
+                    <span class="inquiry-number">문의번호: ${q.id}</span>
+                    <span class="status-pill ${statusClass}">
+                      <span class="status-dot" style="background-color:${dotColor}"></span>
+                      ${statusText}
+                    </span>
+                  </div>
+                  <div class="inquiry-meta-right">
+                    <span>작성자: ${q.writer || '익명'}</span>
+                    <span>작성일: ${q.date || '-'}</span>
+                  </div>
+                </div>
+                <p class="inquiry-question">${q.content || ''}</p>
+                <div class="inquiry-actions">
+                  <button type="button"
+                          class="btn-sm"
+                          onclick="openAnswerView(${q.id})">
+                    문의 보기
+                  </button>
+                  <button type="button"
+                          class="btn-sm btn-sm-primary"
+                          onclick="openAnswerView(${q.id})">
+                    답변하기
+                  </button>
+                </div>
+              </article>
+            `;
+          })
+          .join('');
+
+        listSection.innerHTML = html;
+      }
+
+      // 전역에서 호출할 수 있게 window에 노출
+      window.openAnswerView = function (id) {
+        const q = inquiries.find((x) => x.id === id);
+        if (!q) return;
+        currentInquiryId = id;
+
+        detailNumber.textContent = q.id;
+        detailWriter.textContent = q.writer || '익명';
+        detailDate.textContent = q.date || '-';
+        detailQuestion.textContent = q.content || '';
+
+        if (q.status === 'done') {
+          detailStatusTag.style.backgroundColor = '#dcfce7';
+          detailStatusTag.style.color = '#166534';
+          detailStatusTag.innerHTML =
+            '<span class="status-dot" style="background-color:#16a34a"></span> 답변완료';
+        } else {
+          detailStatusTag.style.backgroundColor = '#fef9c3';
+          detailStatusTag.style.color = '#854d0e';
+          detailStatusTag.innerHTML =
+            '<span class="status-dot" style="background-color:#dc2626"></span> 답변대기';
+        }
+
+        answerText.value = q.answer || '';
+
+        listSection.style.display = 'none';
+        answerSection.style.display = 'block';
+        answerText.focus();
+      };
+
+      function closeAnswerView() {
+        answerSection.style.display = 'none';
+        listSection.style.display = 'block';
+        currentInquiryId = null;
+      }
+
+      document.getElementById('btnCancelAnswer').addEventListener('click', () => {
+        closeAnswerView();
+      });
+
+      document.getElementById('btnSubmitAnswer').addEventListener('click', () => {
+        if (!currentInquiryId) return;
+
+        const text = answerText.value.trim();
+        if (!text) {
+          alert('답변 내용을 입력해주세요.');
+          return;
+        }
+
+        inquiries = inquiries.map((q) =>
+          q.id === currentInquiryId
+            ? { ...q, answer: text, status: '답변완료' }
+            : q,
+        );
+        saveInquiries(inquiries);
+        alert('답변이 저장되었습니다.');
+        closeAnswerView();
+        renderList();
+      });
+
+      // 초기 렌더
+      renderList();
+    });
+  </script>
+</body>
+</html>

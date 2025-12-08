@@ -141,7 +141,7 @@
       display: flex;
       flex-direction: column;
       gap: 18px;
-      height: 160px; /* 주문내역 카드와 비슷한 높이 */
+      height: 160px;
     }
 
     .profile-main {
@@ -192,7 +192,7 @@
       background-color: #f3f4f6;
     }
 
-    /* 오른쪽: 주문/찜/활동 세로 정렬 */
+    /* 오른쪽: 주문 / 찜 / 활동 세로 정렬 */
     .mypage-right {
       display: flex;
       flex-direction: column;
@@ -266,6 +266,110 @@
     .activity-value {
       font-size: 16px;
       font-weight: 600;
+    }
+
+    /* 주문 내역 리스트 */
+    .order-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 110px;
+      overflow-y: auto;
+      font-size: 13px;
+    }
+
+    .order-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 10px;
+      border-radius: 8px;
+      background-color: #f9fafb;
+      border: 1px solid #e5e7eb;
+    }
+
+    .order-main-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .thumb-box {
+      width: 40px;
+      height: 50px;
+      border-radius: 4px;
+      overflow: hidden;
+      background-color: #e5e7eb;
+      flex-shrink: 0;
+    }
+
+    .thumb-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .order-texts {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .order-name {
+      font-weight: 500;
+    }
+
+    .order-meta {
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    .order-price {
+      font-size: 13px;
+      font-weight: 600;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    /* 찜한 상품 리스트 */
+    .wish-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 140px;
+      overflow-y: auto;
+      font-size: 13px;
+    }
+
+    .wish-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      border-radius: 8px;
+      background-color: #f9fafb;
+      border: 1px solid #e5e7eb;
+    }
+
+    .wish-main {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .wish-name {
+      font-weight: 500;
+    }
+
+    .wish-meta {
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    .wish-price {
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
     }
 
     /* ---------- FOOTER (메인과 동일) ---------- */
@@ -372,7 +476,7 @@
         <a href="bottom.html">하의</a>
         <a href="accessory.html">악세서리</a>
         <a href="community.html">커뮤니티</a>
-        <a href="#">코디하기</a>
+
       </div>
 
       <div class="gnb-icons">
@@ -447,21 +551,28 @@
       <!-- 주문 내역 -->
       <section class="card order-card">
         <h2 class="section-title">주문 내역</h2>
-        <div class="order-empty">
+
+        <!-- 주문 없음 -->
+        <div class="order-empty" id="orderEmptyBox">
           <div class="order-empty-icon">📦</div>
           <div>
             <p class="empty-main-text">아직 주문 내역이 없습니다.</p>
             <p class="empty-sub-text">FON에서 쇼핑을 시작해보세요!</p>
           </div>
         </div>
+
+        <!-- 주문 리스트 -->
+        <div class="order-list" id="orderList" style="display:none;"></div>
       </section>
 
       <!-- 찜한 상품 -->
       <section class="card wish-card">
         <h2 class="section-title">
-          찜한 상품 <span class="small-muted">(0)</span>
+          찜한 상품 <span class="small-muted" id="wishCountText">(0)</span>
         </h2>
-        <div class="wish-empty">
+
+        <!-- 찜 없음 -->
+        <div class="wish-empty" id="wishEmptyBox">
           <div class="wish-empty-icon">🤍</div>
           <div>
             <p class="empty-main-text">찜한 상품이 없습니다.</p>
@@ -470,6 +581,9 @@
             </p>
           </div>
         </div>
+
+        <!-- 찜 리스트 -->
+        <div class="wish-list" id="wishList" style="display:none;"></div>
       </section>
 
       <!-- 나의 활동 -->
@@ -478,22 +592,22 @@
         <div class="activity-row">
           <div class="activity-item">
             <p class="activity-label">총 주문</p>
-            <p class="activity-value">0건</p>
+            <p class="activity-value" id="activityOrderCount">0건</p>
           </div>
           <div class="activity-item">
             <p class="activity-label">찜한 상품</p>
-            <p class="activity-value">0개</p>
+            <p class="activity-value" id="activityWishCount">0개</p>
           </div>
           <div class="activity-item">
             <p class="activity-label">작성한 리뷰</p>
-            <p class="activity-value">0개</p>
+            <p class="activity-value" id="activityReviewCount">0개</p>
           </div>
         </div>
       </section>
     </div>
   </main>
 
-  <!-- 공통 푸터 (메인에서 가져옴, 공지사항만 notice.html로) -->
+  <!-- 공통 푸터 -->
   <footer class="site-footer">
     <div class="site-footer-inner">
       <div class="footer-columns">
@@ -509,7 +623,7 @@
           <div class="footer-col-title">고객센터</div>
           <ul>
             <li><a href="notice.html">공지사항</a></li>
-            <li><a href="#">자주묻는질문</a></li>
+            <li><a href="faq.html">자주묻는질문</a></li>
             <li><a href="#">1:1 문의</a></li>
           </ul>
         </div>
@@ -540,8 +654,36 @@
   </footer>
 
   <script>
-    // ----- 로그인 정보 표시 -----
+    function loadOrderHistory() {
+      const raw = localStorage.getItem('fonOrderHistory');
+      if (!raw) return [];
+      try {
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function loadWishlist() {
+      const raw = localStorage.getItem('wishlistItems');
+      if (!raw) return [];
+      try {
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function formatPrice(num) {
+      if (num == null || Number.isNaN(Number(num))) return '-';
+      const n = Number(num);
+      return n.toLocaleString('ko-KR') + '원';
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
+      /* ----- 로그인 정보 표시 ----- */
       const welcomeText = document.getElementById('welcomeText');
       const profileId = document.getElementById('profileId');
       const profileEmail = document.getElementById('profileEmail');
@@ -569,15 +711,143 @@
       welcomeText.textContent = displayName + '님, 환영합니다!';
       profileId.textContent = displayName;
       profileEmail.textContent = emailText;
-    });
 
-    // ----- 로그아웃 버튼 -----
-    document.getElementById('logoutBtn').addEventListener('click', function () {
-      localStorage.removeItem('isAdmin');
-      localStorage.removeItem('fonLoggedIn'); // 로그인 상태 해제
+      /* ----- 주문 내역 렌더링 ----- */
+      const orders = loadOrderHistory();
+      const orderEmptyBox = document.getElementById('orderEmptyBox');
+      const orderListEl = document.getElementById('orderList');
+      const activityOrderCount = document.getElementById('activityOrderCount');
 
-      alert('로그아웃 되었습니다.');
-      window.location.href = 'main.html';
+      if (!orders.length) {
+        if (orderEmptyBox) orderEmptyBox.style.display = 'flex';
+        if (orderListEl) {
+          orderListEl.style.display = 'none';
+          orderListEl.innerHTML = '';
+        }
+        if (activityOrderCount) activityOrderCount.textContent = '0건';
+      } else {
+        const sorted = [...orders].sort((a, b) => {
+          const da = a.createdAt ? new Date(a.createdAt) : 0;
+          const db = b.createdAt ? new Date(b.createdAt) : 0;
+          return db - da;
+        });
+
+        const recent = sorted.slice(0, 3);
+        let html = '';
+
+        recent.forEach((o) => {
+          const qty = Number(o.quantity || 1);
+          const basePrice = o.finalAmount != null
+            ? o.finalAmount
+            : o.productsTotal != null
+            ? o.productsTotal + (o.shippingFee || 0)
+            : (o.price || 0) * qty;
+          const dateStr = o.createdAt
+            ? o.createdAt.slice(0, 10).replace(/-/g, '.')
+            : '';
+
+          const optText = [o.color, o.size].filter(Boolean).join(' / ');
+
+          html += `
+            <div class="order-item">
+              <div class="order-main-info">
+                <div class="thumb-box">
+                  ${
+                    o.image
+                      ? `<img src="${o.image}" alt="${o.name || '상품이미지'}" />`
+                      : ''
+                  }
+                </div>
+                <div class="order-texts">
+                  <div class="order-name">${o.name || '주문 상품'}</div>
+                  <div class="order-meta">
+                    ${optText ? optText + ' · ' : ''}${qty}개
+                    ${dateStr ? ' · ' + dateStr : ''}
+                  </div>
+                </div>
+              </div>
+              <div class="order-price">${formatPrice(basePrice)}</div>
+            </div>
+          `;
+        });
+
+        if (orderListEl) {
+          orderListEl.innerHTML = html;
+          orderListEl.style.display = 'flex';
+        }
+        if (orderEmptyBox) orderEmptyBox.style.display = 'none';
+        if (activityOrderCount)
+          activityOrderCount.textContent = orders.length + '건';
+      }
+
+      /* ----- 찜한 상품 렌더링 ----- */
+      const wishlist = loadWishlist();
+      const wishEmptyBox = document.getElementById('wishEmptyBox');
+      const wishListEl = document.getElementById('wishList');
+      const wishCountText = document.getElementById('wishCountText');
+      const activityWishCount = document.getElementById('activityWishCount');
+
+      if (!wishlist.length) {
+        if (wishEmptyBox) wishEmptyBox.style.display = 'flex';
+        if (wishListEl) {
+          wishListEl.style.display = 'none';
+          wishListEl.innerHTML = '';
+        }
+        if (wishCountText) wishCountText.textContent = '(0)';
+        if (activityWishCount) activityWishCount.textContent = '0개';
+      } else {
+        const recentWishes = wishlist.slice(-3).reverse(); // 마지막 추가한 3개
+
+        let html = '';
+        recentWishes.forEach((w) => {
+          const optText = [w.color, w.size].filter(Boolean).join(' / ');
+          html += `
+            <div class="wish-item">
+              <div class="wish-main">
+                <div class="thumb-box">
+                  ${
+                    w.image
+                      ? `<img src="${w.image}" alt="${w.name || '상품이미지'}" />`
+                      : ''
+                  }
+                </div>
+                <div>
+                  <div class="wish-name">${w.name || '상품'}</div>
+                  <div class="wish-meta">
+                    ${optText || '&nbsp;'}
+                  </div>
+                </div>
+              </div>
+              <div class="wish-price">${formatPrice(w.price)}</div>
+            </div>
+          `;
+        });
+
+        if (wishListEl) {
+          wishListEl.innerHTML = html;
+          wishListEl.style.display = 'flex';
+        }
+        if (wishEmptyBox) wishEmptyBox.style.display = 'none';
+        if (wishCountText)
+          wishCountText.textContent = '(' + wishlist.length + ')';
+        if (activityWishCount)
+          activityWishCount.textContent = wishlist.length + '개';
+      }
+
+      /* ----- 로그아웃 버튼 ----- */
+      const logoutBtn = document.getElementById('logoutBtn');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', function () {
+          localStorage.removeItem('isAdmin');
+          localStorage.removeItem('fonLoggedIn');
+          // 아이디/이메일까지 지우고 싶으면 아래 두 줄도 풀면 됨
+          // localStorage.removeItem('fonUserId');
+          // localStorage.removeItem('fonUserEmail');
+
+          alert('로그아웃 되었습니다.');
+          window.location.href = 'main.html';
+        });
+      }
     });
   </script>
 </body>
