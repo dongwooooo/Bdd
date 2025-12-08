@@ -13,11 +13,7 @@
   />
 
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: 'Noto Sans KR', system-ui, -apple-system, BlinkMacSystemFont,
@@ -346,12 +342,13 @@
       border-radius: 10px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
       padding: 20px 22px 18px;
+      margin-top: 10px;
     }
 
     .detail-title {
-      font-size: 15px;
+      font-size: 16px;
       font-weight: 600;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
     }
 
     .detail-desc {
@@ -360,105 +357,104 @@
       margin-bottom: 14px;
     }
 
-    .detail-block {
-      border-radius: 10px;
-      border: 1px solid #e4e6f1;
-      background-color: #fafbff;
-      padding: 12px 12px 10px;
+    .detail-buttons {
+      display: flex;
+      gap: 12px;
       margin-bottom: 10px;
+    }
+
+    .detail-btn {
+      flex: 1;
+      border-radius: 999px;
+      border: none;
+      padding: 12px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .detail-btn span.icon {
+      font-size: 16px;
+    }
+
+    .detail-btn.title { background-color: #2979ff; }
+    .detail-btn.text { background-color: #07b255; }
+    .detail-btn.image { background-color: #a23af7; }
+
+    .detail-tip {
+      font-size: 11px;
+      color: #999;
+      margin-top: 6px;
+    }
+
+    /* 블록 카드 */
+    .detail-blocks {
+      margin-top: 14px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
+    }
+
+    .detail-block {
+      border-radius: 8px;
+      border: 1px solid #e3e5f0;
+      background-color: #fafbff;
+      padding: 10px 12px 12px;
+      position: relative;
     }
 
     .detail-block-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 8px;
+      margin-bottom: 6px;
     }
 
     .detail-block-label {
-      display: inline-flex;
+      display: flex;
       align-items: center;
       gap: 6px;
-      font-size: 12px;
-      font-weight: 600;
-      color: #555;
+      font-size: 13px;
+      font-weight: 500;
     }
 
-    .detail-block-label span.icon {
-      width: 18px;
-      height: 18px;
-      border-radius: 4px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      color: #fff;
+    .detail-block-label span.badge {
+      font-size: 13px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background-color: #edf0ff;
+      color: #334155;
     }
 
-    .detail-block.title .detail-block-label span.icon {
-      background-color: #2979ff;
-    }
-    .detail-block.text .detail-block-label span.icon {
-      background-color: #07b255;
-    }
-    .detail-block.image .detail-block-label span.icon {
-      background-color: #a23af7;
-    }
-
-    .detail-remove-btn {
+    .detail-block-remove {
       border: none;
       background: none;
       cursor: pointer;
       font-size: 16px;
-      line-height: 1;
-      color: #bbb;
+      color: #999;
     }
 
-    .detail-remove-btn:hover { color: #e53935; }
+    .detail-block-remove:hover { color: #666; }
 
     .detail-block textarea,
     .detail-block input[type="text"] {
       width: 100%;
-      border-radius: 8px;
+      border-radius: 6px;
       border: 1px solid #e0e3ee;
-      padding: 8px 10px;
+      padding: 7px 9px;
       font-size: 13px;
-      outline: none;
-      background-color: #fff;
-    }
-
-    .detail-block textarea {
       resize: vertical;
-      min-height: 60px;
     }
 
-    .detail-add-buttons {
-      display: flex;
-      gap: 10px;
-      margin-top: 6px;
-    }
-
-    .detail-add-btn {
-      border-radius: 999px;
-      border: none;
-      padding: 8px 18px;
-      font-size: 13px;
-      font-weight: 500;
-      color: #fff;
-      cursor: pointer;
-    }
-
-    .detail-add-btn.title { background-color: #2979ff; }
-    .detail-add-btn.text { background-color: #07b255; }
-    .detail-add-btn.image { background-color: #a23af7; }
-
-    .detail-tip {
-      font-size: 11px;
-      color: #999;
-      margin-top: 6px;
+    .detail-block textarea:focus,
+    .detail-block input[type="text"]:focus {
+      border-color: #000;
+      outline: none;
     }
 
     /* 제출 버튼 */
@@ -496,9 +492,7 @@
     .btn-cancel:hover { background-color: #d2d6e4; }
 
     @media (max-width: 960px) {
-      .form-layout {
-        grid-template-columns: 1fr;
-      }
+      .form-layout { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -670,16 +664,17 @@
               <option value="acc">악세서리</option>
             </select>
 
-            <label for="price">할인 가격<span class="required">*</span></label>
+            <label for="price">가격<span class="required">*</span></label>
             <input
               type="number"
               id="price"
               name="price"
-              placeholder="할인 가격을 입력하세요"
+              placeholder="할인 적용 후 가격을 입력하세요"
               min="0"
               required
               style="margin-bottom: 10px" />
 
+            <!-- 사이즈 -->
             <div class="multi-input-group">
               <label>사이즈<span class="required">*</span></label>
               <div class="dynamic-list" id="sizeList"></div>
@@ -687,6 +682,7 @@
               <p class="helper-text">예: M, L, XL 또는 250, 260, 270</p>
             </div>
 
+            <!-- 색상 -->
             <div class="multi-input-group">
               <label>색상<span class="required">*</span></label>
               <div class="dynamic-list" id="colorList"></div>
@@ -716,23 +712,30 @@
             고객이 상품 상세 페이지에서 보게 될 내용을 작성해보세요.
           </p>
 
-          <div id="detailBlocksContainer"></div>
-
-          <div class="detail-add-buttons">
-            <button class="detail-add-btn title" type="button" data-type="title">
-              + 주제/제목 추가
+          <div class="detail-buttons">
+            <button class="detail-btn title" type="button" data-type="title">
+              <span class="icon">🄰</span>
+              <span>제목 추가</span>
             </button>
-            <button class="detail-add-btn text" type="button" data-type="text">
-              + 설명 추가
+            <button class="detail-btn text" type="button" data-type="text">
+              <span class="icon">📄</span>
+              <span>설명 추가</span>
             </button>
-            <button class="detail-add-btn image" type="button" data-type="image">
-              + 이미지 추가
+            <button class="detail-btn image" type="button" data-type="image">
+              <span class="icon">🖼️</span>
+              <span>이미지 추가</span>
             </button>
           </div>
 
           <p class="detail-tip">
-            💡 팁: 제목 → 설명 → 이미지 순서로 추가하면 보기 좋은 상세 페이지를 만들 수 있습니다.
+            💡 팁: 제목 → 설명 → 이미지 순서로 추가하면 보기 좋은 상세 페이지를 만들 수 있습니다!
           </p>
+
+          <!-- 버튼 누르기 전에는 비어 있음 -->
+          <div class="detail-blocks" id="detailBlocksContainer"></div>
+
+          <!-- 저장용 hidden input (JSON 문자열) -->
+          <input type="hidden" id="detailBlocksData" name="detailBlocksData" />
         </section>
 
         <!-- 버튼 -->
@@ -745,15 +748,17 @@
   </main>
 
   <script>
-    // ------------ 공통 함수 ------------
+    function getQueryParam(name) {
+      return new URLSearchParams(window.location.search).get(name);
+    }
+
     function loadDiscountProducts() {
       const raw = localStorage.getItem('fonDiscountProducts');
       if (!raw) return [];
       try {
         const parsed = JSON.parse(raw);
         return Array.isArray(parsed) ? parsed : [];
-      } catch (e) {
-        console.error(e);
+      } catch {
         return [];
       }
     }
@@ -762,90 +767,15 @@
       localStorage.setItem('fonDiscountProducts', JSON.stringify(list));
     }
 
-    function getQueryParam(name) {
-      return new URLSearchParams(window.location.search).get(name);
-    }
-
-    // ------------ 상세 블록 생성 함수 ------------
-    function createDetailBlock(type, value) {
-      const container = document.getElementById('detailBlocksContainer');
-      if (!container) return;
-
-      const block = document.createElement('div');
-      block.classList.add('detail-block', type);
-      block.dataset.type = type;
-
-      const header = document.createElement('div');
-      header.classList.add('detail-block-header');
-
-      const label = document.createElement('div');
-      label.classList.add('detail-block-label');
-
-      const icon = document.createElement('span');
-      icon.classList.add('icon');
-      icon.textContent = type === 'title' ? '제' : type === 'text' ? '설' : 'img';
-
-      const text = document.createElement('span');
-      if (type === 'title') text.textContent = '주제/제목 (큰 글씨)';
-      else if (type === 'text') text.textContent = '설명 (작은 글씨)';
-      else text.textContent = '이미지';
-
-      label.appendChild(icon);
-      label.appendChild(text);
-
-      const removeBtn = document.createElement('button');
-      removeBtn.type = 'button';
-      removeBtn.classList.add('detail-remove-btn');
-      removeBtn.textContent = '✕';
-      removeBtn.addEventListener('click', () => block.remove());
-
-      header.appendChild(label);
-      header.appendChild(removeBtn);
-
-      block.appendChild(header);
-
-      if (type === 'image') {
-        const inputRow = document.createElement('div');
-        inputRow.classList.add('input-row');
-        const urlInput = document.createElement('input');
-        urlInput.type = 'text';
-        urlInput.placeholder = 'https://example.com/image.jpg';
-        urlInput.value = value || '';
-
-        const fakeBtn = document.createElement('button');
-        fakeBtn.type = 'button';
-        fakeBtn.classList.add('btn-light');
-        fakeBtn.textContent = '파일 업로드';
-        // 단순 디자인용 버튼 (업로드 기능은 옵션)
-        fakeBtn.addEventListener('click', () => {
-          alert('이미지 블록의 파일 업로드는 추후 확장 예정입니다.\n지금은 이미지 URL을 입력해주세요 😊');
-        });
-
-        inputRow.appendChild(urlInput);
-        inputRow.appendChild(fakeBtn);
-        block.appendChild(inputRow);
-      } else {
-        const textarea = document.createElement('textarea');
-        textarea.placeholder =
-          type === 'title'
-            ? '주제나 제목을 입력하세요 (예: 제품 소개, 착용감, 스타일 팁...)'
-            : '상품에 대한 자세한 설명을 입력하세요...';
-        textarea.value = value || '';
-        block.appendChild(textarea);
-      }
-
-      container.appendChild(block);
-    }
-
     document.addEventListener('DOMContentLoaded', function () {
-      // 로그인 아이콘
+      /* --- 로그인 아이콘 --- */
       const userLink = document.getElementById('userIconLink');
       if (userLink) {
         const isLoggedIn = localStorage.getItem('fonLoggedIn') === 'true';
         userLink.href = isLoggedIn ? 'mypage.html' : 'login.html';
       }
 
-      // 검색 레이어
+      /* --- 검색 레이어 --- */
       const openBtn = document.getElementById('searchOpenBtn');
       const dim = document.getElementById('searchDim');
       const layer = document.getElementById('searchLayer');
@@ -873,13 +803,10 @@
       if (openBtn) openBtn.addEventListener('click', openSearch);
       if (closeBtn) closeBtn.addEventListener('click', closeSearch);
       if (dim) dim.addEventListener('click', closeSearch);
-
-      document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') closeSearch();
-      });
+      document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSearch(); });
 
       if (input && noResult) {
-        input.addEventListener('input', function (e) {
+        input.addEventListener('input', e => {
           const value = e.target.value.trim();
           if (!value) {
             noResult.style.display = 'none';
@@ -891,62 +818,50 @@
         });
       }
 
-      // 동적 입력: 사이즈 / 색상 / 추가이미지
-      function addDynamicInput(listEl, placeholder) {
-        if (!listEl) return null;
-        const el = document.createElement('input');
-        el.type = 'text';
-        el.placeholder = placeholder;
-        listEl.appendChild(el);
-        return el;
-      }
-
+      /* --- 동적 인풋(사이즈/색상/추가이미지) --- */
       const sizeList = document.getElementById('sizeList');
       const colorList = document.getElementById('colorList');
       const extraImageList = document.getElementById('extraImageList');
 
-      if (sizeList) addDynamicInput(sizeList, '예: M');
-      if (colorList) addDynamicInput(colorList, '예: 블랙');
-
-      const btnAddSize = document.getElementById('btnAddSize');
-      if (btnAddSize) {
-        btnAddSize.addEventListener('click', function () {
-          addDynamicInput(sizeList, '사이즈 입력');
-        });
+      function addDynamicInput(parent, placeholder) {
+        const el = document.createElement('input');
+        el.type = 'text';
+        el.placeholder = placeholder;
+        parent.appendChild(el);
+        return el;
       }
 
-      const btnAddColor = document.getElementById('btnAddColor');
-      if (btnAddColor) {
-        btnAddColor.addEventListener('click', function () {
-          addDynamicInput(colorList, '색상 입력');
-        });
-      }
+      // 기본 하나씩 생성
+      addDynamicInput(sizeList, '예: M');
+      addDynamicInput(colorList, '예: 블랙');
 
-      const btnAddExtraImage = document.getElementById('btnAddExtraImage');
-      if (btnAddExtraImage) {
-        btnAddExtraImage.addEventListener('click', function () {
-          addDynamicInput(extraImageList, '추가 이미지 URL');
-        });
-      }
+      document.getElementById('btnAddSize').addEventListener('click', () => {
+        addDynamicInput(sizeList, '사이즈 입력');
+      });
 
-      // 파일 업로드 -> dataURL 텍스트 박스에 넣기
+      document.getElementById('btnAddColor').addEventListener('click', () => {
+        addDynamicInput(colorList, '색상 입력');
+      });
+
+      document.getElementById('btnAddExtraImage').addEventListener('click', () => {
+        addDynamicInput(extraImageList, '추가 이미지 URL');
+      });
+
+      /* --- 파일 업로드 버튼 -> dataURL --- */
       function bindFileUpload(buttonId, fileInputId, textInputId) {
         const btn = document.getElementById(buttonId);
         const fileInput = document.getElementById(fileInputId);
         const textInput = document.getElementById(textInputId);
-
         if (!btn || !fileInput || !textInput) return;
 
-        btn.addEventListener('click', function () {
-          fileInput.click();
-        });
+        btn.addEventListener('click', () => fileInput.click());
 
-        fileInput.addEventListener('change', function (e) {
+        fileInput.addEventListener('change', e => {
           const file = e.target.files[0];
           if (!file) return;
           const reader = new FileReader();
-          reader.onload = function (event) {
-            textInput.value = event.target.result;
+          reader.onload = ev => {
+            textInput.value = ev.target.result;
           };
           reader.readAsDataURL(file);
         });
@@ -955,33 +870,108 @@
       bindFileUpload('btnUpload1', 'fileInput1', 'mainImage1');
       bindFileUpload('btnUpload2', 'fileInput2', 'mainImage2');
 
-      // 상세 페이지 블록 버튼
-      document.querySelectorAll('.detail-add-btn').forEach((btn) => {
-        btn.addEventListener('click', function () {
+      /* --- 상세 페이지 블록 생성/동기화 --- */
+      const detailBlocksContainer = document.getElementById('detailBlocksContainer');
+      const detailBlocksDataInput = document.getElementById('detailBlocksData');
+
+      function syncDetailBlocksToHidden() {
+        const blocks = [];
+        detailBlocksContainer.querySelectorAll('.detail-block').forEach(block => {
+          const type = block.dataset.type;
+          if (type === 'image') {
+            const input = block.querySelector('input[type="text"]');
+            blocks.push({ type, url: (input.value || '').trim() });
+          } else {
+            const textarea = block.querySelector('textarea');
+            blocks.push({ type, text: (textarea.value || '').trim() });
+          }
+        });
+        detailBlocksDataInput.value = JSON.stringify(blocks);
+      }
+
+      function createDetailBlock(type, value = '', url = '') {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'detail-block';
+        wrapper.dataset.type = type;
+
+        const header = document.createElement('div');
+        header.className = 'detail-block-header';
+
+        const label = document.createElement('div');
+        label.className = 'detail-block-label';
+
+        const badge = document.createElement('span');
+        badge.className = 'badge';
+
+        if (type === 'title') {
+          badge.textContent = '제목/제목 (큰 글씨)';
+        } else if (type === 'text') {
+          badge.textContent = '설명 (작은 글씨)';
+        } else {
+          badge.textContent = '이미지';
+        }
+
+        label.appendChild(badge);
+        header.appendChild(label);
+
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'detail-block-remove';
+        removeBtn.innerHTML = '&times;';
+        removeBtn.addEventListener('click', () => {
+          wrapper.remove();
+          syncDetailBlocksToHidden();
+        });
+
+        header.appendChild(removeBtn);
+        wrapper.appendChild(header);
+
+        if (type === 'image') {
+          const input = document.createElement('input');
+          input.type = 'text';
+          input.placeholder = 'https://example.com/image.jpg';
+          input.value = url || '';
+          input.addEventListener('input', syncDetailBlocksToHidden);
+          wrapper.appendChild(input);
+        } else {
+          const textarea = document.createElement('textarea');
+          textarea.placeholder =
+            type === 'title'
+              ? '주제나 제목을 입력하세요 (예: 제품 소개, 착용감, 스타일링 TIP 등)'
+              : '상품에 대한 자세한 설명을 입력하세요...';
+          textarea.value = value || '';
+          textarea.addEventListener('input', syncDetailBlocksToHidden);
+          wrapper.appendChild(textarea);
+        }
+
+        detailBlocksContainer.appendChild(wrapper);
+        syncDetailBlocksToHidden();
+      }
+
+      document.querySelectorAll('.detail-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
           const type = btn.dataset.type;
           createDetailBlock(type);
         });
       });
 
-      // 수정 모드인지 확인
+      /* --- 수정 모드 처리 --- */
       const editingId = getQueryParam('id');
       const pageTitleEl = document.getElementById('pageTitle');
       const pageSubtitleEl = document.getElementById('pageSubtitle');
       const submitButton = document.getElementById('submitButton');
-      const detailBlocksContainer = document.getElementById('detailBlocksContainer');
 
       if (editingId) {
         const list = loadDiscountProducts();
-        const target = list.find((p) => String(p.id) === String(editingId));
+        const target = list.find(p => String(p.id) === String(editingId));
         if (target) {
           if (pageTitleEl) pageTitleEl.textContent = '할인 상품 수정';
-          if (pageSubtitleEl)
-            pageSubtitleEl.textContent = '할인 상품 정보를 수정합니다.';
+          if (pageSubtitleEl) pageSubtitleEl.textContent = '할인 상품 정보를 수정합니다.';
           if (submitButton) submitButton.textContent = '할인 상품 수정 완료';
 
           document.getElementById('name').value = target.name || '';
           document.getElementById('category').value = target.category || 'outer';
-          document.getElementById('price').value = target.price ?? '';
+          document.getElementById('price').value = target.price || '';
 
           document.getElementById('mainImage1').value =
             (target.images && target.images.main1) || '';
@@ -991,166 +981,115 @@
           document.getElementById('summary').value = target.summary || '';
           document.getElementById('detail').value = target.detail || '';
 
-          // 사이즈 / 색상 / 추가이미지
-          if (sizeList) sizeList.innerHTML = '';
-          if (colorList) colorList.innerHTML = '';
-          if (extraImageList) extraImageList.innerHTML = '';
+          sizeList.innerHTML = '';
+          colorList.innerHTML = '';
+          extraImageList.innerHTML = '';
 
-          const sizes = (target.sizes || '').split(',').map((s) => s.trim()).filter(Boolean);
-          const colors = (target.colors || '').split(',').map((c) => c.trim()).filter(Boolean);
+          const sizes = (target.sizes || '').split(',').map(s => s.trim()).filter(Boolean);
+          const colors = (target.colors || '').split(',').map(c => c.trim()).filter(Boolean);
           const extraImages = (target.images && target.images.extra) || [];
 
-          if (sizes.length && sizeList) {
-            sizes.forEach((s) => {
-              const inp = addDynamicInput(sizeList, '사이즈 입력');
-              inp.value = s;
-            });
-          } else if (sizeList) {
-            addDynamicInput(sizeList, '예: M');
-          }
+          if (sizes.length) sizes.forEach(s => { const i = addDynamicInput(sizeList, '사이즈 입력'); i.value = s; });
+          else addDynamicInput(sizeList, '예: M');
 
-          if (colors.length && colorList) {
-            colors.forEach((c) => {
-              const inp = addDynamicInput(colorList, '색상 입력');
-              inp.value = c;
-            });
-          } else if (colorList) {
-            addDynamicInput(colorList, '예: 블랙');
-          }
+          if (colors.length) colors.forEach(c => { const i = addDynamicInput(colorList, '색상 입력'); i.value = c; });
+          else addDynamicInput(colorList, '예: 블랙');
 
-          if (extraImages.length && extraImageList) {
-            extraImages.forEach((url) => {
-              const inp = addDynamicInput(extraImageList, '추가 이미지 URL');
-              inp.value = url;
-            });
-          }
-
-          // 상세 페이지 블록 복원
-          if (detailBlocksContainer) {
-            detailBlocksContainer.innerHTML = '';
-            if (target.detailBlocks) {
-              try {
-                const blocks = JSON.parse(target.detailBlocks);
-                if (Array.isArray(blocks)) {
-                  blocks.forEach((b) => {
-                    if (!b || !b.type) return;
-                    createDetailBlock(b.type, b.value || '');
-                  });
-                }
-              } catch (e) {
-                // 이전에 그냥 텍스트로 저장된 경우 대비
-                if (typeof target.detailBlocks === 'string') {
-                  createDetailBlock('text', target.detailBlocks);
-                }
-              }
-            }
-          }
-        }
-      } else {
-        // 새 등록일 때 기본으로 제목/설명 블록 하나씩
-        if (detailBlocksContainer) {
-          createDetailBlock('title');
-          createDetailBlock('text');
-        }
-      }
-
-      // 취소 버튼
-      const btnCancel = document.getElementById('btnCancel');
-      if (btnCancel) {
-        btnCancel.addEventListener('click', function () {
-          if (confirm('변경사항이 저장되지 않습니다. 돌아가시겠습니까?')) {
-            window.location.href = 'admin_discount.html';
-          }
-        });
-      }
-
-      // 폼 제출
-      const form = document.getElementById('discountForm');
-      if (form) {
-        form.addEventListener('submit', function (e) {
-          e.preventDefault();
-
-          const name = document.getElementById('name').value.trim();
-          const category = document.getElementById('category').value;
-          const priceStr = document.getElementById('price').value.trim();
-          const price = Number(priceStr);
-          const mainImage1 =
-            document.getElementById('mainImage1').value.trim() || '';
-          const mainImage2 =
-            document.getElementById('mainImage2').value.trim() || '';
-
-          if (!name || !category || priceStr === '' || isNaN(price) || !mainImage1) {
-            alert('필수 항목(상품명, 카테고리, 가격, 대표 사진 1)을 모두 올바르게 입력해주세요.');
-            return;
-          }
-
-          const sizeValues = Array.from(sizeList ? sizeList.querySelectorAll('input') : [])
-            .map((el) => el.value.trim())
-            .filter(Boolean)
-            .join(', ');
-
-          const colorValues = Array.from(colorList ? colorList.querySelectorAll('input') : [])
-            .map((el) => el.value.trim())
-            .filter(Boolean)
-            .join(', ');
-
-          const extraImages = Array.from(
-            extraImageList ? extraImageList.querySelectorAll('input') : [],
-          )
-            .map((el) => el.value.trim())
-            .filter(Boolean);
-
-          const summary = document.getElementById('summary').value.trim();
-          const detail = document.getElementById('detail').value.trim();
-
-          // 상세 블록 데이터 수집
-          const blocksEls = Array.from(
-            document.querySelectorAll('#detailBlocksContainer .detail-block'),
-          );
-          const blocksData = blocksEls.map((el) => {
-            const type = el.dataset.type || 'text';
-            const inputEl =
-              el.querySelector('textarea') || el.querySelector('input[type="text"]');
-            const value = inputEl ? inputEl.value.trim() : '';
-            return { type, value };
+          extraImages.forEach(url => {
+            const i = addDynamicInput(extraImageList, '추가 이미지 URL');
+            i.value = url;
           });
 
-          const list = loadDiscountProducts();
-          const nowId = editingId || Date.now().toString();
-
-          const data = {
-            id: nowId,
-            name,
-            category,
-            price,
-            sizes: sizeValues,
-            colors: colorValues,
-            summary,
-            detail,
-            detailBlocks: JSON.stringify(blocksData),
-            images: {
-              main1: mainImage1,
-              main2: mainImage2,
-              extra: extraImages,
-            },
-            salesCount: 0,
-          };
-
-          if (editingId) {
-            const idx = list.findIndex(
-              (p) => String(p.id) === String(editingId),
-            );
-            if (idx !== -1) list[idx] = data;
-            else list.push(data);
-          } else {
-            list.push(data);
-          }
-
-          saveDiscountProducts(list);
-          alert('할인 상품 정보가 저장되었습니다.');
-          window.location.href = 'admin_discount.html';
-        });
+          // 상세 블록 복원
+          let blocksData = [];
+          try {
+            blocksData = JSON.parse(target.detailBlocks || '[]');
+          } catch {}
+          blocksData.forEach(b => {
+            createDetailBlock(b.type, b.text, b.url);
+          });
+        }
       }
+
+      /* --- 취소 버튼 --- */
+      document.getElementById('btnCancel').addEventListener('click', () => {
+        if (confirm('변경사항이 저장되지 않습니다. 돌아가시겠습니까?')) {
+          window.location.href = 'admin_discount.html';
+        }
+      });
+
+      /* --- 폼 제출 --- */
+      document.getElementById('discountForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const name = document.getElementById('name').value.trim();
+        const category = document.getElementById('category').value;
+        const priceStr = document.getElementById('price').value.trim();
+        const price = Number(priceStr);
+        const mainImage1 = document.getElementById('mainImage1').value.trim();
+        const mainImage2 = document.getElementById('mainImage2').value.trim();
+
+        // 🔥 문자열 기준 + isNaN 체크
+        if (!name || !category || priceStr === '' || isNaN(price) || !mainImage1) {
+          alert('필수 항목(상품명, 카테고리, 가격, 대표 사진 1)을 모두 올바르게 입력해주세요.');
+          return;
+        }
+
+        const sizeValues = Array.from(sizeList.querySelectorAll('input'))
+          .map(el => el.value.trim())
+          .filter(Boolean)
+          .join(', ');
+
+        const colorValues = Array.from(colorList.querySelectorAll('input'))
+          .map(el => el.value.trim())
+          .filter(Boolean)
+          .join(', ');
+
+        const extraImages = Array.from(extraImageList.querySelectorAll('input'))
+          .map(el => el.value.trim())
+          .filter(Boolean);
+
+        const summary = document.getElementById('summary').value.trim();
+        const detail = document.getElementById('detail').value.trim();
+
+        // 상세 블록 hidden 입력에 동기화
+        syncDetailBlocksToHidden();
+        const detailBlocksJson = detailBlocksDataInput.value || '[]';
+
+        const list = loadDiscountProducts();
+        const nowId = editingId || Date.now().toString();
+
+        const data = {
+          id: nowId,
+          name,
+          category,
+          price,
+          sizes: sizeValues,
+          colors: colorValues,
+          summary,
+          detail,
+          detailBlocks: detailBlocksJson,
+          images: {
+            main1: mainImage1,
+            main2: mainImage2,
+            extra: extraImages,
+          },
+          salesCount: (editingId && list.find(p => String(p.id) === String(editingId))?.salesCount) || 0,
+          isNew: true
+        };
+
+        if (editingId) {
+          const idx = list.findIndex(p => String(p.id) === String(editingId));
+          if (idx !== -1) list[idx] = data;
+          else list.push(data);
+        } else {
+          list.push(data);
+        }
+
+        saveDiscountProducts(list);
+        alert('할인 상품 정보가 저장되었습니다.');
+        window.location.href = 'admin_discount.html';
+      });
     });
   </script>
 </body>
